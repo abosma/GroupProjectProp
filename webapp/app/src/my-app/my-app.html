@@ -166,6 +166,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <iron-icon icon="social:group"></iron-icon>
               <span>Rooster</span>
           </a>
+          
+          <a name="Presentie" href$="[[_c_baseURL]]student/presentie" verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
+              <iron-icon icon="social:group"></iron-icon>
+              <span>Presentie</span>
+          </a>
+          
           <a name="student_medestudenten" href$="[[_c_baseURL]]student/medestudenten"  verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
@@ -197,10 +203,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
  
         <!-- sections voor iedereen ---------------------------------------------------------------- -->
         <!-- element$="none" of weglaten van element$ geeft beide aan dat er geen polymerElement gebruikt zal gaan worden -->
+        
+                
+        
         <section name="home" title="HOME" element$="none"> 
           <paper-material elevation="1">
               <p>Demo app gebaseerd op Polymer.</p>
-              <p>Deze app past nadat je bent ingeloggen het menu aan, aan de rol die gekoppeld is aan de ingeloggede user.</p>
+              <p></p>
           </paper-material>
         </section>
 
@@ -237,6 +246,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <my-logout rol="{{_rol}}"></my-logout>
             </paper-material>
           </section>
+          
+          
 
 <!-- sections voor docent -->
           <section name="docent_rooster"
@@ -261,7 +272,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                      c_username="[[_username]]">
                   </my-rooster-student>
               </paper-material>
-          </section>
+
+    		</section>
+        	<section name = "student_presentie"
+        			title = "Presentie student"
+        			element$ = "my-presentie-student"> 
+        				<paper-material elevation='1'>
+        					<my-presentie-student c_visible="[[_are_strings_equal(_ar_page, 'student_rooster')]]"
+                              	c_rol="[[_rol]]"
+                              	c_username="[[_username]]">
+							</my-presentie-student>
+						</paper-material>
+	
+			</section>        
+        
+          
+          <!--  <section name="Presentie" 
+                   title="Presentie"
+                   element="my-presentie-leerling">
+            <paper-material elevation="1">
+              <my-presentie-leerling 
+              c_visible="[[_are_strings_equal(_ar_page, 'Presentie')]]"
+              c_rol="[[_rol]]"
+              c_username="[[_username]]"
+              </my-presentie-leerling>
+            
+            
+            </paper-material>
+          </section> -->
 
           <section  name="student_medestudenten" 
                     title="OVERZICHT MEDESTUDENTEN"
