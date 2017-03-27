@@ -1,12 +1,56 @@
-<link rel="import" href="../../../bower_components/polymer/polymer.html">
 <dom-module id="my-agenda">
     <template>
         <style>
             :host {
                 display: block;
             }
+
+            .container {
+              @apply(--layout-horizontal);
+              @apply(--layout-justified);
+              @apply(--layout-center);
+            }
+
+            .dagen-agenda {
+                border: 1px solid #1693c9;
+            }
+
+            .dagen-agenda div {
+                background: #33aadd;
+                width: 100%;
+                padding: 10px;
+                text-align: center;
+                border-right: 1px solid #1693c9;
+                color: white;
+            }
+
+            .dagen-agenda div:last-child {
+                border-right: none;
+            }
+
         </style>
-        <h2>Hallow</h2>
+
+
+        <!-- Header Agenda  -->
+        <div class="container">
+            <div><h2>Mijn weekrooster</h2></div>
+            <div><h3> <iron-icon icon="arrow-back"></iron-icon> Week 3  <iron-icon icon="arrow-forward"></iron-icon></h3></div>
+        </div>
+
+        <!-- Dagen Agenda -->
+        <div class="container dagen-agenda">
+            <div>MA 27MRT</div>
+            <div>DI 28MRT</div>
+            <div>WO 29MRT</div>
+            <div>DO 30MRT</div>
+            <div>VR 31MRT</div>
+            <div>ZA 1APR</div>
+        </div>
+
+
+
+
+
 
 
 
@@ -15,6 +59,10 @@
         Polymer({
             is: 'my-agenda',
             properties: {
+                _c_baseURL: {
+                    type: Boolean,
+                    value: true,                          
+                  },
             },
         });
     </script>
