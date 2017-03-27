@@ -24,8 +24,7 @@ public class Application {
 	 * 
 	 * Als je alle URLs hebt geregistreerd kun je de server starten en de applicatie in de
 	 * browser opvragen! Zie ook de controller-klassen voor een voorbeeld!
-	 * 
-	 */
+	 * s */
 	public static void main(String[] args) {
 		JSONFileServer server = new JSONFileServer(new File("webapp/app"), 8888);
 		
