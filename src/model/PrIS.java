@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import model.klas.Klas;
 import model.persoon.Docent;
 import model.persoon.Student;
+import model.les.Les;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -14,12 +15,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class PrIS {
 	private ArrayList<Docent> deDocenten;
 	private ArrayList<Student> deStudenten;
 	private ArrayList<Klas> deKlassen;
+	private ArrayList<Les> deLessen;
 	
 	/**
 	 * De constructor maakt een set met standaard-data aan. Deze data
@@ -48,6 +52,7 @@ public class PrIS {
 		deDocenten = new ArrayList<Docent>();
 		deStudenten = new ArrayList<Student>();
 		deKlassen = new ArrayList<Klas>();
+		deLessen = new ArrayList<Les>();
 
 		// Inladen klassen
 		vulKlassen(deKlassen);
@@ -57,6 +62,9 @@ public class PrIS {
 
 		// Inladen docenten
 		vulDocenten(deDocenten);
+		
+		// Inladen lessen
+		vulLessen(deKlassen, deLessen);
 	
 	} //Einde Pris constructor
 	
@@ -221,7 +229,63 @@ public class PrIS {
 		pKlassen.add(k4);
 		pKlassen.add(k5);
 		pKlassen.add(k6);
-	}	
+	}
+	
+	private void vulLessen(ArrayList<Klas> pKlassen, ArrayList<Les> pLessen)
+	{
+		String csvFile = "././CSV/rooster.csv";
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		try{
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+			    // use comma as separator
+				String[] element = line.split(cvsSplitBy);
+				//Split uren en minuten in excel bestand
+				String[] bT = element[1].split(":");
+				String[] eT = element[2].split(":");
+				//Maak van excel vak 1 een localdate
+				LocalDate dag = LocalDate.parse(element[0]);
+				//Voeg uren en minuten van vakken 2/3 aan het LocalDate van vak 1
+				LocalDateTime beginTijd = dag.atTime(Integer.parseInt(bT[0]), Integer.parseInt(bT[1]));
+				LocalDateTime eindTijd = dag.atTime(Integer.parseInt(eT[0]), Integer.parseInt(eT[1]));
+				//Vak 3 is lesnaam
+				String lesNaam = element[3];
+				//getDocent geeft een docent terug met hetzelfde email als vak 4
+				Docent docent = this.getDocent(element[4]);
+				//Vak 5 is het lokaal
+				String lokaal = element[5];
+				//Maak empty Klas aan
+				Klas klas = null;
+				//Voor iedere klas in de gevulde pKlassen
+				for(Klas k : pKlassen){
+					//Als de klascode hetzelfde is als de klascode in vak 6
+					if(k.getKlasCode().equals(element[6])){
+						//Dan is de empty klas de klas met hetzelfde klascode
+						klas = k;
+					}
+				}
+				//Voeg een nieuw les toe met alle data uit het excel bestand
+				pLessen.add(new Les(beginTijd, eindTijd, lesNaam, docent, lokaal, klas));
+			}
+		}catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			//Om alle lessen te printen uncomment deze
+			//System.out.println(pLessen.toString());
+			if(br != null){
+				try{
+					br.close();
+				}catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	private void vulStudenten(
 			ArrayList<Student> pStudenten,
 			ArrayList<Klas> pKlassen) {
@@ -265,7 +329,7 @@ public class PrIS {
 						e.printStackTrace();
 					}
 				}
-			}	
+			}
 		}
 	}
 }
