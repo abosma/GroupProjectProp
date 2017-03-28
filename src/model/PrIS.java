@@ -175,6 +175,27 @@ public class PrIS {
 		
 		return "undefined";
 	}
+	
+	public ArrayList<Les> getLessenDocent(String docMail){
+		ArrayList<Les> returnLessen = new ArrayList<Les>();
+		for(Les l : deLessen){
+			if(l.getDocent().getGebruikersnaam().equals(docMail)){
+				returnLessen.add(l);
+			}
+		}
+		return returnLessen;
+	}
+	
+	public ArrayList<Les> getLessenStudent(String klasNaam){
+		ArrayList<Les> returnLessen = new ArrayList<Les>();
+		for(Les l : deLessen){
+			if(l.getKlas().getNaam().equals(klasNaam)){
+				returnLessen.add(l);
+			}
+		}
+		return returnLessen;
+	}
+	
 	private void vulDocenten(ArrayList<Docent> pDocenten) {
 		String csvFile = "././CSV/docenten.csv";
 		BufferedReader br = null;

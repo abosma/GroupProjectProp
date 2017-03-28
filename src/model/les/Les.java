@@ -22,6 +22,14 @@ public class Les {
   	this.klas = kl;
   }
   
+  public Docent getDocent(){
+  	return this.docent;
+  }
+  
+  public Klas getKlas(){
+  	return this.klas;
+  }
+  
   public String toString(){
   	return "Begindatum: " + this.beginData + "\n"
   			+ "Einddatum: " + this.eindData + "\n"
