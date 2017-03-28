@@ -151,11 +151,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Inloggen</span>
           </a>
  
-          <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
-            <iron-icon icon="account-box"></iron-icon>
-            <span>Uitloggen</span>
-          </a>
-
           <!-- beschikbaar voor docent---------------------------------------------------- -->
           <a name="Rooster" href$="[[_c_baseURL]]docent/rooster" verborgen$="[[!_are_strings_equal(_rol, 'docent')]]">
               <iron-icon icon="social:group"></iron-icon>
@@ -176,6 +171,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
           </a>
+          
+          <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(_rol, 'undefined')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Uitloggen</span>
+          </a>
+          
 
         </iron-selector>
       </app-drawer>
@@ -287,19 +288,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			</section>        
         
           
-          <!--  <section name="Presentie" 
-                   title="Presentie"
-                   element="my-presentie-leerling">
-            <paper-material elevation="1">
-              <my-presentie-leerling 
-              c_visible="[[_are_strings_equal(_ar_page, 'Presentie')]]"
-              c_rol="[[_rol]]"
-              c_username="[[_username]]"
-              </my-presentie-leerling>
-            
-            
-            </paper-material>
-          </section> -->
+      
 
           <section  name="student_medestudenten" 
                     title="OVERZICHT MEDESTUDENTEN"
