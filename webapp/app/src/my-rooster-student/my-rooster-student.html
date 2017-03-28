@@ -70,11 +70,18 @@
                 margin-left: 0px; /* reduce the default */
             }
         </style>
+        <p>TEST-[[l_display]]-</p>
         <my-agenda rol="{{ c_rol }}"></my-agenda>
 
 
+        <iron-ajax
+          id="ajax_student_agenda_ophalen_request_handler"
+          method="POST"
+          url="/student/rooster/dagOphalen"
+          handle-as="json"
+          on-response="_student_agenda_ophalen_response_handler">
+        </iron-ajax>
     </template>
-
     <script>
     (function() {
       'use strict';
@@ -97,6 +104,41 @@
           c_username: {
             type: String,
           },
+          c_visible: {
+            type: Boolean,
+            value: false,
+            observer: '_initializing',
+          },
+          l_display: {
+            type: String,
+            value: "",
+          }
+        },
+
+        _initializing : function() {
+          if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
+            if (this.c_rol=="student") {                        // voor studenten
+              this._student_agenda_ophalen_request_handler();    //    haal info op van server
+            } /*else {                                            // na handmatige url wijziging zonder login
+              var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
+              lToast.open();                                    /* het sluiten van deze error verwijst  * /
+                                                                /* terug naar home page * /
+            }*/
+          }
+        },
+
+        _student_agenda_ophalen_request_handler : function(){
+          console.log("_student_agenda_ophalen_request_handler "+this.c_username);
+          this.$.ajax_student_agenda_ophalen_request_handler.contentType="application/json";
+          this.$.ajax_student_agenda_ophalen_request_handler.body={
+            "username":this.c_username
+          };
+          this.$.ajax_student_agenda_ophalen_request_handler.generateRequest();
+        },
+
+        _student_agenda_ophalen_response_handler : function(response){
+          console.log("_student_agenda_ophalen_response_handler ::"+response.detail.response);
+          this.l_display = response.detail.response.firstName + " " + response.detail.response.lastName;
         },
 
         _go_home: function() {
