@@ -186,10 +186,10 @@ public class PrIS {
 		return returnLessen;
 	}
 	
-	public ArrayList<Les> getLessenStudent(String klasNaam){
+	public ArrayList<Les> getLessenStudent(String stuMail){
 		ArrayList<Les> returnLessen = new ArrayList<Les>();
 		for(Les l : deLessen){
-			if(l.getKlas().getNaam().equals(klasNaam)){
+			if(l.getKlas().getStudenten().contains(stuMail)){
 				returnLessen.add(l);
 			}
 		}
