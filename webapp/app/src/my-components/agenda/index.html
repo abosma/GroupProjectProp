@@ -24,6 +24,10 @@
                 color: white;
             }
 
+            .dagen-content div {
+                width: 100%;
+            }
+
             .dagen-agenda div:last-child {
                 border-right: none;
             }
@@ -47,6 +51,15 @@
             <div>ZA 1APR</div>
         </div>
 
+        <div class="container dagen-content">
+            <div>Geen activiteit</div>
+            <div>Geen activiteit</div>
+            <div>Geen activiteit</div>
+            <div>Geen activiteit</div>
+            <div>Geen activiteit</div>
+            <div>Geen activiteit</div>
+        </div>
+
 
 
 
@@ -59,10 +72,6 @@
         Polymer({
             is: 'my-agenda',
             properties: {
-                _c_baseURL: {
-                    type: Boolean,
-                    value: true,                          
-                  },
             },
         });
     </script>
