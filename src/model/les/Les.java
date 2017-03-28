@@ -2,8 +2,12 @@ package model.les;
 
 import model.klas.Klas;
 import model.persoon.Docent;
+import model.persoon.Student;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Les {
 	
@@ -13,6 +17,7 @@ public class Les {
   private Docent docent;
   private String lokaal;
   private Klas klas;
+  private Map<String, Integer> presentieMap = new HashMap<String, Integer>();
   
   public Les(LocalDateTime bD, LocalDateTime bE, String lN, Docent doc, String lkl, Klas kl){
   	this.beginData = bD;
@@ -21,6 +26,20 @@ public class Les {
   	this.docent = doc;
   	this.lokaal = lkl;
   	this.klas = kl;
+  	
+		for(Student stu : klas.getStudenten()){
+			presentieMap.put(stu.getGebruikersnaam(), 0);
+		}
+  }
+  
+  public void veranderPresentie(String gNaam, int presentieID){
+  	if(this.presentieMap.containsKey(gNaam)){
+  		this.presentieMap.put(gNaam, presentieID);
+  	}
+  }
+  
+  public Map<String, Integer> getPresentie(){
+  	return this.presentieMap;
   }
   
   public ArrayList<LocalDateTime> getLesData(){
