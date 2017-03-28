@@ -1,15 +1,15 @@
 package controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-
 import model.PrIS;
-import model.klas.Klas;
-import model.persoon.Student;
+import model.les.Les;
 import server.Conversation;
 
 public class RoosterController {
@@ -30,38 +30,72 @@ public class RoosterController {
 	private void ophalenDocent(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
-		String  lGroepIdZelf = lStudentZelf.getGroepId();
-		
-		Klas lKlas = informatieSysteem.getKlasVanStudent(lStudentZelf);
-
-    ArrayList<Student> lStudentenVanKlas = lKlas.getStudenten();
+		ArrayList<Les> lessenDocent = informatieSysteem.getLessenDocent(lGebruikersnaam);
 		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		
-		for (Student lMedeStudent : lStudentenVanKlas) {
-			if (lMedeStudent == lStudentZelf)
-				continue;
-			else {
-				String lGroepIdAnder = lMedeStudent.getGroepId();
-				boolean lZelfdeGroep = ((lGroepIdZelf != "") && (lGroepIdAnder==lGroepIdZelf));
-				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
-				String lLastName = lMedeStudent.getVolledigeAchternaam();
-				lJsonObjectBuilderVoorStudent
-					.add("id", lMedeStudent.getStudentNummer())
-					.add("firstName", lMedeStudent.getVoornaam())
-					.add("lastName", lLastName)
-				  .add("sameGroup", lZelfdeGroep);
-			  
-			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
-			}
+		for (Les l : lessenDocent) {
+			ArrayList<LocalDateTime> tempArray = l.getLesData();
+			
+			LocalDateTime beginData = tempArray.get(0);
+			LocalDateTime eindData = tempArray.get(1);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      
+			String beginDataString = beginData.format(formatter);
+      String eindDataString = eindData.format(formatter);
+			String lesNaam = l.getNaam();
+			String docentNaam = l.getDocent().getGebruikersnaam();
+			String lokaal = l.getLokaal();
+			String klasNaam = l.getKlas().getNaam();
+			
+			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
+			lJsonObjectBuilderVoorDocent
+				.add("beginData", beginDataString)
+				.add("eindData", eindDataString)
+				.add("lesNaam", lesNaam)
+				.add("docentNaam", docentNaam)
+				.add("lokaal", lokaal)
+				.add("klasNaam", klasNaam);
+		  
+		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
 		}
     String lJsonOutStr = lJsonArrayBuilder.build().toString();
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 
 	private void ophalenStudent(Conversation conversation) {
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String lKlasNaam = lJsonObjectIn.getString("klasnaam");
+		ArrayList<Les> lessenStudent = informatieSysteem.getLessenStudent(lKlasNaam);
 		
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
+		
+		for (Les l : lessenStudent) {
+			ArrayList<LocalDateTime> tempArray = l.getLesData();
+			
+			LocalDateTime beginData = tempArray.get(0);
+			LocalDateTime eindData = tempArray.get(1);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      
+			String beginDataString = beginData.format(formatter);
+      String eindDataString = eindData.format(formatter);
+			String lesNaam = l.getNaam();
+			String docentNaam = l.getDocent().getGebruikersnaam();
+			String lokaal = l.getLokaal();
+			String klasNaam = l.getKlas().getNaam();
+			
+			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
+			lJsonObjectBuilderVoorStudent
+				.add("beginData", beginDataString)
+				.add("eindData", eindDataString)
+				.add("lesNaam", lesNaam)
+				.add("docentNaam", docentNaam)
+				.add("lokaal", lokaal)
+				.add("klasNaam", klasNaam);
+		  
+		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
+		}
+    String lJsonOutStr = lJsonArrayBuilder.build().toString();
+		conversation.sendJSONMessage(lJsonOutStr);
 	}
-	
 }
