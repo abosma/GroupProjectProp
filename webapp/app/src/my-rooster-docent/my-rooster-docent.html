@@ -4,6 +4,8 @@
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../my-components/agenda/index.html">
+
 
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
@@ -12,7 +14,7 @@
      bij start van de applicatie.
 -->
 
-<dom-module id="my-medestudenten">
+<dom-module id="my-rooster-docent">
     <template>
         <style>
             :host {
@@ -33,86 +35,16 @@
                 background: #1a9fd9; /* kind of blue */
                 --paper-button-ink-color: #00567B; /* kind of dark blue */
             }
-
-            .my-title {
-                font-size: 20px;
-                color: blue;
-                border-bottom: 1px solid red; /* a red line */
-                padding-bottom: 2px; /* space above the border line */
-            }
-
-            .voornaam {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .achternaam {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .groepid-header {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .groepid {
-                min-width: 100px;
-            }
-
-            .my-button {
-                width: 100%; /* full width */
-                color: white; /* white tekst */
-                background: #1a9fd9; /* kind of blue */
-                --paper-button-ink-color: #00567B; /* kind of dark blue */
-                margin-top: 5px; /* enlarge thet default */
-                margin-left: 0px; /* reduce the default */
-            }
         </style>
+
 
         <paper-toast id="toast_invalid_aanroep"
                      duration="0"
                      text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
             <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
         </paper-toast>
-
-        <div class="my-title">Overzicht van medestudenten van [[c_username]]</div>
-        <table>
-            <tr>
-                <th class="voornaam">Voornaam </th>
-                <th class="achternaam">Achternaam </th>
-                <th class="groepid-header">Mede groepleden </th>
-            </tr>
-            <template is="dom-repeat" items="[[_c_studenten]]">
-                <tr>
-                    <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
-                    <td class="achternaam"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.lastName]] </a></td>
-                    <td class="groepid">
-                        <paper-checkbox class="my-check"
-                                        checked="{{item.sameGroup}}">
-                        </paper-checkbox>
-                    </td>
-                </tr>
-            </template>
-        </table>
-        <paper-button class="my-button"
-                      on-click="_medestudenten_opslaan_request_handler">
-            Opslaan
-        </paper-button>
-
-        <iron-ajax id="ajax_medestudenten_ophalen"
-                   method="POST"
-                   url="/student/medestudenten/ophalen"
-                   handle-as="json"
-                   on-response="_medestudenten_ophalen_response_handler">
-        </iron-ajax>
-
-        <iron-ajax id="ajax_medestudenten_opslaan"
-                   method="POST"
-                   url="/student/medestudenten/opslaan"
-                   handle-as="json"
-                   on-response="_medestudenten_opslaan_response_handler">
-        </iron-ajax>
+        
+        <my-agenda></my-agenda>
 
     </template>
 
@@ -125,7 +57,7 @@
          xxxx  public               : two way external databinding {{xxxx}} - notify nodig
       */
       Polymer({
-        is: 'my-medestudenten',
+        is: 'my-rooster-docent',
 
         properties: {
           _c_studenten: {
@@ -157,43 +89,13 @@
 
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
-            if (this.c_rol=="docent") {                        // voor studenten
-              this._medestudenten_ophalen_request_handler();    //    haal info op van server
+            if (this.c_rol=="docent" || true) {                        // voor studenten
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
               lToast.open();                                    /* het sluiten van deze error verwijst  */
                                                                 /* terug naar home page */
             }
           }
-        },
-
-        _medestudenten_ophalen_request_handler: function() {
-          console.log("_medestudenten_ophalen_request_handler user="+this.c_username);
-          this.$.ajax_medestudenten_ophalen.contentType="application/json";
-          this.$.ajax_medestudenten_ophalen.body={
-            "username":this.c_username
-          };
-          this.$.ajax_medestudenten_ophalen.generateRequest();
-        },
-
-        _medestudenten_ophalen_response_handler: function(request) {
-          console.log("_mededestudenten_ophalen_response_handler aantal studenten="+request.detail.response.length);
-          this._c_studenten = request.detail.response;
-        },
-
-        _medestudenten_opslaan_request_handler: function() {
-          console.log("_medestudenten_opslaan_request_handler user="+this.c_username);
-          this.$.ajax_medestudenten_opslaan.contentType="application/json";
-          this.$.ajax_medestudenten_opslaan.body={
-              "username":this.c_username,
-              "groupMembers": this._c_studenten
-          };
-          this.$.ajax_medestudenten_opslaan.generateRequest();
-        },
-
-        _medestudenten_opslaan_response_handler: function(request) {
-          console.log("_mededestudenten_opslaan_response_handler errorcode="+request.detail.response.errorcode);
-          this._go_home();		/* verlaat de pagina en ga terug naar home page */
         },
 
        _toast_clicked: function(e) {
