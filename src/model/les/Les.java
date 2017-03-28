@@ -3,6 +3,7 @@ package model.les;
 import model.klas.Klas;
 import model.persoon.Docent;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Les {
 	
@@ -20,6 +21,21 @@ public class Les {
   	this.docent = doc;
   	this.lokaal = lkl;
   	this.klas = kl;
+  }
+  
+  public ArrayList<LocalDateTime> getLesData(){
+  	ArrayList<LocalDateTime> returnArray = new ArrayList<LocalDateTime>();
+  	returnArray.add(this.beginData);
+  	returnArray.add(this.eindData);
+  	return returnArray;
+  }
+  
+  public String getNaam(){
+  	return this.lesNaam;
+  }
+  
+  public String getLokaal(){
+  	return this.lokaal;
   }
   
   public Docent getDocent(){
