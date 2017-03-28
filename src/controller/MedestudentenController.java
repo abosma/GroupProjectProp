@@ -32,6 +32,7 @@ public class MedestudentenController implements Handler {
 	}
 
 	public void handle(Conversation conversation) {
+		System.out.println(conversation.getRequestedURI());
 		if (conversation.getRequestedURI().startsWith("/student/medestudenten/ophalen")) {
 			ophalen(conversation);
 		} else {

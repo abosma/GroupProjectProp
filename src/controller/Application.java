@@ -34,15 +34,19 @@ public class Application {
 		LoginController loginController = new LoginController(infoSysteem);
 		MedestudentenController medestudentenController = new MedestudentenController(infoSysteem);
 		
+		
+
+		
 		server.registerHandler("/systeemdatum/lesinfo", systeemDatumController);
 
+		
 		server.registerHandler("/login", loginController);
-
   	server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
   	server.registerHandler("/student/medestudenten/opslaan", medestudentenController);
   	server.registerHandler("/docent/rooster/ophalen", medestudentenController);
   	server.registerHandler("/student/rooster/ophalen", medestudentenController);
-		
+  	
+  	
 		server.start();
 	}
 }
