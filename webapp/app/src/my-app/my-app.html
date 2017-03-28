@@ -256,6 +256,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    element$="my-rooster-docent">
               <paper-material elevation="1">
                   <my-rooster-docent
+                      systeemdatumlokaal="{{_systeemdatumlokaal}}"
+                      systeemdatumstandaard="{{_systeemdatumstandaard}}"
                       c_visible="[[_are_strings_equal(_ar_page, 'docent_rooster')]]"
                       c_rol="[[_rol]]"
                       c_username="[[_username]]">
@@ -268,13 +270,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    title="ROOSTER STUDENT"
                    element$="my-rooster-student">
               <paper-material elevation="1">
-                  <my-rooster-student c_visible="[[_are_strings_equal(_ar_page, 'student_rooster')]]"
-                                     c_rol="[[_rol]]"
-                                     c_username="[[_username]]">
+                  <my-rooster-student 
+                      systeemdatumlokaal="{{_systeemdatumlokaal}}"
+                      systeemdatumstandaard="{{_systeemdatumstandaard}}"
+                      c_visible="[[_are_strings_equal(_ar_page, 'student_rooster')]]"
+                      c_rol="[[_rol]]"
+                      c_username="[[_username]]">
                   </my-rooster-student>
               </paper-material>
 
     		</section>
+        <!--
         	<section name = "student_presentie"
         			title = "Presentie student"
         			element$ = "my-presentie-student"> 
@@ -284,7 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               	c_username="[[_username]]">
 							</my-presentie-student>
 						</paper-material>
-	
+	-->
 			</section>        
         
           

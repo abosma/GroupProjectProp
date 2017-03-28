@@ -29,6 +29,13 @@
              -->
             <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
         </div>
+        <iron-ajax
+          id="ajax_student_dag_rooster_ophalen_request"
+          method="POST"
+          url="/student/rooster/dagOphalen"
+          handle-as="json"
+          on-response="_student_dag_rooster_ophalen_response_handler">
+        </iron-ajax>
     </template>
     <script>
         Polymer({
@@ -36,8 +43,7 @@
             properties: {
                rol: {
                 type: String,
-                notify: true,
-                observer: '_initializing',   
+                notify: true,   
               },
 
               isStudent: {
@@ -48,14 +54,36 @@
                 type: String,
                 notify: true,
               },
-
+              c_visible: {
+                type: Boolean,
+                value: false,
+                observer: '_initializing',
+              },
+              c_username: {
+                type: String,
+              },
+              lessen: {
+                type: Array,
+              }
             },
 
             _initializing : function() {
-              if(this.rol == "undefined" || this.rol == "docent"){
-                this.rol = "docent";
-                this.isStudent = false;
+              if(this.c_visible){
+                this._student_dag_rooster_ophalen_request();
               }
+            },
+
+            _student_dag_rooster_ophalen_request : function(){
+              this.$.ajax_student_dag_rooster_ophalen_request.contentType="application/json";
+              this.$.ajax_student_dag_rooster_ophalen_request.body={
+                "username":this.c_username,
+                "date":this.datum
+              };
+              this.$.ajax_student_dag_rooster_ophalen_request.generateRequest();
+            },
+
+            _student_dag_rooster_ophalen_response_handler : function(response){
+              console.log("_student_agenda_ophalen_response_handler ::"+response.detail.response);
             },
         });
     </script>
