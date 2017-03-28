@@ -1,4 +1,4 @@
-<link rel="import" href="../my-agenda/my-agenda-les.html">
+<link rel="import" href="../my-agenda/my-agenda-dag.html">
 <dom-module id="my-agenda">
     <template>
         <style>
@@ -10,88 +10,6 @@
               @apply(--layout-horizontal);
               @apply(--layout-justified);
             }
-
-            .dagen-agenda {
-                border: 1px solid #1693c9;
-            }
-
-            .dagen-agenda div {
-                background: #33aadd;
-                width: 100%;
-                padding: 10px;
-                text-align: center;
-                border-right: 1px solid #1693c9;
-                color: white;
-            }
-
-            .dagen-content div {
-                width: 100%;
-            }
-
-            .dagen-content {
-                border-left: 1px solid #1693c9;
-                border-bottom: 1px solid #1693c9;
-                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-
-            }
-
-            .dagen-content div:nth-child(even) {
-                background: #eaeaea;
-            }
-
-            .dagen-agenda div:last-child {
-                border-right: none;
-            }
-
-            .dagen-content ul {
-                list-style: none;
-                padding: 1em;
-                font-size: 0.8em;
-                border-bottom: 1px solid #ccc;
-            }
-
-            .dagen-content ul:last-child {
-                border-bottom: none;
-            }
-
-            .dagen-content ul li:nth-child(2) {
-                margin-bottom: 5px;
-            }
-
-            .dagen-content div {
-                 border-right: 1px solid #1693c9;
-                 min-height: 100%;            
-             }
-
-            .dagen-content .no-content {
-                text-align: center;
-                padding-top: 2em;           
-            }
-
-             .ziekmeld-button {
-                margin-top: 20px;
-                width: 100%;
-                height: 2em;
-                background-color: #33aadd; 
-                color: white;
-             }
-
-             .presentie-button {
-                margin-top: 20px;
-                width: 100%;
-                height: 2em;
-                font-size: 0.9em;
-                background-color: #33aadd; 
-                color: white;
-             }
-
-             .ziekgemeld-button {
-                margin-top: 20px;
-                width: 100%;
-                height: 2em;
-                cursor: default;
-             }
-
         </style>
 
 
@@ -101,25 +19,13 @@
             <div><h3> <iron-icon icon="arrow-back"></iron-icon> Week 3  <iron-icon icon="arrow-forward"></iron-icon></h3></div>
         </div>
 
-        <!-- Dagen Agenda -->
-        <div class="container dagen-agenda">
-            <div>MA 27MRT</div>
-            <div>DI 28MRT</div>
-            <div>WO 29MRT</div>
-            <div>DO 30MRT</div>
-            <div>VR 31MRT</div>
-            <div>ZA 1APR</div>
-        </div>
-
         <div class="container dagen-content">
-            <div class="dag">
-                <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
-            </div>
-            <div class="no-content">Geen activiteit</div>
-            <div class="no-content">Geen activiteit</div>
-            <div class="no-content">Geen activiteit</div>
-            <div class="no-content">Geen activiteit</div>
-            <div class="no-content">Geen activiteit</div>
+            <my-agenda-dag datum="01-01-2017"></my-agenda-dag>
+            <my-agenda-dag datum="02-01-2017"></my-agenda-dag>
+            <my-agenda-dag datum="03-01-2017"></my-agenda-dag>
+            <my-agenda-dag datum="04-01-2017"></my-agenda-dag>
+            <my-agenda-dag datum="05-01-2017"></my-agenda-dag>
+            <my-agenda-dag datum="06-01-2017"></my-agenda-dag>
         </div>
 
     </template>

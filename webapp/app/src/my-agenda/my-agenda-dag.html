@@ -1,0 +1,63 @@
+<link rel="import" href="../my-agenda/my-agenda-les.html">
+<dom-module id="my-agenda-dag">
+    <template>
+        <style>
+            :host{
+                display: block;
+                width: 100%;
+            };
+
+            .dagen-agenda {
+                border: 1px solid #1693c9;
+                background: #33aadd;
+                width: 100%;
+                padding: 10px;
+                text-align: center;
+                border-right: 1px solid #1693c9;
+                color: white;
+            }
+
+            
+            .dagen-agenda:last-child {
+                border-right: none;
+            }
+        </style>
+        <div class="dag">
+            <div class="dagen-agenda">[[datum]]</div>
+            <!-- Lelijk en hardcoced
+                TODO: automatisch genereren die hap!
+             -->
+            <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'my-agenda-dag',
+            properties: {
+               rol: {
+                type: String,
+                notify: true,
+                observer: '_initializing',   
+              },
+
+              isStudent: {
+                    type: Boolean,
+                    value: true,
+              },
+              datum: {
+                type: Date,
+                notify: true,
+                observer: '_initializing',
+              },
+
+            },
+
+            _initializing : function() {
+              if(this.rol == "undefined" || this.rol == "docent"){
+                this.rol = "docent";
+                this.isStudent = false;
+              }
+            },
+        });
+    </script>
+</dom-module>
