@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
      en ook zodra hij weer gedeselecteerd wordt.
@@ -59,15 +59,20 @@
         --paper-button-ink-color: #00567B;  /* kind of dark blue */
         margin-top: 5px;                    /* enlarge thet default */
         margin-left: 0px;                   /* reduce the default */
+        
+     
+        
       }
     </style>
 
     
 
     <div class="my-title"> Presentie van [[c_username]]</div>
+    
+    <template is="dom-repeat" items="[[_c_studenten]]">
+   
+    </template>
 
-    
-    
 
     <iron-ajax
       id="ajax_vakken_ophalen"
@@ -76,8 +81,11 @@
       handle-as="json"
       on-response="_vakken_ophalen_response_handler">
     </iron-ajax> 
- 
     
+    
+	
+ 
+   
   </template>
 
   <script>

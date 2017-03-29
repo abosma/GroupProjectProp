@@ -2,6 +2,7 @@
 package controller;
 
 
+import java.io.*;
 
 import java.util.ArrayList;
 import javax.json.Json;
@@ -20,7 +21,11 @@ import server.Conversation;
 import server.Handler;
 
 
-public class PresentieController implements Handler {
+public class PresentieController implements Handler   {
+	
+	
+
+	
 	private PrIS informatieSysteem;
 
 	public PresentieController(PrIS infoSys) {
@@ -36,13 +41,27 @@ public class PresentieController implements Handler {
 		}
 	}
 	
-	private void ophalen(Conversation conversation) {
+	private void ophalen(Conversation conversation)  {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		System.out.println(lJsonObjectIn);
-		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
-		String  lGroepIdZelf = lStudentZelf.getGroepId();
 		
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		//mail student via polymer
+		
+		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
+		//Bijbehorende student object
+		
+		lStudentZelf.getVakken(lGebruikersnaam);
+		
+		
+		
+		
+		
+		
+		
+		
+		System.out.println(lStudentZelf.getGebruikersnaam());
+		
+		String  lGroepIdZelf = lStudentZelf.getGroepId();
 		
 		Klas lKlas = informatieSysteem.getKlasVanStudent(lStudentZelf);		// klas van de student opzoeken
 

@@ -70,12 +70,12 @@
     </paper-toast>
 
     <div class="my-title">Overzicht van medestudenten van [[c_username]]</div>
-    <table>
+    <!-- <table>
       <tr>
         <th class="voornaam">Voornaam </th>
         <th class="achternaam">Achternaam </th>
         <th class="groepid-header">Mede groepleden </th>
-      </tr>
+      </tr> -->
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
           <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
@@ -85,10 +85,10 @@
               class="my-check"
               checked="{{item.sameGroup}}">
             </paper-checkbox>
-      	  </td>
-        </tr>
+      	 <!--  </td>
+        </tr> -->
       </template>
-    </table>
+   <!--  </table> -->
     
     <paper-button
       class="my-button"
