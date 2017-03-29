@@ -12,6 +12,7 @@ public class Application {
 	 * op een bepaalde poort (bijv. 8888). Daarna is er een PrIS-object gemaakt. Dit
 	 * object fungeert als toegangspunt van het domeinmodel. Hiervandaan kan alle
 	 * informatie bereikt worden.
+
 	 * 
 	 * Om het domeinmodel en de Polymer-GUI aan elkaar te koppelen zijn diverse controllers
 	 * gemaakt. Er zijn meerdere controllers om het overzichtelijk te houden. Je mag zoveel

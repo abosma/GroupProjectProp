@@ -75,7 +75,7 @@
       url="/student/presentie"
       handle-as="json"
       on-response="_vakken_ophalen_response_handler">
-    </iron-ajax>
+    </iron-ajax> 
  
     
   </template>
@@ -122,7 +122,7 @@
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
         	  if (this.c_rol=="student") {                        // voor studenten
-              //this._vakken_ophalen_request_handler();    //    haal info op van server
+        		  this._vakken_ophalen_request_handler();  //    haal info op van server
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
               lToast.open();                                    /* het sluiten van deze error verwijst  */
