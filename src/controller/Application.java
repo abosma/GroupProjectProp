@@ -35,10 +35,13 @@ public class Application {
 		MedestudentenController medestudentenController = new MedestudentenController(infoSysteem);
 		AgendaController agendaController = new AgendaController(infoSysteem);
 		
+		PresentieController presentieController  = new PresentieController(infoSysteem);
+		server.registerHandler("/student/presentie", presentieController);
+		
 		server.registerHandler("/systeemdatum/lesinfo", systeemDatumController);
 
+		
 		server.registerHandler("/login", loginController);
-
   	server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
   	server.registerHandler("/student/medestudenten/opslaan", medestudentenController);
   	
@@ -46,7 +49,8 @@ public class Application {
   	
   	server.registerHandler("/docent/rooster/ophalen", medestudentenController);
   	server.registerHandler("/student/rooster/ophalen", medestudentenController);
-		
+  	
+  	
 		server.start();
 	}
 }

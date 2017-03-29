@@ -1,16 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import"
-	href="../../bower_components/paper-styles/typography.html">
-<link rel="import"
-	href="../../bower_components/paper-button/paper-button.html">
-<link rel="import"
-	href="../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import"
-	href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import"
-	href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import"
-	href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
@@ -19,214 +12,147 @@
      bij start van de applicatie.
 -->
 
-<dom-module id="my-presentie-student"> <template>
-<style>
+<dom-module id="my-presentie-student">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      :root {
+        --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+      }
 
+      span {
+        @apply(--paper-font-body1);
+      }
+      .toast-button {
+        text-transform: none;
+        color: white;                           /* white tekst */
+        background: #1a9fd9;                    /* kind of blue */
+        --paper-button-ink-color: #00567B;      /* kind of dark blue */
+      }
+      .my-title {
+        font-size: 20px;
+        color: blue;
+        border-bottom: 1px solid red;           /* a red line */
+        padding-bottom: 2px;                    /* space above the border line */
+      }
+      .voornaam {
+        min-width: 100px;
+        text-align: left;
+       }
+      .achternaam {
+        min-width: 100px;
+        text-align: left;
+      }
+      .groepid-header {
+        min-width: 100px;
+        text-align: left;
+      }
+      .groepid{
+        min-width: 100px;
+      }
+      .my-button {
+        width: 100%;                        /* full width */
+        color: white;                       /* white tekst */
+        background: #1a9fd9;                /* kind of blue */
+        --paper-button-ink-color: #00567B;  /* kind of dark blue */
+        margin-top: 5px;                    /* enlarge thet default */
+        margin-left: 0px;                   /* reduce the default */
+      }
+    </style>
 
-</style>
-
-
-<style>
-:host {
-	display: block;
-}
-
-:root { -
-	-paper-input-container-focus-color: #1a9fd9; /* kind of blue */
-}
-
-span { @apply (--paper-font-body1);
-	
-}
-
-.my-title {
-	font-size: 20px;
-	color: blue;
-	padding-bottom: 2px; /* space above the border line */
-}
-
-.my-button {
-	width: 100%; /* full width */
-	color: white; /* white tekst */
-	background: #1a9fd9; /* kind of blue */ -
-	-paper-button-ink-color: #00567B; /* kind of dark blue */
-	margin-top: 5px; /* enlarge thet default */
-	margin-left: 0px; /* reduce the default */
-}
-
- iron-list {
-      height: 100vh; /* don't use % values unless the parent element is sized. */
-    }
-
-
-</style>
-
-
-<div class="my-title">Presentie [[c_username]]</div>
-
-</template> <!-- 
-        <iron-ajax id="ajax_medestudenten_opslaan"
-                   method="POST"
-                   url="/student/medestudenten/opslaan"
-                   handle-as="json"
-                   on-response="_medestudenten_opslaan_response_handler">
-        </iron-ajax> --> 
-        
-       <!--  <iron-list items="[[data]]" as="item" scroll-target="document" scroll-offset="200">
-        <template>
-        	<div class="item">#[[index]] - [[item.name]]</div>
-        </template>
-    </iron-list> -->
     
-    <template is="dom-bind">
-		 <!--  <iron-ajax url="bower_components/iron-list/demo/data/contacts.json" last-response="{{data}}" auto></iron-ajax> -->
-		    <iron-list items="[[data]]" as="item" id="my-list">
-		      <template>
-		        <div>
-		          <div class="item">
-		            <!-- <img class="avatar" src="[[item.image]]"> -->
-		            <div class="pad">
-		              <div class="primary">[[item.date]]</div>
-		              <div class="secondary">[[item.amount]]</div>
-		              <!-- <div class="secondary dim">[[item.longText]]</div> -->
-		            </div>
-		           <!--  <iron-icon icon$="[[iconForItem(item)]]"></iron-icon> -->
-		          </div>
-		        </div>
-		      </template>
-		    </iron-list>
-		</template>
+
+    <div class="my-title"> Presentie van [[c_username]]</div>
+
     
     
+
+    <iron-ajax
+      id="ajax_vakken_ophalen"
+      method="POST"
+      url="/student/presentie"
+      handle-as="json"
+      on-response="_vakken_ophalen_response_handler">
+    </iron-ajax>
+ 
     
-    <script type="text/javascript">
-			var data = [
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'},
-				{date: '15-08-15', amount: '200'}
-			];
-			
-			autoBindTemplate = document.querySelector('template[is=dom-bind]');
+  </template>
 
-			//initial set of data to list
-			autoBindTemplate.data = data;
-        </script>
+  <script>
+    (function() {
+      'use strict';
+      /* _xxxx private              : geen external data binding      - geen notify
+         _c_xx private constant     : geen external binding, constant - geen notify
+         c_xx  public constant      : one way external databinding [[c_xx]] - geen notify nodig
+         xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+      */
+      Polymer({
+        is: "my-presentie-student",
+
+        properties: {
+          _c_studenten: {
+            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
+										array is constant groepnr is changable */
+          },
+          c_rol: {
+            type: String,
+          },
+          c_username: {
+            type: String,
+          },
+          c_visible: {
+            type: Boolean,                                      /* true when element is the active visible item */
+            value: false,
+            observer: '_initializing',                          /* wordt ook aangeroepen bijwisseling van true naar false.
+                                                                   regel in de functie dat er niets gebeurd
+                                                                   als c_visible false is */
+          },
+        },
+
+        _go_home: function() {
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+        },
         
-        
-        
-        
-        
-        <script>
-									(function() {
-										'use strict';
-										/* _xxxx private              : geen external data binding      - geen notify
-										   _c_xx private constant     : geen external binding, constant - geen notify
-										   c_xx  public constant      : one way external databinding [[c_xx]] - geen notify nodig
-										   xxxx  public               : two way external databinding {{xxxx}} - notify nodig
-										 */
-										Polymer({
-											is : 'my-presentie-student',
+        _initializing : function() {
+          if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
+        	  if (this.c_rol=="student") {                        // voor studenten
+              //this._vakken_ophalen_request_handler();    //    haal info op van server
+            } else {                                            // na handmatige url wijziging zonder login
+              var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
+              lToast.open();                                    /* het sluiten van deze error verwijst  */
+                                                                /* terug naar home page */
+            }
+          }
+        },
 
-											properties : {
-												_c_studenten : {
-													type : Array, /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
-																				array is constant groepnr is changable */
-												},
-												c_rol : {
-													type : String,
-												},
-												c_username : {
-													type : String,
-												},
-												c_visible : {
-													type : Boolean, /* true when element is the active visible item */
-													value : false,
-													observer : '_initializing', /* wordt ook aangeroepen bijwisseling van true naar false.
-													                                         regel in de functie dat er niets gebeurd
-													                                         als c_visible false is */
-												},
-											},
+         _vakken_ophalen_request_handler: function() {
+          console.log("_vakken_ophalen_request_handler user="+this.c_username);
+          this.$.ajax_vakken_ophalen.contentType="application/json";
+          this.$.ajax_vakken_ophalen.body={
+            "username":this.c_username
+          };
+          this.$.ajax_vakken_ophalen.generateRequest();
+        },
 
-											_go_home : function() {
-												var lApp = document
-														.querySelector('my-app'); //het polymer element <my-app>
-												var lAppRouter = lApp.$.approuter; // het html-element <app-route> met id=approuter
-												lAppRouter.data = {
-													page : ""
-												}; // vul het data attribute met de homepage url
-												// door de two way binding in <app-route> en <app-location>
-												// zal ook de url echt wijzigen
-											},
+        _vakken_ophalen_response_handler: function(request) {
+          console.log("_vakken_ophalen_response_handler aantal studenten="+request.detail.response.length);
+          this._c_studenten = request.detail.response;
+        },
 
-											_initializing : function() {
-												if (this.c_visible) { // zodra zichtbaar geworden moet er wat worden gedaan
-													if (this.c_rol == "student") { // voor studenten
-														this
-																._medestudenten_ophalen_request_handler(); //    haal info op van server
-													} else { // na handmatige url wijziging zonder login
-														var lToast = this.$.toast_invalid_aanroep; // meldt ongeldige aanroep
-														lToast.open(); /* het sluiten van deze error verwijst  */
-														/* terug naar home page */
-													}
-												}
-											},
 
-											_medestudenten_ophalen_request_handler : function() {
-												console
-														.log("_medestudenten_ophalen_request_handler user="
-																+ this.c_username);
-												this.$.ajax_medestudenten_ophalen.contentType = "application/json";
-												this.$.ajax_medestudenten_ophalen.body = {
-													"username" : this.c_username
-												};
-												this.$.ajax_medestudenten_ophalen
-														.generateRequest();
-											},
+       _toast_clicked: function(e) {
+         var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
+         lToast.toggle();
+         this._go_home();
+        },
 
-											_medestudenten_ophalen_response_handler : function(
-													request) {
-												console
-														.log("_mededestudenten_ophalen_response_handler aantal studenten="
-																+ request.detail.response.length);
-												this._c_studenten = request.detail.response;
-											},
-
-											_medestudenten_opslaan_request_handler : function() {
-												console
-														.log("_medestudenten_opslaan_request_handler user="
-																+ this.c_username);
-												this.$.ajax_medestudenten_opslaan.contentType = "application/json";
-												this.$.ajax_medestudenten_opslaan.body = {
-													"username" : this.c_username,
-													"groupMembers" : this._c_studenten
-												};
-												this.$.ajax_medestudenten_opslaan
-														.generateRequest();
-											},
-
-											_medestudenten_opslaan_response_handler : function(
-													request) {
-												console
-														.log("_mededestudenten_opslaan_response_handler errorcode="
-																+ request.detail.response.errorcode);
-												this._go_home(); /* verlaat de pagina en ga terug naar home page */
-											},
-
-											_toast_clicked : function(e) {
-												var lToast = this.$.toast_invalid_aanroep; // meldt ongeldige aanroep
-												lToast.toggle();
-												this._go_home();
-											},
-
-										});
-									})();
-								</script> </dom-module>
+      });
+    })();
+  </script>
+</dom-module>
