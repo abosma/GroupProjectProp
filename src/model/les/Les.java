@@ -49,6 +49,14 @@ public class Les {
   	return returnArray;
   }
   
+  public LocalDateTime getBeginData(){
+  	return this.beginData;
+  }
+  
+  public LocalDateTime getEindData(){
+  	return this.eindData;
+  }
+  
   public String getNaam(){
   	return this.lesNaam;
   }

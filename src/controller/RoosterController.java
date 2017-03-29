@@ -30,7 +30,58 @@ public class RoosterController implements Handler{
 			ophalenStudent(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/ophalen")){
 			ophalenDocent(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
+			ophalenStudentLesdag(conversation);
 		}
+	}
+
+	private void ophalenStudentLesdag(Conversation conversation) {
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		String lStringDate = lJsonObjectIn.getString("date")+" 00:00";
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");		
+		LocalDateTime lDate = LocalDateTime.parse(lStringDate, formatter);;
+		
+		//Alle lessen ophalen via PrIS
+		ArrayList<Les> lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDate);
+		
+		System.out.println(lLessen.toString());
+		
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
+		
+		for (Les les : lLessen) {
+			LocalDateTime beginDatum = les.getBeginData();
+			LocalDateTime eindDatum = les.getEindData();
+			
+			formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      
+			String stringDatum = beginDatum.format(formatter);
+			formatter = DateTimeFormatter.ofPattern("HH:mm");
+			String stringBegin = beginDatum.format(formatter);
+      String StringEind = eindDatum.format(formatter);
+			String lesNaam = les.getNaam();
+			String docentNaam = les.getDocent().getGebruikersnaam();
+			String lokaal = les.getLokaal();
+			String klasNaam = les.getKlas().getNaam();
+			
+			//Hier voeg ik alle strings toe aan de JsonObjectBuilder zodat Polymer alles kan gebruiken
+			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
+			lJsonObjectBuilderVoorDocent
+				.add("datum", stringDatum)
+				.add("begin", stringBegin)
+				.add("eind", StringEind)
+				.add("vak", lesNaam)
+				.add("docent", docentNaam)
+				.add("lokaal", lokaal)
+				.add("klas", klasNaam);
+		  
+		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
+		}
+    String lJsonOutStr = lJsonArrayBuilder.build().toString();
+		conversation.sendJSONMessage(lJsonOutStr);
+		
 	}
 
 	private void ophalenDocent(Conversation conversation) {

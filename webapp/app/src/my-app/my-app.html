@@ -152,12 +152,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </a>
  
           <!-- beschikbaar voor docent---------------------------------------------------- -->
-          <a name="DocentRooster" href$="[[_c_baseURL]]docent/rooster" verborgen$="[[!_are_strings_equal(_rol, 'docent')]]">
+          <a name="Rooster" href$="[[_c_baseURL]]docent/rooster" verborgen$="[[!_are_strings_equal(_rol, 'docent')]]">
               <iron-icon icon="social:group"></iron-icon>
               <span>Rooster</span>
           </a>
           <!-- beschikbaar voor student--------------------------------------------------- -->
-          <a name="StudentRooster" href$="[[_c_baseURL]]student/rooster" verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
+          <a name="Rooster" href$="[[_c_baseURL]]student/rooster" verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
               <iron-icon icon="social:group"></iron-icon>
               <span>Rooster</span>
           </a>
@@ -271,11 +271,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    element$="my-rooster-student">
               <paper-material elevation="1">
                   <my-rooster-student 
-                      systeemdatumlokaal="{{_systeemdatumlokaal}}"
-                      systeemdatumstandaard="{{_systeemdatumstandaard}}"
                       c_visible="[[_are_strings_equal(_ar_page, 'student_rooster')]]"
                       c_rol="[[_rol]]"
-                      c_username="[[_username]]">
+                      c_username="[[_username]]"
+                      systeemdatumlokaal="{{_systeemdatumlokaal}}"
+                      systeemdatumstandaard="{{_systeemdatumstandaard}}">
                   </my-rooster-student>
               </paper-material>
 
@@ -296,12 +296,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						</paper-material>
 	 
 			</section>        
+        
           
           <section  name="student_medestudenten" 
                     title="OVERZICHT MEDESTUDENTEN"
                     element$="my-medestudenten">
             <paper-material elevation="1">
-       
+              <!--
+                  c_visible="true" als deze section geselecteerd is.
+                  LET OP: boolean values moeten als string doorgegeven worden,
+                          vandaar de quotes rondom de function aanroep.
+                          De aanwezige literal waarde wordt met enkele quotes doorgegeven
+              -->
               <my-medestudenten
                 c_visible="[[_are_strings_equal(_ar_page, 'student_medestudenten')]]"
                 c_rol="[[_rol]]"

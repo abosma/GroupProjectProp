@@ -35,7 +35,7 @@ public class Application {
 		LoginController loginController = new LoginController(infoSysteem);
 		MedestudentenController medestudentenController = new MedestudentenController(infoSysteem);
 		AgendaController agendaController = new AgendaController(infoSysteem);
-		RoosterController rC = new RoosterController(infoSysteem);
+		RoosterController roosterController = new RoosterController(infoSysteem);
 		PresentieController presentieController  = new PresentieController(infoSysteem);
 		
 		server.registerHandler("/student/presentie", presentieController);
@@ -43,9 +43,9 @@ public class Application {
 		server.registerHandler("/login", loginController);
   	server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
   	server.registerHandler("/student/medestudenten/opslaan", medestudentenController);
-  	server.registerHandler("/student/rooster/dagOphalen", agendaController);
-  	server.registerHandler("/docent/rooster/ophalen", rC);
-  	server.registerHandler("/student/rooster/ophalen", rC);
+  	server.registerHandler("/student/rooster/lesdagophalen", roosterController);
+  	server.registerHandler("/docent/rooster/ophalen", roosterController);
+  	server.registerHandler("/student/rooster/ophalen", roosterController);
 		server.start();
 	}
 }

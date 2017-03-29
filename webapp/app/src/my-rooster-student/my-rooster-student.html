@@ -77,6 +77,10 @@
             <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
         </paper-toast>
 
+        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" systeemdatumlokaal="{{systeemdatumlokaal}}" systeemdatumstandaard="{{systeemdatumstandaard}}"></my-agenda>
+
+
+        <!-- Geen idee waarom dit is teruggeplaatst. Tijdelijke voorbeeldcode. 
         <div class="my-title">Overzicht van medestudenten van [[c_username]]</div>
         <table>
             <tr>
@@ -96,10 +100,11 @@
                 </tr>
             </template>
         </table>
+        -->
 
         <iron-ajax id="ajax_student_rooster_ophalen"
                    method="POST"
-                   url="/student/rooster/ophalen"
+                   url="/student/rooster/lesdagophalen"
                    handle-as="json"
                    on-response="_student_rooster_ophalen_response_handler">
         </iron-ajax>
@@ -149,17 +154,27 @@
           systeemdatumstandaard: {
             type: String,
           },
+          isReady: {
+            type: Boolean,
+            value: false,
+          },
         },
 
         _initializing : function() {
-          if (this.c_visible) {
+          if (this.c_visible && this.isReady) {
             if (this.c_rol=="student") {
               this._student_rooster_ophalen_request_handler();
             } else {
-              var lToast = this.$.toast_invalid_aanroep;
-              lToast.open();
+                console.log(this.c_username + " " + this.c_rol + " ");
+                var lToast = this.$.toast_invalid_aanroep;
+                lToast.open();
             }
           }
+        },
+
+        ready : function(){
+            this.isReady = true;
+            this._initializing();
         },
 
         _student_rooster_ophalen_request_handler: function () {
@@ -167,8 +182,7 @@
             this.$.ajax_student_rooster_ophalen.contentType = "application/json";
             this.$.ajax_student_rooster_ophalen.body = {
                 "username": this.c_username,
-                "weeknummer": this.c_weeknummer,
-                "jaarnummer": this.c_jaarnummer
+                "date": "07-02-2017"
             };
             this.$.ajax_student_rooster_ophalen.generateRequest();
         },
