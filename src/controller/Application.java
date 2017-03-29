@@ -34,7 +34,6 @@ public class Application {
 		SysteemDatumController systeemDatumController = new SysteemDatumController(infoSysteem);
 		LoginController loginController = new LoginController(infoSysteem);
 		MedestudentenController medestudentenController = new MedestudentenController(infoSysteem);
-		AgendaController agendaController = new AgendaController(infoSysteem);
 		RoosterController roosterController = new RoosterController(infoSysteem);
 		PresentieController presentieController  = new PresentieController(infoSysteem);
 		

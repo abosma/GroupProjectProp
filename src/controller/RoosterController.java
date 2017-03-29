@@ -47,8 +47,6 @@ public class RoosterController implements Handler{
 		//Alle lessen ophalen via PrIS
 		ArrayList<Les> lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDate);
 		
-		System.out.println(lLessen.toString());
-		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		
 		for (Les les : lLessen) {
