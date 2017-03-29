@@ -94,7 +94,7 @@
               var tijd_datum = new Date(dateString);
               var dag = tijd_datum.getDay(); //dag in woorden
               var dag2 = tijd_datum.getDate(); // dag in getal
-              var maand = tijd_datum.getMonth()+1; // +1 want js begint bij 0 te tellen
+              var maand = tijd_datum.getMonth(); // +1 want js begint bij 0 te tellen
 
               var maandarray = new Array('JAN', 'FEB', 'MA', 'APR', 'MEI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC');
               var dagarray = new Array('ZO','MA','DI', 'WO', 'DO', 'VR', 'ZA');
