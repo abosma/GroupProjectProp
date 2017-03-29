@@ -87,12 +87,12 @@ public class RoosterController implements Handler{
 		for (Les l : lessenStudent) {
 			ArrayList<LocalDateTime> tempArray = l.getLesData();
 			
-			LocalDateTime beginData = tempArray.get(0);
-			LocalDateTime eindData = tempArray.get(1);
+			LocalDateTime beginDatum = tempArray.get(0);
+			LocalDateTime eindDatum = tempArray.get(1);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	    
-			String beginDataString = beginData.format(formatter);
-      String eindDataString = eindData.format(formatter);
+			String beginDatumString = beginDatum.format(formatter);
+      String eindDatumString = eindDatum.format(formatter);
 			String lesNaam = l.getNaam();
 			String docentNaam = l.getDocent().getGebruikersnaam();
 			String lokaal = l.getLokaal();
@@ -100,8 +100,8 @@ public class RoosterController implements Handler{
 			
 			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
 			lJsonObjectBuilderVoorStudent
-				.add("beginData", beginDataString)
-				.add("eindData", eindDataString)
+				.add("beginDatum", beginDatumString)
+				.add("eindDatum", eindDatumString)
 				.add("lesNaam", lesNaam)
 				.add("docentNaam", docentNaam)
 				.add("lokaal", lokaal)
