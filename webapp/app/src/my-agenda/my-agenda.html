@@ -12,20 +12,18 @@
             }
         </style>
 
-
         <!-- Header Agenda  -->
         <div class="container">
-            <div><h2>Mijn weekrooster | [[rol]]</h2></div>
+            <div><h2>Mijn weekrooster || [[rol]]</h2></div>
             <div><h3> <iron-icon icon="arrow-back"></iron-icon> Week 3  <iron-icon icon="arrow-forward"></iron-icon></h3></div>
         </div>
 
         <div class="container dagen-content">
-            <my-agenda-dag datum="01-01-2017"></my-agenda-dag>
-            <my-agenda-dag datum="02-01-2017"></my-agenda-dag>
-            <my-agenda-dag datum="03-01-2017"></my-agenda-dag>
-            <my-agenda-dag datum="04-01-2017"></my-agenda-dag>
-            <my-agenda-dag datum="05-01-2017"></my-agenda-dag>
-            <my-agenda-dag datum="06-01-2017"></my-agenda-dag>
+            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,1)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
+            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,2)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
+            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,3)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
+            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,4)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
+            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,5)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
         </div>
 
     </template>
@@ -33,26 +31,37 @@
         Polymer({
             is: 'my-agenda',
             properties: {
-               rol: {
-                type: String,
-                notify: true,
-                observer: '_initializing',   
-              },
+                rol: {
+                    type: String,
+                    notify: true,   
+                },
 
-              isStudent: {
+                isStudent: {
                     type: Boolean,
                     value: true,
-              },
-
-
-            },
-
-            _initializing : function() {
-              if(this.rol == "undefined" || this.rol == "docent"){
-                this.rol = "docent";
-                this.isStudent = false;
-              }
-            },
+                },
+                systeemdatumlokaal: {
+                    type: String,
+                },
+                systeemdatumstandaard: {
+                    type: String,
+                },
+                c_visible: {
+                    type: Boolean,
+                    value: false,
+                },
+                c_username: {
+                    type: String
+                }
+            },  // end of properties
+            _fix_date : function(dateString, dayOfWeek){
+                var d = new Date(dateString);
+                console.log("Before: " + d);
+                d.setDate(d.getDate() + (dayOfWeek - d.getDay()));
+                console.log("After:" + d );
+                var dateString = d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
+                return dateString;
+            },    
         });
     </script>
 </dom-module>

@@ -70,11 +70,8 @@
                 margin-left: 0px; /* reduce the default */
             }
         </style>
-        <my-agenda rol="{{ c_rol }}"></my-agenda>
-
-
+        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" systeemdatumlokaal="{{systeemdatumlokaal}}" systeemdatumstandaard="{{systeemdatumstandaard}}"></my-agenda>
     </template>
-
     <script>
     (function() {
       'use strict';
@@ -97,6 +94,33 @@
           c_username: {
             type: String,
           },
+          c_visible: {
+            type: Boolean,
+            value: false,
+            observer: '_initializing',
+          },
+          l_display: {
+            type: String,
+            value: "",
+          },
+          systeemdatumlokaal: {
+            type: String,
+          },
+          systeemdatumstandaard: {
+            type: String,
+          },
+        },
+
+        _initializing : function() {
+          if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
+            if (this.c_rol=="student") {                        // voor studenten
+              //this._student_agenda_ophalen_request_handler();    //    haal info op van server
+            } /*else {                                            // na handmatige url wijziging zonder login
+              var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
+              lToast.open();                                    /* het sluiten van deze error verwijst  * /
+                                                                /* terug naar home page * /
+            }*/
+          }
         },
 
         _go_home: function() {
