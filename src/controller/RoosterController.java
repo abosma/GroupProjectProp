@@ -46,13 +46,13 @@ public class RoosterController implements Handler{
 			ArrayList<LocalDateTime> tempArray = l.getLesData();
 			
 			//0 is begintijd, 1 is eindtijd in l.getLesData()
-			LocalDateTime beginData = tempArray.get(0);
-			LocalDateTime eindData = tempArray.get(1);
+			LocalDateTime beginDatum = tempArray.get(0);
+			LocalDateTime eindDatum = tempArray.get(1);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
       
 			//Hier wordt de LocalDateTime naar een string omgezet, dus van 01-01-2000T00:00:00 naar 2000-01-01 00:00:00
-			String beginDataString = beginData.format(formatter);
-      String eindDataString = eindData.format(formatter);
+			String beginDataString = beginDatum.format(formatter);
+      String eindDataString = eindDatum.format(formatter);
 			String lesNaam = l.getNaam();
 			String docentNaam = l.getDocent().getGebruikersnaam();
 			String lokaal = l.getLokaal();
@@ -61,8 +61,8 @@ public class RoosterController implements Handler{
 			//Hier voeg ik alle strings toe aan de JsonObjectBuilder zodat Polymer alles kan gebruiken
 			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
 			lJsonObjectBuilderVoorDocent
-				.add("beginData", beginDataString)
-				.add("eindData", eindDataString)
+				.add("beginDatum", beginDataString)
+				.add("eindDatum", eindDataString)
 				.add("lesNaam", lesNaam)
 				.add("docentNaam", docentNaam)
 				.add("lokaal", lokaal)
