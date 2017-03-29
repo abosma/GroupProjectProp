@@ -15,9 +15,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
+import java.util.Date;
 
 public class PrIS {
 	private ArrayList<Docent> deDocenten;
@@ -189,10 +192,39 @@ public class PrIS {
 	public ArrayList<Les> getLessenStudent(String stuMail){
 		ArrayList<Les> returnLessen = new ArrayList<Les>();
 		for(Les l : deLessen){
-			if(l.getKlas().getStudenten().contains(stuMail)){
-				returnLessen.add(l);
+			ArrayList<Student> alleStudenten = l.getKlas().getStudenten();
+			for(Student stu : alleStudenten){
+				if(stu.getGebruikersnaam().equals(stuMail)){
+					returnLessen.add(l);
+				}
 			}
 		}
+		return returnLessen;
+	}
+	
+	public ArrayList<Les> getLessenStudentWeek(String stuMail, int weekNummer, int jaarNummer){
+		ArrayList<Les> returnLessen = new ArrayList<Les>();
+		for(Les l : deLessen){
+			ArrayList<Student> alleStudenten = l.getKlas().getStudenten();
+			for(Student stu : alleStudenten){
+				if(stu.getGebruikersnaam().equals(stuMail)){
+					for(LocalDateTime ldt : l.getLesData()){
+						Calendar cal = Calendar.getInstance();
+						Instant instant = ldt.toInstant(ZoneOffset.UTC);
+						Date date = Date.from(instant);
+						cal.setTime(date);
+						int week = cal.get(Calendar.WEEK_OF_YEAR);
+						int jaar = cal.get(Calendar.YEAR);
+						if(week == weekNummer && jaar == jaarNummer){
+							returnLessen.add(l);
+						}
+					}
+				}
+			}
+		}
+    for(int i = 0; i < returnLessen.size(); i += 2){
+    	returnLessen.remove(i);
+    }
 		return returnLessen;
 	}
 	

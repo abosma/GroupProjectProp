@@ -70,7 +70,39 @@
                 margin-left: 0px; /* reduce the default */
             }
         </style>
-        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" systeemdatumlokaal="{{systeemdatumlokaal}}" systeemdatumstandaard="{{systeemdatumstandaard}}"></my-agenda>
+
+        <paper-toast id="toast_invalid_aanroep"
+                     duration="0"
+                     text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
+            <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
+        </paper-toast>
+
+        <div class="my-title">Overzicht van medestudenten van [[c_username]]</div>
+        <table>
+            <tr>
+                <th class="voornaam">Voornaam </th>
+                <th class="achternaam">Achternaam </th>
+                <th class="groepid-header">Mede groepleden </th>
+            </tr>
+            <template is="dom-repeat" items="[[_c_lessen]]">
+                <tr>
+                    <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
+                    <td class="achternaam"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.lastName]] </a></td>
+                    <td class="groepid">
+                        <paper-checkbox class="my-check"
+                                        checked="{{item.sameGroup}}">
+                        </paper-checkbox>
+                    </td>
+                </tr>
+            </template>
+        </table>
+
+        <iron-ajax id="ajax_student_rooster_ophalen"
+                   method="POST"
+                   url="/student/rooster/ophalen"
+                   handle-as="json"
+                   on-response="_student_rooster_ophalen_response_handler">
+        </iron-ajax>
     </template>
     <script>
     (function() {
@@ -84,7 +116,7 @@
         is: 'my-rooster-student',
 
         properties: {
-          _c_studenten: {
+          _c_lessen: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
 										array is constant groepnr is changable */
           },
@@ -93,6 +125,14 @@
           },
           c_username: {
             type: String,
+          },
+          c_weeknummer: {
+              type: Number,
+              value: 6,
+          },
+          c_jaarnummer: {
+              type: Number,
+              value: 2017,
           },
           c_visible: {
             type: Boolean,
@@ -112,15 +152,30 @@
         },
 
         _initializing : function() {
-          if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
-            if (this.c_rol=="student") {                        // voor studenten
-              //this._student_agenda_ophalen_request_handler();    //    haal info op van server
-            } /*else {                                            // na handmatige url wijziging zonder login
-              var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
-              lToast.open();                                    /* het sluiten van deze error verwijst  * /
-                                                                /* terug naar home page * /
-            }*/
+          if (this.c_visible) {
+            if (this.c_rol=="student") {
+              this._student_rooster_ophalen_request_handler();
+            } else {
+              var lToast = this.$.toast_invalid_aanroep;
+              lToast.open();
+            }
           }
+        },
+
+        _student_rooster_ophalen_request_handler: function () {
+            console.log("_student_rooster_ophalen_request_handler user=" + this.c_username);
+            this.$.ajax_student_rooster_ophalen.contentType = "application/json";
+            this.$.ajax_student_rooster_ophalen.body = {
+                "username": this.c_username,
+                "weeknummer": this.c_weeknummer,
+                "jaarnummer": this.c_jaarnummer
+            };
+            this.$.ajax_student_rooster_ophalen.generateRequest();
+        },
+
+        _student_rooster_ophalen_response_handler: function (request) {
+            console.log("_student_rooster_ophalen_response_handler aantal lessen=" + JSON.stringify(request.detail.response));
+            this._c_lessen = request.detail.response;
         },
 
         _go_home: function() {
@@ -130,7 +185,6 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
-
       });
     })();
     </script>

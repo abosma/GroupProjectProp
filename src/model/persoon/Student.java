@@ -23,9 +23,8 @@ public class Student extends Persoon {
 		this.setGroepId("");
 	}
 
-
  public String getGroepId() {
-    return this.groepId;	
+    return this.groepId;
   }
  
   public void setGroepId(String pGroepId) {

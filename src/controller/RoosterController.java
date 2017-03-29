@@ -1,18 +1,24 @@
 package controller;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+
 import model.PrIS;
 import model.les.Les;
 import server.Conversation;
+import server.Handler;
 
-public class RoosterController {
+public class RoosterController implements Handler{
 	private PrIS informatieSysteem;
 	
 	public RoosterController(PrIS infoSys) {
@@ -20,9 +26,9 @@ public class RoosterController {
 	}
 	
 	public void handle(Conversation conversation) {
-		if (conversation.getRequestedURI().startsWith("/student/rooster")) {
+		if (conversation.getRequestedURI().startsWith("/student/rooster/ophalen")) {
 			ophalenStudent(conversation);
-		} else if (conversation.getRequestedURI().startsWith("/docent/rooster")){
+		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/ophalen")){
 			ophalenDocent(conversation);
 		}
 	}
@@ -71,8 +77,10 @@ public class RoosterController {
 	private void ophalenStudent(Conversation conversation) {
 		//Hetzelfde als ophalenDocent behalve dat het getLessenStudent gebruikt in plaats van getLessenDocent
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		String lKlasNaam = lJsonObjectIn.getString("username");
-		ArrayList<Les> lessenStudent = informatieSysteem.getLessenStudent(lKlasNaam);
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		int lWeekNummer = lJsonObjectIn.getInt("weeknummer");
+		int lJaarNummer = lJsonObjectIn.getInt("jaarnummer");
+		ArrayList<Les> lessenStudent = informatieSysteem.getLessenStudentWeek(lGebruikersnaam, lWeekNummer, lJaarNummer);
 		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		
@@ -82,7 +90,7 @@ public class RoosterController {
 			LocalDateTime beginData = tempArray.get(0);
 			LocalDateTime eindData = tempArray.get(1);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      
+	    
 			String beginDataString = beginData.format(formatter);
       String eindDataString = eindData.format(formatter);
 			String lesNaam = l.getNaam();

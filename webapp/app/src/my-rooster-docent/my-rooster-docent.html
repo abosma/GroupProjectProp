@@ -43,8 +43,6 @@
                      text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
             <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
         </paper-toast>
-        <my-agenda rol="{{ c_rol }}"></my-agenda>
-
     </template>
 
     <script>
@@ -59,7 +57,7 @@
         is: 'my-rooster-docent',
 
         properties: {
-          _c_studenten: {
+          _c_lessen: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
 										array is constant groepnr is changable */
           },

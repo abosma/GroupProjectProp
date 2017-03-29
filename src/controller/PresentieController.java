@@ -72,7 +72,4 @@ public class PresentieController implements Handler {
     
 		conversation.sendJSONMessage(lJsonOutStr);																				// string gaat terug naar de Polymer-GUI!
 	}
-	
-
-
 }
