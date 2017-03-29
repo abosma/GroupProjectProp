@@ -12,7 +12,6 @@
             }
 
             .agenda {
-                padding-right: 22px;
                 border: 1px solid #1693c9;            
             }
 
@@ -20,14 +19,12 @@
                 cursor: pointer;
                 color: #33aadd;
             }
-
-
         </style>
 
         <!-- Header Agenda  -->
         <div class="container">
             <div><h2>Mijn weekrooster || [[rol]]</h2></div>
-            <div><h3> <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[c_currentWeek]]  <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon></h3></div>
+            <div><h3> <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[ c_currentWeek ]]  <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon></h3></div>
         </div>
 
         <div class="container agenda">
@@ -59,6 +56,8 @@
                 },
                 systeemdatumstandaard: {
                     type: String,
+                    notify: true,   
+                    observer: '_initializing',
                 },
                 c_visible: {
                     type: Boolean,
@@ -68,13 +67,12 @@
                     type: String
                 },
 
-
                 c_currentWeek: {
                     type: Number,
                 }
             },  // end of properties
-            ready : function() {
-                d = new Date();
+             _initializing : function() {
+                d = new Date(this.systeemdatumstandaard);
                 d.setHours(0,0,0);
                 d.setDate(d.getDate() + 4 - (d.getDay()||7));
                 var yearStart = new Date(d.getFullYear(),0,1);
@@ -91,7 +89,7 @@
             },    
 
             changeWeekUp: function() {
-                var weeksInYear = this.weeksInYear(2017);
+                var weeksInYear = this.weeksInYear(this.systeemdatumstandaard);
                 if(this.c_currentWeek == weeksInYear){
                     this.c_currentWeek = 1;
                 }else{
@@ -100,7 +98,7 @@
             },
 
             changeWeekDown: function() {
-                var weeksInYear = this.weeksInYear(2017);
+                var weeksInYear = this.weeksInYear(this.systeemdatumstandaard);
                 if(this.c_currentWeek == 1){
                     this.c_currentWeek = weeksInYear;
                 }else{

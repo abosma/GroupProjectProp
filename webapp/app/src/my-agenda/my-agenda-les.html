@@ -4,10 +4,11 @@
             :host {
                 display: block;
             }
-
-            .container {
-              @apply(--layout-horizontal);
-              @apply(--layout-justified);
+            .dagen-content ul {
+                list-style: none;
+                padding: 1em;
+                font-size: 0.8em;
+                border-bottom: 1px solid #ccc;
             }
 
             .dagen-content ul {
@@ -15,15 +16,7 @@
                 padding: 1em;
                 font-size: 0.8em;
                 border-bottom: 1px solid #ccc;
-                border-right: 1px solid #1693c9;
-            }
-
-            .dagen-content ul {
-                list-style: none;
-                padding: 1em;
-                font-size: 0.8em;
-                border-bottom: 1px solid #ccc;
-                border-right: 1px solid #1693c9;
+                margin: 0px;
             }
 
             .dagen-content ul:last-child {
@@ -31,11 +24,9 @@
             }
 
             .dagen-content ul li:nth-child(2) {
-                margin-bottom: 5px;
             }
 
             .dagen-content div {
-                 border-right: 1px solid #1693c9;
                  min-height: 100%;            
              }
 
