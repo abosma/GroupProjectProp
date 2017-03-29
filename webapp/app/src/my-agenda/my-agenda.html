@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <link rel="import" href="../my-agenda/my-agenda-dag.html">
 <dom-module id="my-agenda">
     <template>
@@ -137,72 +136,4 @@
             },
         });
     </script>
-=======
-<link rel="import" href="../my-agenda/my-agenda-dag.html">
-<dom-module id="my-agenda">
-    <template>
-        <style>
-            :host {
-                display: block;
-            }
-
-            .container {
-              @apply(--layout-horizontal);
-              @apply(--layout-justified);
-            }
-        </style>
-
-        <!-- Header Agenda  -->
-        <div class="container">
-            <div><h2>Mijn weekrooster || [[rol]]</h2></div>
-            <div><h3> <iron-icon icon="arrow-back"></iron-icon> Week 3  <iron-icon icon="arrow-forward"></iron-icon></h3></div>
-        </div>
-
-        <div class="container dagen-content">
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,1)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,2)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,3)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,4)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,5)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-        </div>
-
-    </template>
-    <script>
-        Polymer({
-            is: 'my-agenda',
-            properties: {
-                rol: {
-                    type: String,
-                    notify: true,   
-                },
-
-                isStudent: {
-                    type: Boolean,
-                    value: true,
-                },
-                systeemdatumlokaal: {
-                    type: String,
-                },
-                systeemdatumstandaard: {
-                    type: String,
-                },
-                c_visible: {
-                    type: Boolean,
-                    value: false,
-                },
-                c_username: {
-                    type: String
-                }
-            },  // end of properties
-            _fix_date : function(dateString, dayOfWeek){
-                var d = new Date(dateString);
-                console.log("Before: " + d);
-                d.setDate(d.getDate() + (dayOfWeek - d.getDay()));
-                console.log("After:" + d );
-                var dateString = d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
-                return dateString;
-            },    
-        });
-    </script>
->>>>>>> origin/master
 </dom-module>
