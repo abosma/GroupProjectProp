@@ -211,12 +211,11 @@ public class PrIS {
 		// loop door alle lessen
 		for(Les les : deLessen){
 			LocalDateTime beginDatum = les.getBeginData();
-			System.out.println(beginDatum.toString());
 			// controleer of de datum overeenkomt, anders slaan we deze uberhaupt over.
 			if( date.getYear() == beginDatum.getYear() &&
 					date.getMonth() == beginDatum.getMonth() &&
 					date.getDayOfMonth() == beginDatum.getDayOfMonth()){
-				System.out.println(les.toString());
+				
 				// controleer od student in deze klas zit.
   			if(les.getKlas().bevatStudent(theStudent)){
   				// als alles klopt, dan voegen we deze les toe aan de array.

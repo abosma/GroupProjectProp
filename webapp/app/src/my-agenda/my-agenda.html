@@ -28,13 +28,9 @@
         </div>
 
         <div class="container agenda">
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,1)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,2)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,3)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,4)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-            <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,5)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
-
-             <my-agenda-dag datum="[[_fix_date(systeemdatumstandaard,6)]]" c_visible="{{c_visible}}" c_username="{{c_username}}"></my-agenda-dag>
+            <template is="dom-repeat" items=[[lessen]]>
+                <my-agenda-dag datum="[[_fix_date(roosterdatum,index)]]" c_visible="{{c_visible}}" c_username="{{c_username}}" lessen="{{item}}"></my-agenda-dag>
+            </template>
         </div>
 
     </template>
@@ -57,7 +53,6 @@
                 systeemdatumstandaard: {
                     type: String,
                     notify: true,   
-                    observer: '_initializing',
                 },
                 c_visible: {
                     type: Boolean,
@@ -69,10 +64,16 @@
 
                 c_currentWeek: {
                     type: Number,
+                },
+                lessen: {
+                    type: Object,
+                    observer: '_initializing',
                 }
             },  // end of properties
              _initializing : function() {
-                d = new Date(this.systeemdatumstandaard);
+
+                d = new Date(this.systeemdatumlokaal);
+                this.roosterdatum = this.systeemdatumlokaal;
                 d.setHours(0,0,0);
                 d.setDate(d.getDate() + 4 - (d.getDay()||7));
                 var yearStart = new Date(d.getFullYear(),0,1);
@@ -81,6 +82,7 @@
 
             _fix_date : function(dateString, dayOfWeek){
                 var d = new Date(dateString);
+                dayOfWeek = dayOfWeek+1; // offset voor index
                 //console.log("Before: " + d);
                 d.setDate(d.getDate() + (dayOfWeek - d.getDay()));
                 //console.log("After:" + d );

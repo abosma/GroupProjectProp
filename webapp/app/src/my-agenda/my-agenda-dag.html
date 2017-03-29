@@ -27,17 +27,18 @@
             <!-- Lelijk en hardcoced
                 TODO: automatisch genereren die hap!
              -->
-            <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
-
-            <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
+             <template is="dom-repeat" items="[[lessen]]">
+              <my-agenda-les 
+                vak="[[item.vak]]" 
+                datum="[[item.datum]]"
+                begin="[[item.begin]]" 
+                eind="[[item.eind]]" 
+                locatie="[[item.locatie]]" 
+                groepen="[[item.vak]]" 
+                docent="[[item.docent]]">
+              </my-agenda-les>  
+             </template>
         </div>
-        <iron-ajax
-          id="ajax_student_dag_rooster_ophalen_request"
-          method="POST"
-          url="/student/rooster/dagOphalen"
-          handle-as="json"
-          on-response="_student_dag_rooster_ophalen_response_handler">
-        </iron-ajax>
     </template>
     <script>
         Polymer({
@@ -61,33 +62,21 @@
               c_visible: {
                 type: Boolean,
                 value: false,
-                observer: '_initializing',
               },
               c_username: {
                 type: String,
               },
               lessen: {
-                type: Array,
+                type: Object,
+                observer: '_initializing',
               }
             },
 
             _initializing : function() {
               if(this.c_visible){
                 //this._student_dag_rooster_ophalen_request();
+                //console.log(lessen);
               }
-            },
-
-            _student_dag_rooster_ophalen_request : function(){
-              this.$.ajax_student_dag_rooster_ophalen_request.contentType="application/json";
-              this.$.ajax_student_dag_rooster_ophalen_request.body={
-                "username":this.c_username,
-                "date":this.datum
-              };
-              this.$.ajax_student_dag_rooster_ophalen_request.generateRequest();
-            },
-
-            _student_dag_rooster_ophalen_response_handler : function(response){
-              console.log("_student_agenda_ophalen_response_handler ::"+response.detail.response);
             },
 
             _fix_date : function(dateString){
