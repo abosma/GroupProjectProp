@@ -65,25 +65,7 @@
     
 
     <div class="my-title"> Presentie van [[c_username]]</div>
-<!--     <table>
-      <tr>
-        <th class="voornaam">Voornaam </th>
-        <th class="achternaam">Achternaam </th>
-        <th class="groepid-header">Mede groepleden </th>
-      </tr>
-      <template is="dom-repeat" items="[[_c_studenten]]">
-        <tr>
-          <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
-          <td class="achternaam"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.lastName]] </a></td>
-          <td class="groepid">
-             <paper-checkbox
-              class="my-check"
-              checked="{{item.sameGroup}}">
-            </paper-checkbox>
-      	  </td>
-        </tr> -->
-     
-   <!--  </table> -->
+
     
     
 
@@ -139,8 +121,8 @@
         
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
-            if (this.c_rol=="student") {                        // voor studenten
-              this._vakken_ophalen_request_handler();    //    haal info op van server
+        	  if (this.c_rol=="student") {                        // voor studenten
+              //this._vakken_ophalen_request_handler();    //    haal info op van server
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
               lToast.open();                                    /* het sluiten van deze error verwijst  */
