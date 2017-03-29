@@ -23,10 +23,12 @@
             }
         </style>
         <div class="dag">
-            <div class="dagen-agenda">[[datum]]</div>
+            <div class="dagen-agenda">[[_fix_date(datum)]]</div>
             <!-- Lelijk en hardcoced
                 TODO: automatisch genereren die hap!
              -->
+            <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
+
             <my-agenda-les vak="OODC" begin="12:00" eind="13:30" locatie="DL200-4.84" groepen="v1f" docent="dietste.obbink@hu.nl"></my-agenda-les>
         </div>
         <iron-ajax
@@ -50,10 +52,12 @@
                     type: Boolean,
                     value: true,
               },
+
               datum: {
                 type: String,
                 notify: true,
               },
+
               c_visible: {
                 type: Boolean,
                 value: false,
@@ -69,7 +73,7 @@
 
             _initializing : function() {
               if(this.c_visible){
-                this._student_dag_rooster_ophalen_request();
+                //this._student_dag_rooster_ophalen_request();
               }
             },
 
@@ -85,6 +89,17 @@
             _student_dag_rooster_ophalen_response_handler : function(response){
               console.log("_student_agenda_ophalen_response_handler ::"+response.detail.response);
             },
+
+            _fix_date : function(dateString){
+              var tijd_datum = new Date(dateString);
+              var dag = tijd_datum.getDay(); //dag in woorden
+              var dag2 = tijd_datum.getDate(); // dag in getal
+              var maand = tijd_datum.getMonth()+1; // +1 want js begint bij 0 te tellen
+
+              var maandarray = new Array('JAN', 'FEB', 'MA', 'APR', 'MEI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC');
+              var dagarray = new Array('ZO','MA','DI', 'WO', 'DO', 'VR', 'ZA');
+              return(dagarray[dag]+" "+dag2+" "+maandarray[maand]);
+            },   
         });
     </script>
 </dom-module>
