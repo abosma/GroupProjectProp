@@ -203,28 +203,38 @@ public class PrIS {
 	}
 	
 	public ArrayList<Les> getLessenStudentWeek(String stuMail, int weekNummer, int jaarNummer){
+		//Temp arraylist voor return
 		ArrayList<Les> returnLessen = new ArrayList<Les>();
 		for(Les l : deLessen){
+			//Haal alle studenten op
 			ArrayList<Student> alleStudenten = l.getKlas().getStudenten();
 			for(Student stu : alleStudenten){
+				//Als de studentmail hetzelfde is
 				if(stu.getGebruikersnaam().equals(stuMail)){
+					//Voor de begin en einddatum
 					for(LocalDateTime ldt : l.getLesData()){
+						//Om van localdatetime naar calendar object te gaan
 						Calendar cal = Calendar.getInstance();
 						Instant instant = ldt.toInstant(ZoneOffset.UTC);
 						Date date = Date.from(instant);
 						cal.setTime(date);
+						//Haal week een jaar van het ingevoerde localdatetime
 						int week = cal.get(Calendar.WEEK_OF_YEAR);
 						int jaar = cal.get(Calendar.YEAR);
+						//Als week en jaar van week en jaar van localdatetime hetzelfde is
 						if(week == weekNummer && jaar == jaarNummer){
+							//voeg het toe aan returnLessen
 							returnLessen.add(l);
 						}
 					}
 				}
 			}
 		}
+		//Omdat er 2 localdatetimes zijn per les werd er 2x dezelfde les toegevoegd, dus iedere ander les wordt uit de les gehaald
     for(int i = 0; i < returnLessen.size(); i += 2){
     	returnLessen.remove(i);
     }
+    //Teruggestuurd naar RoosterController
 		return returnLessen;
 	}
 	
