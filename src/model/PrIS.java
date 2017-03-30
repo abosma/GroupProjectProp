@@ -181,6 +181,10 @@ public class PrIS {
 		return "undefined";
 	}
 	
+	public ArrayList<Les> getAlleLessen(){
+		return this.deLessen;
+	}
+	
 	public ArrayList<Les> getLessenDocent(String docMail){
 		ArrayList<Les> returnLessen = new ArrayList<Les>();
 		for(Les l : deLessen){
