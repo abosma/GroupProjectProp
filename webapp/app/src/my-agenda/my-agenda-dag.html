@@ -30,11 +30,16 @@
                   datum="[[item.datum]]"
                   begin="[[item.begin]]" 
                   eind="[[item.eind]]" 
-                  locatie="[[item.locatie]]" 
+                  locatie="[[item.lokaal]]" 
                   groepen="[[item.vak]]" 
                   docent="[[item.docent]]">
               </my-agenda-les>  
             </template>
+
+            <template is="dom-if" if="{{ hasNoLesson() }}" restamp">
+              Geen activiteit
+            </template>
+
           </div>
         </div>
     </template>
@@ -71,7 +76,11 @@
               var maandarray = new Array('JAN', 'FEB', 'MA', 'APR', 'MEI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC');
               var dagarray = new Array('ZO','MA','DI', 'WO', 'DO', 'VR', 'ZA');
               return(dagarray[dag]+" "+dag2+" "+maandarray[maand]);
-            },   
+            }, 
+
+            hasNoLesson: function () {
+              return true;
+            }  
         });
     </script>
 </dom-module>
