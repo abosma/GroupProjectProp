@@ -33,7 +33,9 @@ public class PresentieController implements Handler   {
 	}
 
 	public void handle(Conversation conversation) {
+		
 		System.out.println(conversation.getRequestedURI());
+		
 		if (conversation.getRequestedURI().startsWith("/student/presentie")) {
 			ophalen(conversation);
 		} else {
@@ -49,10 +51,6 @@ public class PresentieController implements Handler   {
 		
 		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
 		//Bijbehorende student object
-		
-		lStudentZelf.getVakken(lGebruikersnaam);
-		
-		
 		
 		
 		
