@@ -2,30 +2,24 @@
 package controller;
 
 
-import java.io.*;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javax.json.Json;
-//import javax.json.JsonArray;
+
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-//import org.eclipse.jetty.websocket.jsr356.annotations.IJsrMethod;
-
 import model.PrIS;
-import model.persoon.Student;
-import model.klas.Klas;
-
+import model.les.Les;
 import server.Conversation;
 import server.Handler;
 
 
 public class PresentieController implements Handler   {
-	
-	
-
-	
 	private PrIS informatieSysteem;
 
 	public PresentieController(PrIS infoSys) {
@@ -33,60 +27,86 @@ public class PresentieController implements Handler   {
 	}
 
 	public void handle(Conversation conversation) {
-		
-		System.out.println(conversation.getRequestedURI());
-		
-		if (conversation.getRequestedURI().startsWith("/student/presentie")) {
-			ophalen(conversation);
-		} else {
-			System.out.println("ssd");
+		if(conversation.getRequestedURI().startsWith("/student/presentie")) {
+			studentOphalen(conversation);
+		}if (conversation.getRequestedURI().startsWith("/docent/presentie")) {
+			docentOphalen(conversation);
 		}
 	}
 	
-	private void ophalen(Conversation conversation)  {
+	private void studentOphalen(Conversation conversation)  {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		//mail student via polymer
+		String lVaknaam = lJsonObjectIn.getString("vaknaam");
 		
-		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
-		//Bijbehorende student object
+		ArrayList<Les> lessenStudent = informatieSysteem.getVakStudent(lVaknaam, lGebruikersnaam);
 		
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		
-		
-		
-		
-		
-		System.out.println(lStudentZelf.getGebruikersnaam());
-		
-		String  lGroepIdZelf = lStudentZelf.getGroepId();
-		
-		Klas lKlas = informatieSysteem.getKlasVanStudent(lStudentZelf);		// klas van de student opzoeken
-
-    ArrayList<Student> lStudentenVanKlas = lKlas.getStudenten();	// medestudenten opzoeken
-		
-		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
-		
-		for (Student lMedeStudent : lStudentenVanKlas) {									        // met daarin voor elke medestudent een JSON-object... 
-			if (lMedeStudent == lStudentZelf) 																			// behalve de student zelf...
-				continue;
-			else {
-				String lGroepIdAnder = lMedeStudent.getGroepId();
-				boolean lZelfdeGroep = ((lGroepIdZelf != "") && (lGroepIdAnder==lGroepIdZelf));
-				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder(); // maak het JsonObject voor een student
-				String lLastName = lMedeStudent.getVolledigeAchternaam();
-				lJsonObjectBuilderVoorStudent
-					.add("id", lMedeStudent.getStudentNummer())																	//vul het JsonObject		     
-					.add("firstName", lMedeStudent.getVoornaam())	
-					.add("lastName", lLastName)				     
-				  .add("sameGroup", lZelfdeGroep);					     
-			  
-			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);													//voeg het JsonObject aan het array toe				     
-			}
+		for (Les l : lessenStudent) {
+			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
+			
+			LocalDateTime beginDatum = l.getBeginData();
+			LocalDateTime eindDatum = l.getEindData();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    
+			String beginDatumString = beginDatum.format(formatter);
+	    String eindDatumString = eindDatum.format(formatter);
+			String docentNaam = l.getDocent().getGebruikersnaam();
+			String lokaal = l.getLokaal();
+			
+			lJsonObjectBuilderVoorStudent
+				.add("beginDatum", beginDatumString)
+				.add("eindDatum", eindDatumString)
+				.add("docentNaam", docentNaam)
+				.add("lokaal", lokaal);
+			for(Map.Entry<String, Integer> pres : l.getPresentie().entrySet()){
+    		if(pres.getKey().equals(lGebruikersnaam)){
+    			lJsonObjectBuilderVoorStudent.add(pres.getKey(), pres.getValue());
+    		}
+    	}
+		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
 		}
     String lJsonOutStr = lJsonArrayBuilder.build().toString();		
-    // maak er een string van
     
-		conversation.sendJSONMessage(lJsonOutStr);																				// string gaat terug naar de Polymer-GUI!
+		conversation.sendJSONMessage(lJsonOutStr);
+	}
+	
+	private void docentOphalen(Conversation conversation)  {
+	JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		String lVaknaam = lJsonObjectIn.getString("vaknaam");
+		
+		ArrayList<Les> lessenStudent = informatieSysteem.getVakDocent(lVaknaam, lGebruikersnaam);
+		
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
+		
+		for (Les l : lessenStudent) {
+			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
+			
+			LocalDateTime beginDatum = l.getBeginData();
+			LocalDateTime eindDatum = l.getEindData();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    
+			String beginDatumString = beginDatum.format(formatter);
+	    String eindDatumString = eindDatum.format(formatter);
+			String docentNaam = l.getDocent().getGebruikersnaam();
+			String lokaal = l.getLokaal();
+			
+			lJsonObjectBuilderVoorStudent
+				.add("beginDatum", beginDatumString)
+				.add("eindDatum", eindDatumString)
+				.add("docentNaam", docentNaam)
+				.add("lokaal", lokaal);
+			for(Map.Entry<String, Integer> pres : l.getPresentie().entrySet()){
+  			lJsonObjectBuilderVoorStudent.add(pres.getKey(), pres.getValue());
+    	}
+		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
+		}
+    String lJsonOutStr = lJsonArrayBuilder.build().toString();		
+    
+		conversation.sendJSONMessage(lJsonOutStr);
 	}
 }
