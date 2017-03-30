@@ -128,12 +128,11 @@
           },
           systeemdatumlokaal: {
             type: String,
-            computed: "_standaarddatumstring_to_lokaledatumstring(systeemdatumstandaard)",
+            computed: "_standaarddatumstring_to_lokaledatumstring_datum(systeemdatumstandaard)",
             notify: true,
           },
           systeemdatumstandaard: {
-            type: Date,                                         /* dit is een string in YYYY-MM-DD formaat
-                                                               ook als de regional settings anders aangeven*/
+            type: Date,   
             notify: true,
           },
         },
@@ -161,8 +160,19 @@
           };
         },
 
+        _standaarddatumstring_to_lokaledatumstring_datum(pStandaardDatum) {
+          var lApp = document.querySelector('my-app');
+
+          if(pStandaardDatum != "" && localStorage.systeemdatumstandaard){
+            localStorage.setItem("systeemdatumstandaard", pStandaardDatum);
+          }
+
+          return lApp.standaarddatumstring_to_lokaledatumstring(pStandaardDatum);
+        },
+
         _standaarddatumstring_to_lokaledatumstring(pStandaardDatum) {
          	var lApp = document.querySelector('my-app');
+
          	return lApp.standaarddatumstring_to_lokaledatumstring(pStandaardDatum);
         }
       });
