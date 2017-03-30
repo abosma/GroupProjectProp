@@ -40,6 +40,7 @@
         _logout_clicked: function() {
           console.log("_logout_clicked");
           this.rol = "undefined";
+          localStorage.removeItem("username");
           this._go_home();
          },
         

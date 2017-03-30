@@ -132,6 +132,24 @@
           },
         },
 
+        ready: function(){            
+          if(localStorage.username){
+            this.username = localStorage.username;
+            if (this.rol == "undefined") {
+              this.$.ajax_login.contentType="application/json";
+              this.$.ajax_login.body={
+                "username":this.username,
+                "password":this._password
+              };
+              this.$.ajax_login.generateRequest();
+            } else {
+              var lToast = this.$.toast_reeds_aangelogd;     // meldt reeds aangelogd
+              lToast.open();                                  /* het sluiten van deze error verwijst  */
+                                                              /* terug naar home page */
+            }
+          }
+        },
+
         _checkForEnter: function (e) {
           if (e.currentTarget.id == "email_element") {
             if (e.keyCode === 13) {
@@ -180,7 +198,8 @@
             this.$.email_element.invalid = true;                // markeer email-element
             this.$.wachtwoord_element.invalid = true;           // markeer wachtwoord-element
 
-          } else {                                            // als aanloggen ok
+          } else {   
+            localStorage.setItem("username", this.username);
             this.$.email_element.invalid = false;               // verwijder fout markering
             this.$.wachtwoord_element.invalid = false;          // verwijder fout markering
             this._go_home();                                    // ga naar de home page.
