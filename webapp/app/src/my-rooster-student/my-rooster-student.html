@@ -71,6 +71,11 @@
                 margin-top: 5px; /* enlarge thet default */
                 margin-left: 0px; /* reduce the default */
             }
+
+              .mouseHover:hover {
+                cursor: pointer;
+                color: #33aadd;
+            }
         </style>
 
         <paper-toast id="toast_invalid_aanroep"
@@ -79,7 +84,20 @@
             <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
         </paper-toast>
 
-        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" systeemdatumlokaal="{{systeemdatumstandaard}}" lessen="{{_c_lessen}}"></my-agenda>
+        <!-- Header Agenda  -->
+        <div class="container">
+            <div>
+                <h2>Mijn weekrooster || [[rol]]</h2>
+            </div>
+            <div>
+                <h3>
+                    <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[ c_weeknummer ]]
+                    <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon>
+                </h3>
+            </div>
+        </div>
+
+        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" datum="{{weekdatum}}" lessen="{{_c_lessen}}"></my-agenda>
 
         <iron-ajax id="ajax_student_rooster_ophalen"
                    method="POST"
@@ -112,11 +130,9 @@
           },
           c_weeknummer: {
               type: Number,
-              value: 6,
           },
           c_jaarnummer: {
               type: Number,
-              value: 2017,
           },
           c_visible: {
             type: Boolean,
@@ -137,12 +153,15 @@
             type: Boolean,
             value: false,
           },
+          weekdatum: {
+            type: String,
+          }
         },
 
         _initializing : function() {
           if (this.c_visible && this.isReady) {
             if (this.c_rol=="student") {
-              this._student_rooster_ophalen_request_handler();
+              this._getWeek();
             } else {
                 console.log(this.c_username + " " + this.c_rol + " ");
                 var lToast = this.$.toast_invalid_aanroep;
@@ -151,33 +170,73 @@
           }
         },
 
-        _transform_ddMMyyyy_to_yyyyMMdd(input){
-          var parts = input.split("-");
-          for (var i = 0; i < parts.length; i++) {
-            if(parts[i].length < 2){
-              parts[i] = "0"+parts[i];
-            }
+        _getWeek : function() {
+          var date = this._get_first_date_of_week(this.systeemdatumlokaal)
+          this.weekdatum = date.split("-").reverse().join("-");
+          this.c_weeknummer = this._get_week_from_date(this.weekdatum);
+          this._student_rooster_ophalen_request_handler(date);
+        },
+
+        _update : function(){
+          var date = this._get_date_from_weeknr();
+          this.weekdatum = date.split("-").reverse().join("-");
+          this._student_rooster_ophalen_request_handler(date);
+        },
+
+        _get_date_from_weeknr : function(){
+          var date = new Date(this.weekdatum.split('-')[0],0,1);
+          var dayNum = date.getDay();
+          var reqDate = (this.c_weeknummer-1) * 7;
+          if(dayNum != 0 || dayNum > 4){
+            reqDate += 7;
           }
-          if(parts[0] < 4)parts.reverse();
-          return parts.join("-");
+          date.setDate(1-date.getDay() + (++reqDate));
+          var days = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var month = date.getMonth()+1;
+          month = month < 10 ? "0" + month : month;
+          return days+"-"+month+"-"+date.getFullYear();
+        },
+
+        _get_week_from_date : function(dateString){
+          var date = new Date(dateString);
+          date.setHours(0,0,0);
+          var yearStart = new Date(date.getFullYear(),0,1);
+          return Math.ceil(( ( (date - yearStart) / 86400000) + 1)/7); 
+        },
+
+        _reverse_date_string : function(string){
+          return string.split("-").reverse().join("-");
+        },
+
+        _get_first_date_of_week : function(dateString){
+          dateString = dateString.split("-").reverse().join("-");
+          var date = new Date(dateString);
+          date.setDate(date.getDate() - date.getDay() + 1); // +1 want week begint op zondag ipv maandag volgens javascript
+          date.setMonth(date.getMonth() + 1);
+          console.log(date.getDay() + "-" + date.getDate());
+          var days = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
+          return days+"-"+(month)+"-"+date.getFullYear();
         },
 
         ready : function(){
             this.isReady = true;
             while(this.systeemdatumlokaal == null){
-
-            }
+              // Lelijk, maar het werkt.
+              console.log("wacht op sysDatLok: ");
+            } 
+            console.log(this.systeemdatumlokaal);
             this._initializing();
         },
 
-        _student_rooster_ophalen_request_handler: function () {
+        _student_rooster_ophalen_request_handler: function (date) {
             console.log("_student_rooster_ophalen_request_handler user=" + this.c_username);
-            console.log(this.systeemdatumlokaal);
             this.$.ajax_student_rooster_ophalen.contentType = "application/json";
+            console.log("_student_rooster_ophalen_request_handler " + date );
             this.$.ajax_student_rooster_ophalen.body = {
                 "username": this.c_username,
-                "date": this._transform_ddMMyyyy_to_yyyyMMdd(this.systeemdatumlokaal),
-                "days":5
+                "date": date,
+                "days": 6
             };
             this.$.ajax_student_rooster_ophalen.generateRequest();
         },
@@ -194,6 +253,55 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
+
+        changeWeekUp: function() {
+          var weeksInYear = this.weeksInYear(this.systeemdatumstandaard);
+          if(this.c_weeknummer == weeksInYear){
+              this.c_weeknummer = 1;
+          }else{
+              this.c_weeknummer += 1;
+          }
+          this._update();
+        },
+
+        changeWeekDown: function() {
+          var weeksInYear = this.weeksInYear(this.systeemdatumstandaard);
+          if(this.c_weeknummer == 1){
+              this.c_weeknummer = weeksInYear;
+          }else{
+              this.c_weeknummer -= 1;
+          }
+          this._update();
+        },
+
+         weeksInYear: function(year) {
+            var month = 11, day = 31, week;
+
+            // Find week that 31 Dec is in. If is first week, reduce date until
+            // get previous week.
+            do {
+              d = new Date(year, month, day--);
+              week = this.getWeekNumber(d)[1];
+            } while (week == 1);
+
+            return week;
+          },
+
+           getWeekNumber: function(d) {
+              d = new Date(+d);
+              d.setHours(0,0,0);
+              // Set to nearest Thursday: current date + 4 - current day number
+              // Make Sunday's day number 7
+              d.setDate(d.getDate() + 4 - (d.getDay()||7));
+              // Get first day of year
+              var yearStart = new Date(d.getFullYear(),0,1);
+              // Calculate full weeks to nearest Thursday
+              var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+              // Return array of year and week number
+              return [d.getFullYear(), weekNo];
+          },
+
+
       });
     })();
     </script>

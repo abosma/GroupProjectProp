@@ -69,8 +69,6 @@ public class PrIS {
 		// Inladen lessen
 		vulLessen(deKlassen, deLessen);
 		
-		this.getVakStudent("TCIF-V1AUI-15_2016","ronald.derooij@student.hu.nl");
-	
 	} //Einde Pris constructor
 	
 	//deze method is static onderdeel van PrIS omdat hij als hulp methode 
@@ -181,6 +179,10 @@ public class PrIS {
 		return "undefined";
 	}
 	
+	public ArrayList<Les> getAlleLessen(){
+		return this.deLessen;
+	}
+	
 	public ArrayList<Les> getLessenDocent(String docMail){
 		ArrayList<Les> returnLessen = new ArrayList<Les>();
 		for(Les l : deLessen){
@@ -199,7 +201,6 @@ public class PrIS {
 				for(Student stu : alleStudenten){
 					if(stu.getGebruikersnaam().equals(gebruikersnaam)){
 						returnLessen.add(l);
-						System.out.println(l + l.getPresentie(gebruikersnaam));
 					}
 				}
 			}
@@ -207,12 +208,13 @@ public class PrIS {
 		return returnLessen;
 	}
 	
-	public ArrayList<Les> getVakDocent(String naam){
+	public ArrayList<Les> getVakDocent(String naam, String gebruikersnaam){
 		ArrayList<Les> returnLessen = new ArrayList<Les>();
 		for(Les l : deLessen){
 			if(l.getNaam().equals(naam)){
-				returnLessen.add(l);
-				System.out.println(l);
+				if(l.getDocent().getGebruikersnaam().equals(gebruikersnaam)){
+  				returnLessen.add(l);
+				}
 			}
 		}
 		return returnLessen;

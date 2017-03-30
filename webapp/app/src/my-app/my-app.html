@@ -407,7 +407,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if ((pNewPage == "") || (pNewPage == undefined)){
               this._ar_page = "home";
             } else {
-              this._ar_page = pNewPage;         
+              this._ar_page = pNewPage;
             } 
         },
          
@@ -459,9 +459,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		  */
 		  /* gebruikt het Javascript date object om op basis van een standaarddatumstring
 		     een object te maken en via dit een lokaledatumstring te maken */
-		  var eenDatumObject             = new Date(); // is vandaag
-		  this._systeemdatumstandaard    = this.date_to_standaard_string(eenDatumObject);
-		  this._systeemdatumlokaal       = eenDatumObject.toLocaleDateString();
+		  if(localStorage.systeemdatumstandaard){
+
+        var eenDatumObject             = new Date(localStorage.systeemdatumstandaard);
+        this._systeemdatumstandaard    = this.date_to_standaard_string(eenDatumObject);
+        this._systeemdatumlokaal       = eenDatumObject.toLocaleDateString();
+
+      }else{
+        
+        var eenDatumObject             = new Date(); // is vandaag
+        this._systeemdatumstandaard    = this.date_to_standaard_string(eenDatumObject);
+        this._systeemdatumlokaal       = eenDatumObject.toLocaleDateString();
+      }
+
 		  console.log("application ready to run");
         },
 	      
