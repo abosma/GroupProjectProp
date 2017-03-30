@@ -69,8 +69,6 @@ public class PrIS {
 		// Inladen lessen
 		vulLessen(deKlassen, deLessen);
 		
-		this.getVakDocent("TCIF-V1AUI-15_2016","dick.pronk@hu.nl");
-	
 	} //Einde Pris constructor
 	
 	//deze method is static onderdeel van PrIS omdat hij als hulp methode 
