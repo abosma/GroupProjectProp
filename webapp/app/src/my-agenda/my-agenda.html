@@ -29,7 +29,11 @@
 
         <div class="container agenda">
             <template is="dom-repeat" items=[[lessen]]>
-                <my-agenda-dag datum="[[_fix_date(roosterdatum,index)]]" c_visible="{{c_visible}}" c_username="{{c_username}}" lessen="{{item}}"></my-agenda-dag>
+                <my-agenda-dag 
+                    datum="[[_fix_date(roosterdatum,index)]]" 
+                    c_username="{{c_username}}" 
+                    lessen="{{item}}">
+                </my-agenda-dag>
             </template>
         </div>
 
@@ -82,7 +86,7 @@
 
             _fix_date : function(dateString, dayOfWeek){
                 var d = new Date(dateString);
-                dayOfWeek = dayOfWeek+1; // offset voor index
+                dayOfWeek = dayOfWeek; // offset voor index
                 //console.log("Before: " + d);
                 d.setDate(d.getDate() + (dayOfWeek - d.getDay()));
                 //console.log("After:" + d );
