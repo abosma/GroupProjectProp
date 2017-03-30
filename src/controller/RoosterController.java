@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -147,6 +148,7 @@ public class RoosterController implements Handler{
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		
 		for (Les l : lessenStudent) {
+			Map<String, Integer> presenties = l.getPresentie();
 			ArrayList<LocalDateTime> tempArray = l.getLesData();
 			
 			LocalDateTime beginDatum = tempArray.get(0);
@@ -168,6 +170,11 @@ public class RoosterController implements Handler{
 				.add("docentNaam", docentNaam)
 				.add("lokaal", lokaal)
 				.add("klasNaam", klasNaam);
+			for(Map.Entry<String, Integer> pres : presenties.entrySet()){
+				if(pres.getKey().equals(lGebruikersnaam)){
+					lJsonObjectBuilderVoorStudent.add(pres.getKey(), pres.getValue());
+				}
+			}
 		  
 		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
 		}

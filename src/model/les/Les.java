@@ -42,6 +42,15 @@ public class Les {
   	return this.presentieMap;
   }
   
+  public String getPresentie(String gebruikersnaam){
+  	for(Map.Entry<String, Integer> pres : presentieMap.entrySet()){
+  		if(pres.getKey().equals(gebruikersnaam)){
+  			return pres.getKey() + ":" + pres.getValue();
+  		}
+  	}
+		return null;
+  }
+  
   public ArrayList<LocalDateTime> getLesData(){
   	ArrayList<LocalDateTime> returnArray = new ArrayList<LocalDateTime>();
   	returnArray.add(this.beginData);

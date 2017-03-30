@@ -68,6 +68,8 @@ public class PrIS {
 		
 		// Inladen lessen
 		vulLessen(deKlassen, deLessen);
+		
+		this.getVakStudent("TCIF-V1AUI-15_2016","ronald.derooij@student.hu.nl");
 	
 	} //Einde Pris constructor
 	
@@ -184,6 +186,33 @@ public class PrIS {
 		for(Les l : deLessen){
 			if(l.getDocent().getGebruikersnaam().equals(docMail)){
 				returnLessen.add(l);
+			}
+		}
+		return returnLessen;
+	}
+	
+	public ArrayList<Les> getVakStudent(String naam, String gebruikersnaam){
+		ArrayList<Les> returnLessen = new ArrayList<Les>();
+		for(Les l : deLessen){
+			if(l.getNaam().equals(naam)){
+				ArrayList<Student> alleStudenten = l.getKlas().getStudenten();
+				for(Student stu : alleStudenten){
+					if(stu.getGebruikersnaam().equals(gebruikersnaam)){
+						returnLessen.add(l);
+						System.out.println(l + l.getPresentie(gebruikersnaam));
+					}
+				}
+			}
+		}
+		return returnLessen;
+	}
+	
+	public ArrayList<Les> getVakDocent(String naam){
+		ArrayList<Les> returnLessen = new ArrayList<Les>();
+		for(Les l : deLessen){
+			if(l.getNaam().equals(naam)){
+				returnLessen.add(l);
+				System.out.println(l);
 			}
 		}
 		return returnLessen;
