@@ -172,9 +172,29 @@
 
         _getWeek : function() {
           var date = this._get_first_date_of_week(this.systeemdatumlokaal)
-          this.weekdatum = this._reverse_date_string(date);
+          this.weekdatum = date.split("-").reverse().join("-");
           this.c_weeknummer = this._get_week_from_date(this.weekdatum);
           this._student_rooster_ophalen_request_handler(date);
+        },
+
+        _update : function(){
+          var date = this._get_date_from_weeknr();
+          this.weekdatum = date.split("-").reverse().join("-");
+          this._student_rooster_ophalen_request_handler(date);
+        },
+
+        _get_date_from_weeknr : function(){
+          var date = new Date(this.weekdatum.split('-')[0],0,1);
+          var dayNum = date.getDay();
+          var reqDate = (this.c_weeknummer-1) * 7;
+          if(dayNum != 0 || dayNum > 4){
+            reqDate += 7;
+          }
+          date.setDate(1-date.getDay() + (++reqDate));
+          var days = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          var month = date.getMonth()+1;
+          month = month < 10 ? "0" + month : month;
+          return days+"-"+month+"-"+date.getFullYear();
         },
 
         _get_week_from_date : function(dateString){
@@ -189,26 +209,14 @@
         },
 
         _get_first_date_of_week : function(dateString){
-          dateString = this._reverse_date_string(dateString);
+          dateString = dateString.split("-").reverse().join("-");
           var date = new Date(dateString);
           date.setDate(date.getDate() - date.getDay() + 1); // +1 want week begint op zondag ipv maandag volgens javascript
           date.setMonth(date.getMonth() + 1);
           console.log(date.getDay() + "-" + date.getDate());
           var days = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
           var month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
-          console.log(date.getDate()+"-"+month+"-"+date.getFullYear());
           return days+"-"+(month)+"-"+date.getFullYear();
-        },
-
-        _transform_ddMMyyyy_to_yyyyMMdd(input){
-          var parts = input.split("-");
-          for (var i = 0; i < parts.length; i++) {
-            if(parts[i].length < 2){
-              parts[i] = "0"+parts[i];
-            }
-          }
-          if(parts[0] < 4)parts.reverse();
-          return parts.join("-");
         },
 
         ready : function(){
@@ -224,10 +232,11 @@
         _student_rooster_ophalen_request_handler: function (date) {
             console.log("_student_rooster_ophalen_request_handler user=" + this.c_username);
             this.$.ajax_student_rooster_ophalen.contentType = "application/json";
+            console.log("_student_rooster_ophalen_request_handler " + date );
             this.$.ajax_student_rooster_ophalen.body = {
                 "username": this.c_username,
                 "date": date,
-                "days": 5
+                "days": 6
             };
             this.$.ajax_student_rooster_ophalen.generateRequest();
         },
@@ -252,6 +261,7 @@
           }else{
               this.c_weeknummer += 1;
           }
+          this._update();
         },
 
         changeWeekDown: function() {
@@ -261,6 +271,7 @@
           }else{
               this.c_weeknummer -= 1;
           }
+          this._update();
         },
 
          weeksInYear: function(year) {
