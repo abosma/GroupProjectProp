@@ -47,14 +47,6 @@ public class PresentieController implements Handler   {
 		//Bijbehorende student object
 		
 		lStudentZelf.getVakken(lGebruikersnaam);
-		
-		
-		
-		
-		
-		
-		
-		
 		System.out.println(lStudentZelf.getGebruikersnaam());
 		
 		String  lGroepIdZelf = lStudentZelf.getGroepId();

@@ -147,7 +147,8 @@
           }
         },
 
-        _ophalen_lesinfo_response_handler: function(request) {
+        _ophalen_lesinfo_response_handler: function (request) {
+            console.log("_student_rooster_ophalen_response_handler aantal lessen=" + JSON.stringify(request.detail.response));
           console.log("_ophalen_lesinfo_response_handler: "+
             request.detail.response.eerste_lesdatum + " tot " +
             request.detail.response.laatste_lesdatum);

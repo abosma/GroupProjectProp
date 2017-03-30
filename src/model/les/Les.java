@@ -42,7 +42,15 @@ public class Les {
   	return this.presentieMap;
   }
   
-  public String getPresentie(String gebruikersnaam){
+  public ArrayList<String> getPresentieDocent(){
+  	ArrayList<String> presenties = new ArrayList<String>();
+  	for(Map.Entry<String, Integer> pres : presentieMap.entrySet()){
+			presenties.add(pres.getKey() + ":" + pres.getValue());
+  	}
+  	return presenties;
+  }
+  
+  public String getPresentieStudent(String gebruikersnaam){
   	for(Map.Entry<String, Integer> pres : presentieMap.entrySet()){
   		if(pres.getKey().equals(gebruikersnaam)){
   			return pres.getKey() + ":" + pres.getValue();
