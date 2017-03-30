@@ -33,9 +33,11 @@
       }
       .my-title {
         font-size: 20px;
-        color: blue;
-        border-bottom: 1px solid red;           /* a red line */
-        padding-bottom: 2px;                    /* space above the border line */
+        color: black;
+        border-bottom: 1px solid blue;           /* a red line */
+        padding-bottom: 5px;
+        margin-bottom: 10px;       
+        
       }
       .voornaam {
         min-width: 100px;
@@ -60,33 +62,64 @@
         margin-top: 5px;                    /* enlarge thet default */
         margin-left: 0px;                   /* reduce the default */
         
-     
-        
       }
-    </style>
+      
+      .item {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      }
+      
+</style>
+    <div class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>
 
-    
-
-    <div class="my-title"> Presentie van [[c_username]]</div>
     
     <template is="dom-repeat" items="[[_c_studenten]]">
-   
     </template>
 
-
+	
     <iron-ajax
       id="ajax_vakken_ophalen"
       method="POST"
       url="/student/presentie"
       handle-as="json"
       on-response="_vakken_ophalen_response_handler">
-    </iron-ajax> 
+    </iron-ajax>
     
+ 	      
+     <!-- <iron-ajax
+      id="ajax_presentie_tonen"
+      method="POST"
+      url="/student/presentie/tonen"
+      handle-as="json"
+      on-response="_vakken_ophalen_response_handler">
+    </iron-ajax>  
+     -->
+    <!--  on-response="_vakken_ophalen_response_handler" -->
     
-	
- 
+	<!-- data vakken student -->    
+    <template is="dom-bind">
+    <iron-ajax url="data/contacts.json" last-response="{{data}}" auto></iron-ajax>
+
+    <iron-list items="[[data]]" as="item" scroll-target="document" scroll-offset="200">
    
-  </template>
+   
+    <!--  Lijst met vakken van de ingelogde student --> 
+    <template>
+    
+    <div class="item">
+    
+     <paper-button
+      class="my-button"
+      on-click="_presentie_tonen_request_handler">[[index]] - [[item.name]]
+    </paper-button>
+    </div>
+     
+    </template>
+    </iron-list>
+
+  	</template>
+  	
+  	</template>
 
   <script>
     (function() {
@@ -131,34 +164,59 @@
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
         	  if (this.c_rol=="student") {                        // voor studenten
         		  this._vakken_ophalen_request_handler();  //    haal info op van server
-            } else {                                            // na handmatige url wijziging zonder login
+				          
+        	  } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
               lToast.open();                                    /* het sluiten van deze error verwijst  */
                                                                 /* terug naar home page */
             }
           }
         },
-
-         _vakken_ophalen_request_handler: function() {
-          console.log("_vakken_ophalen_request_handler user="+this.c_username);
+			
+          /*  Functie wordt aangeroepen voor de pagina begin,
+           Er moet nog voor gezorgt worden dat wanneer deze functie aangeroepen wordt het ervoor zorgt dat de vakken die de student volgt
+           opgehaald worden en weergeven worden in de lijst */
+         
+          _vakken_ophalen_request_handler: function() {
+          console.log("_vakken_ophalen_request_handler user="+this.c_username  );
           this.$.ajax_vakken_ophalen.contentType="application/json";
           this.$.ajax_vakken_ophalen.body={
             "username":this.c_username
           };
           this.$.ajax_vakken_ophalen.generateRequest();
         },
-
+		
+        /* Response handler functie hierboven */
         _vakken_ophalen_response_handler: function(request) {
           console.log("_vakken_ophalen_response_handler aantal studenten="+request.detail.response.length);
           this._c_studenten = request.detail.response;
         },
 
-
+		
+        
+        /* Onderstaande functie zou ervoor moeten zorgen dat de aanwezigheid gegevens van het aangeklikte vak getoond moeten worden */
+        /* _presentie_tonen_request_handler: function() {
+        	
+        	console.log("_presentie_tonen_request_handler user="+this.c_username);
+            this.$.ajax_presentie_tonen.contentType="application/json";
+            this.$.ajax_presentie_tonen.body={
+                "vak":this.c_username
+            };
+            this.$.ajax_presentie_tonen.generateRequest();
+          }, */
+        
+        
+        
+        
+        
        _toast_clicked: function(e) {
          var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
          lToast.toggle();
          this._go_home();
         },
+        
+        
+        
 
       });
     })();
