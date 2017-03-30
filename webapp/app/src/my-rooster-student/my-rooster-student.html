@@ -83,7 +83,7 @@
 
         <iron-ajax id="ajax_student_rooster_ophalen"
                    method="POST"
-                   url="/student/rooster/ophalen"
+                   url="/student/rooster/lesdagophalen"
                    handle-as="json"
                    on-response="_student_rooster_ophalen_response_handler">
         </iron-ajax>
@@ -176,8 +176,8 @@
             this.$.ajax_student_rooster_ophalen.contentType = "application/json";
             this.$.ajax_student_rooster_ophalen.body = {
                 "username": this.c_username,
-                "weeknummer": this.c_weeknummer,
-                "jaarnummer": this.c_jaarnummer
+                "date": this._transform_ddMMyyyy_to_yyyyMMdd(this.systeemdatumlokaal),
+                "days":7
             };
             this.$.ajax_student_rooster_ophalen.generateRequest();
         },
