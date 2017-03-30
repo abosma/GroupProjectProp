@@ -38,6 +38,9 @@ public class Application {
 		PresentieController presentieController  = new PresentieController(infoSysteem);
 		
 		server.registerHandler("/student/presentie", presentieController);
+		server.registerHandler("/student/presentie/tonen", presentieController);
+		
+		
 		server.registerHandler("/systeemdatum/lesinfo", systeemDatumController);
 		server.registerHandler("/login", loginController);
   	server.registerHandler("/student/medestudenten/ophalen", medestudentenController);

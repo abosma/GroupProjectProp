@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
      en ook zodra hij weer gedeselecteerd wordt.
@@ -75,6 +76,8 @@
     
     <template is="dom-repeat" items="[[_c_studenten]]">
     </template>
+    
+
 
 	
     <iron-ajax
@@ -86,18 +89,17 @@
     </iron-ajax>
     
  	      
-     <!-- <iron-ajax
+    <iron-ajax
       id="ajax_presentie_tonen"
       method="POST"
-      url="/student/presentie/tonen"
+      url="/student/presentie/tonen" 
       handle-as="json"
       on-response="_vakken_ophalen_response_handler">
     </iron-ajax>  
-     -->
-    <!--  on-response="_vakken_ophalen_response_handler" -->
+    
     
 	<!-- data vakken student -->    
-    <template is="dom-bind">
+    <!-- <template is="dom-bind"> -->
     <iron-ajax url="data/contacts.json" last-response="{{data}}" auto></iron-ajax>
 
     <iron-list items="[[data]]" as="item" scroll-target="document" scroll-offset="200">
@@ -105,19 +107,21 @@
    
     <!--  Lijst met vakken van de ingelogde student --> 
     <template>
-    
+    <!--  <a href="#/student/presentie" -->
     <div class="item">
+    
     
      <paper-button
       class="my-button"
-      on-click="_presentie_tonen_request_handler">[[index]] - [[item.name]]
+      on-click="_go_home"
+      >[[index]] - [[item.name]]</a>
     </paper-button>
     </div>
      
     </template>
     </iron-list>
 
-  	</template>
+  	<!-- </template> -->
   	
   	</template>
 
@@ -195,7 +199,9 @@
 		
         
         /* Onderstaande functie zou ervoor moeten zorgen dat de aanwezigheid gegevens van het aangeklikte vak getoond moeten worden */
-        /* _presentie_tonen_request_handler: function() {
+         
+        
+        _presentie_tonen_request_handler: function() {
         	
         	console.log("_presentie_tonen_request_handler user="+this.c_username);
             this.$.ajax_presentie_tonen.contentType="application/json";
@@ -203,7 +209,7 @@
                 "vak":this.c_username
             };
             this.$.ajax_presentie_tonen.generateRequest();
-          }, */
+          }, 
         
         
         
