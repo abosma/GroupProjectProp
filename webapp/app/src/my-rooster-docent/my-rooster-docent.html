@@ -37,6 +37,20 @@
             }
         </style>
 
+        <!-- Header Agenda  -->
+        <div class="container">
+            <div>
+                <h2>Mijn weekrooster || [[rol]]</h2>
+            </div>
+            <div>
+                <h3>
+                    <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[ c_currentWeek ]]
+                    <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon>
+                </h3>
+            </div>
+        </div>
+
+        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" systeemdatumlokaal="{{systeemdatumstandaard}}" lessen="{{_c_lessen}}"></my-agenda>
 
         <paper-toast id="toast_invalid_aanroep"
                      duration="0"

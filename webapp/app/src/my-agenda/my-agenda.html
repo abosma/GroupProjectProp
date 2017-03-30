@@ -21,12 +21,6 @@
             }
         </style>
 
-        <!-- Header Agenda  -->
-        <div class="container">
-            <div><h2>Mijn weekrooster || [[rol]]</h2></div>
-            <div><h3> <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[ c_currentWeek ]]  <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon></h3></div>
-        </div>
-
         <div class="container agenda">
             <template is="dom-repeat" items=[[lessen]]>
                 <my-agenda-dag 
