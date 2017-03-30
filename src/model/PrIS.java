@@ -201,7 +201,6 @@ public class PrIS {
 				for(Student stu : alleStudenten){
 					if(stu.getGebruikersnaam().equals(gebruikersnaam)){
 						returnLessen.add(l);
-						System.out.println(l + l.getPresentieStudent(gebruikersnaam));
 					}
 				}
 			}
