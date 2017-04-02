@@ -35,11 +35,6 @@
                   docent="[[item.docent]]">
               </my-agenda-les>  
             </template>
-
-            <template is="dom-if" if="{{ hasNoLesson() }}" restamp">
-              Geen activiteit
-            </template>
-
           </div>
         </div>
     </template>
@@ -79,6 +74,7 @@
             }, 
 
             hasNoLesson: function () {
+              if(this.lessen!=null)console.log(Object.keys(this.lessen).length);
               return false;
             }  
         });

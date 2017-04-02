@@ -99,8 +99,8 @@
             </div>
             <div>
                 <h3>
-                    <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[ c_weeknummer ]]
-                    <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon>
+                    <iron-icon icon="arrow-back" on-click="_week_down" class="mouseHover"></iron-icon> Week [[ c_weeknummer ]]
+                    <iron-icon icon="arrow-forward" on-click="_week_up" class="mouseHover"></iron-icon>
                 </h3>
             </div>
         </div>
@@ -108,7 +108,7 @@
         <div class="container agenda">
             <template is="dom-repeat" items=[[_c_lessen]]>
                 <my-agenda-dag 
-                    datum="[[_fix_date(weekdatum,index)]]" 
+                    datum="[[_pas_datum_aan(l_date,index)]]" 
                     c_username="{{c_username}}" 
                     lessen="{{item}}">
                 </my-agenda-dag>
@@ -174,13 +174,16 @@
           weekdatum: {
             type: String,
           },
+          l_date: {
+            type: Date,
+          },
         },
 
         _initializing : function() {
           if (this.c_visible && this.isReady) {
             if (this.c_rol=="student") {
-              this._getWeek();
-              this._update();
+              this._set_date_and_week();
+              this._student_rooster_ophalen_request();
             } else {
                 console.log(this.c_username + " " + this.c_rol + " ");
                 var lToast = this.$.toast_invalid_aanroep;
@@ -189,72 +192,53 @@
           }
         },
 
-        _getWeek : function() {
-          var date = this._get_first_date_of_week(this.systeemdatumlokaal)
-          this.weekdatum = date.split("-").reverse().join("-");
-          this.c_weeknummer = this._get_week_from_date(this.weekdatum);
+        _set_date_and_week : function(){
+          var date = this._get_date_from_string(this.systeemdatumstandaard);
+          this.l_date = this._get_date_with_offset(date, 1-date.getDay()); // set date to first day of the week, then convert it back to a date object.
+          this.c_weeknummer = this._get_week_from_date(this.l_date);
         },
 
-        _update : function(){
-          var date = this._get_date_from_weeknr();
-          this.weekdatum = date.split("-").reverse().join("-");
-          this._student_rooster_ophalen_request_handler(date);
+        _get_date_with_offset : function(date, offset) {
+          return new Date(date.setDate(date.getDate() + offset));
         },
 
-        _get_date_from_weeknr : function(){
-          var date = new Date(this.weekdatum.split('-')[0],0,1);
-          var dayNum = date.getDay();
-          var reqDate = (this.c_weeknummer-1) * 7;
-          if(dayNum != 0 || dayNum > 4){
-            reqDate += 7;
-          }
-          date.setDate(1-date.getDay() + (++reqDate));
-          return this._date_to_string_ddMMyyyy(date);
+        _update_date_and_week : function(days){
+          this.l_date = this._get_date_with_offset(this.l_date, days);
+          this.c_weeknummer = this._get_week_from_date(this.l_date);
+          this._student_rooster_ophalen_request();
         },
 
-        _get_week_from_date : function(dateString){
-          var date = new Date(dateString);
-          date.setHours(0,0,0);
-          var yearStart = new Date(date.getFullYear(),0,1);
-          return Math.ceil(( ( (date - yearStart) / 86400000) + 1)/7); 
+        _get_week_from_date : function(date){
+          var years = new Date(date.getFullYear(), 0 , 1);
+          var singleYear = date - years;
+          return Math.ceil(((singleYear / 86400000) + 1) / 7);
         },
 
-        _reverse_date_string : function(string){
-          return string.split("-").reverse().join("-");
-        },
-
-        _get_first_date_of_week : function(dateString){
-          dateString = this._reverse_date_string(dateString);
-          var date = new Date(dateString);
-          date.setDate(date.getDate() - date.getDay() + 1); // +1 want week begint op zondag ipv maandag volgens javascript
-          return this._date_to_string_ddMMyyyy(date);
-        },
-
-        _date_to_string_ddMMyyyy : function(date){
-          date.setMonth(date.getMonth() + 1);
-          var days = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-          var month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth();
-          return days+"-"+(month)+"-"+date.getFullYear();
+        _get_date_from_string : function(date){
+          console.log("_get_date_from_string: " + date);
+          return new Date(date);
         },
 
         ready : function(){
             this.isReady = true;
-            while(this.systeemdatumlokaal == null){
+            while(this.systeemdatumstandaard == null){
+              // this ugly piece of code ensures the agenda wont be loaded until the systemdate is available
             } 
             this._initializing();
         },
 
-        _student_rooster_ophalen_request_handler: function (date) {
+        _student_rooster_ophalen_request: function () {
             this.$.ajax_student_rooster_ophalen.contentType = "application/json";
             this.$.ajax_student_rooster_ophalen.body = {
                 "username": this.c_username,
-                "date": date,
+                "date": this.l_date,
                 "days": 6
             };
             this.$.ajax_student_rooster_ophalen.generateRequest();
         },
 
         _student_rooster_ophalen_response_handler: function (request) {
+            console.log("_student_rooster_ophalen_response_handler: " + request.detail.response);
             this._c_lessen = request.detail.response;
         },
 
@@ -266,60 +250,23 @@
                                                         // zal ook de url echt wijzigen
         },
 
-        changeWeekUp: function() {
-          var weeksInYear = this.weeksInYear(this.systeemdatumstandaard);
-          if(this.c_weeknummer == weeksInYear){
-              this.c_weeknummer = 1;
-          }else{
-              this.c_weeknummer += 1;
-          }
-          this._update();
+        _week_up: function() {
+          this._update_date_and_week(7);
         },
 
-        changeWeekDown: function() {
-          var weeksInYear = this.weeksInYear(this.systeemdatumstandaard);
-          if(this.c_weeknummer == 1){
-              this.c_weeknummer = weeksInYear;
-          }else{
-              this.c_weeknummer -= 1;
-          }
-          this._update();
+        _week_down: function() {
+          this._update_date_and_week(-7);
         },
 
-       weeksInYear: function(year) {
-          var month = 11, day = 31, week;
-
-          // Find week that 31 Dec is in. If is first week, reduce date until
-          // get previous week.
-          do {
-            var d = new Date(year, month, day--);
-            week = this.getWeekNumber(d)[1];
-          } while (week == 1);
-
-          return week;
+        _pas_datum_aan : function(dateString, dayOfWeek){
+            return this._date_to_string(this._get_date_with_offset(new Date(this.l_date), dayOfWeek)); // new date omdat anders 'l_date' overschreven word.
         },
 
-         getWeekNumber: function(d) {
-            d = new Date(+d);
-            d.setHours(0,0,0);
-            // Set to nearest Thursday: current date + 4 - current day number
-            // Make Sunday's day number 7
-            d.setDate(d.getDate() + 4 - (d.getDay()||7));
-            // Get first day of year
-            var yearStart = new Date(d.getFullYear(),0,1);
-            // Calculate full weeks to nearest Thursday
-            var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
-            // Return array of year and week number
-            return [d.getFullYear(), weekNo];
+        _date_to_string : function(date) {
+          var date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+          console.log("_date_to_string" + date);
+          return date;
         },
-
-        _fix_date : function(dateString, dayOfWeek){
-            var d = new Date(dateString);
-            dayOfWeek = dayOfWeek+1; // offset voor ind
-            d.setDate(d.getDate() + (dayOfWeek - d.getDay()));
-            var dateString = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-            return dateString;
-        }, 
 
       });
     })();

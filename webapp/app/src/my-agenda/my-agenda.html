@@ -24,7 +24,7 @@
         <div class="container agenda">
             <template is="dom-repeat" items=[[lessen]]>
                 <my-agenda-dag 
-                    datum="[[_fix_date(roosterdatum,index)]]" 
+                    datum="[[_pas_datum_aan(roosterdatum,index)]]" 
                     c_username="{{c_username}}" 
                     lessen="{{item}}">
                 </my-agenda-dag>
@@ -67,20 +67,20 @@
             },  // end of properties
              _initializing : function() {
 
-                d = new Date(this.datum);
+                lDatum = new Date(this.datum);
                 this.roosterdatum = this.datum;
-                d.setHours(0,0,0);
-                d.setDate(d.getDate() + 4 - (d.getDay()||7));
-                var yearStart = new Date(d.getFullYear(),0,1);
-                this.c_currentWeek = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+                lDatum.setHours(0,0,0);
+                lDatum.setDate(lDatum.getDate() + 4 - (lDatum.getDay()||7));
+                var yearStart = new Date(lDatum.getFullYear(),0,1);
+                this.c_currentWeek = Math.ceil(( ( (lDatum - yearStart) / 86400000) + 1)/7)
             },
 
-            _fix_date : function(dateString, dayOfWeek){
-                var d = new Date(dateString);
-                dayOfWeek = dayOfWeek+1; // offset voor ind
-                d.setDate(d.getDate() + (dayOfWeek - d.getDay()));
-                var dateString = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-                return dateString;
+            _pas_datum_aan : function(string_datum, int_weekdag){
+                var lDatum = new Date(string_datum);
+                int_weekdag = int_weekdag+1; // offset voor ind
+                lDatum.setDate(lDatum.getDate() + (int_weekdag - lDatum.getDay()));
+                var return_string_datum = lDatum.getFullYear()+"-"+(lDatum.getMonth()+1)+"-"+lDatum.getDate();
+                return return_string_datum;
             },    
         });
     </script>

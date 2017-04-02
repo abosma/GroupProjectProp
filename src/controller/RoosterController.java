@@ -36,15 +36,15 @@ public class RoosterController implements Handler{
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		String lStringDate = lJsonObjectIn.getString("date") + " 00:00";
+		String lStringDate = lJsonObjectIn.getString("date");
 		int lDays = lJsonObjectIn.getInt("days");
 		
 		System.out.println(lStringDate);
 		
 		JsonArrayBuilder lWeekBuilder = Json.createArrayBuilder();
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");		
-		LocalDateTime lDate = LocalDateTime.parse(lStringDate, formatter);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss.SSS");		
+		LocalDateTime lDate = LocalDateTime.parse(lStringDate.substring(0, lStringDate.length()-2)); // remove the 'Z' from the javascript date object to make it reable for Java
 		
 		for(int i = 0; i < lDays; i++){
   		
