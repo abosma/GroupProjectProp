@@ -1,0 +1,86 @@
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+
+
+<dom-module id="my-presentie-melden">
+    <style>
+      .ziekmeld-button {
+        margin-top: 20px;
+        width: 100%;
+        height: 2em;
+        background-color: #33aadd; 
+        color: white;
+      }
+
+      .ziekgemeld-button {
+        margin-top: 20px;
+        width: 100%;
+        height: 2em;
+        cursor: default;
+      }
+    </style>
+    <template>
+        <paper-button
+          id="login_button_element"
+          class="ziekmeld-button"
+          on-tap="openDialog"
+          raised>
+            Afmelden
+         </paper-button>
+
+        <paper-dialog id="presentieMelden" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+          <h2>Afmelden</h2>
+          <paper-dropdown-menu label="Reden invoeren" on-iron-select="_itemSelected">
+            <paper-menu class="dropdown-content">
+              <paper-item value="1">Ziek</paper-item>
+              <paper-item value="2">Afmelden</paper-item>
+            </paper-menu>
+          </paper-dropdown-menu>
+
+           <paper-input hidden$="{{!redenVeldWeergeven}}" id="afmeldReden" label="Reden afmelden"></paper-input>
+
+          <div class="buttons">
+            <paper-button dialog-dismiss>Sluiten</paper-button>
+            <paper-button dialog-confirm autofocus>Melden</paper-button>
+          </div>
+    
+        </paper-dialog>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'my-presentie-melden',
+            properties: {
+              redenVeldWeergeven: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+            },
+
+            _initializing : function() {
+            },
+
+             openDialog: function() {
+              this.$.presentieMelden.open();
+            },
+
+            _itemSelected : function(e) {
+              var selectedItem = e.target.selectedItem;
+              if (selectedItem) {
+
+                if(selectedItem.innerText == "Afmelden"){
+                  this.redenVeldWeergeven = true;
+                }else{
+                  this.redenVeldWeergeven = false;
+                }
+
+              }
+            },
+        });
+    </script>
+</dom-module>

@@ -1,3 +1,4 @@
+<link rel="import" href="../my-agenda/my-presentie-melden.html">
 <dom-module id="my-agenda-les">
     <template>
         <style>
@@ -8,15 +9,13 @@
                 list-style: none;
                 padding: 1em;
                 font-size: 0.8em;
-                border-bottom: 1px solid #ccc;
             }
 
             .dagen-content ul {
                 list-style: none;
                 padding: 1em;
                 font-size: 0.8em;
-                border-bottom: 1px solid #ccc;
-                margin: 0px;
+]                margin: 0px;
             }
 
             .dagen-content ul:last-child {
@@ -34,31 +33,6 @@
                 text-align: center;
                 padding-top: 2em;           
             }
-
-             .ziekmeld-button {
-                margin-top: 20px;
-                width: 100%;
-                height: 2em;
-                background-color: #33aadd; 
-                color: white;
-             }
-
-             .presentie-button {
-                margin-top: 20px;
-                width: 100%;
-                height: 2em;
-                font-size: 0.9em;
-                background-color: #33aadd; 
-                color: white;
-             }
-
-             .ziekgemeld-button {
-                margin-top: 20px;
-                width: 100%;
-                height: 2em;
-                cursor: default;
-             }
-
         </style>
 
         
@@ -73,12 +47,7 @@
                 <li>Groep(en): [[groepen]]</li>
                 <li>[[docent]]</li>
                 <li hidden$="{{!isStudent}}">
-                  <paper-button
-                    id="login_button_element"
-                    class="ziekmeld-button"
-                    raised>
-                      Ziekmelden
-                   </paper-button>
+                  <my-presentie-melden></my-presentie-melden>
                 </li>
 
                 <li hidden$="{{isStudent}}">
