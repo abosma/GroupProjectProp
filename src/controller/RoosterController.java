@@ -36,7 +36,11 @@ public class RoosterController implements Handler{
 	}
 	
 	private void ophalenDocentLesWeek(Conversation conversation) {
-		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		ophalenLesWeek(conversation, "docent");		
+	}
+	
+	private void ophalenLesWeek(Conversation conversation, String rol){
+    JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
 		String lStringDate = lJsonObjectIn.getString("date");
@@ -51,38 +55,23 @@ public class RoosterController implements Handler{
 			if(i>0)lDate = lDate.plusDays(1);
 			
   		//Alle lessen ophalen via PrIS
-  		ArrayList<Les> lLessen = informatieSysteem.getLessenDocentForSingleDate(lGebruikersnaam, lDate);
-  		
+			ArrayList<Les> lLessen;
+			if(rol.equals("docent")){
+				lLessen = informatieSysteem.getLessenDocentForSingleDate(lGebruikersnaam, lDate);
+			} else if (rol.equals("student")){
+				lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDate);
+			} else {
+				lLessen = new ArrayList<Les>();
+			}
+			
   		lWeekBuilder.add(transformLessenToJsonArray(lLessen));
 		}
 		String lJsonOutStr = lWeekBuilder.build().toString();
 		conversation.sendJSONMessage(lJsonOutStr);
-		
 	}
 	
 	private void ophalenStudentLesdag(Conversation conversation) {
-		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		
-		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		String lStringDate = lJsonObjectIn.getString("date");
-		int lDays = lJsonObjectIn.getInt("days");
-		
-		JsonArrayBuilder lWeekBuilder = Json.createArrayBuilder();
-		
-		LocalDateTime lDate = LocalDateTime.parse(lStringDate.substring(0, lStringDate.length()-2)); // remove the 'Z' from the javascript date object to make it reable for Java
-		
-		for(int i = 0; i < lDays; i++){
-  		
-			if(i>0)lDate = lDate.plusDays(1);
-			
-  		//Alle lessen ophalen via PrIS
-  		ArrayList<Les> lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDate);
-  		
-  		lWeekBuilder.add(transformLessenToJsonArray(lLessen));
-		}
-		String lJsonOutStr = lWeekBuilder.build().toString();
-		conversation.sendJSONMessage(lJsonOutStr);
-		
+		ophalenLesWeek(conversation, "student");
 	}
 	
 	private JsonArray transformLessenToJsonArray(ArrayList<Les> lessen){
