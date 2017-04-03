@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -27,9 +28,36 @@ public class RoosterController implements Handler{
 			ophalenStudent(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/ophalen")){
 			ophalenDocent(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/lesweek")){
+			ophalenDocentLesWeek(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
 			ophalenStudentLesdag(conversation);
 		}
+	}
+	
+	private void ophalenDocentLesWeek(Conversation conversation) {
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		String lStringDate = lJsonObjectIn.getString("date");
+		int lDays = lJsonObjectIn.getInt("days");
+		
+		JsonArrayBuilder lWeekBuilder = Json.createArrayBuilder();
+		
+		LocalDateTime lDate = LocalDateTime.parse(lStringDate.substring(0, lStringDate.length()-2)); // remove the 'Z' from the javascript date object to make it reable for Java
+		
+		for(int i = 0; i < lDays; i++){
+  		
+			if(i>0)lDate = lDate.plusDays(1);
+			
+  		//Alle lessen ophalen via PrIS
+  		ArrayList<Les> lLessen = informatieSysteem.getLessenDocentForSingleDate(lGebruikersnaam, lDate);
+  		
+  		lWeekBuilder.add(transformLessenToJsonArray(lLessen));
+		}
+		String lJsonOutStr = lWeekBuilder.build().toString();
+		conversation.sendJSONMessage(lJsonOutStr);
+		
 	}
 	
 	private void ophalenStudentLesdag(Conversation conversation) {
@@ -39,63 +67,65 @@ public class RoosterController implements Handler{
 		String lStringDate = lJsonObjectIn.getString("date");
 		int lDays = lJsonObjectIn.getInt("days");
 		
-		System.out.println(lStringDate);
-		
 		JsonArrayBuilder lWeekBuilder = Json.createArrayBuilder();
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy'T'HH:mm:ss.SSS");		
 		LocalDateTime lDate = LocalDateTime.parse(lStringDate.substring(0, lStringDate.length()-2)); // remove the 'Z' from the javascript date object to make it reable for Java
 		
 		for(int i = 0; i < lDays; i++){
   		
 			if(i>0)lDate = lDate.plusDays(1);
 			
-			System.out.println(lDate.toString());
-			
   		//Alle lessen ophalen via PrIS
   		ArrayList<Les> lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDate);
   		
-  		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
-  		
-  		if(lLessen.isEmpty()){
-  			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
-  			lJsonObjectBuilderVoorDocent.add("vak", "Geen Lessen");
-  			lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
-  		} else {
-    		for (Les les : lLessen) {
-    			LocalDateTime beginDatum = les.getBeginData();
-    			LocalDateTime eindDatum = les.getEindData();
-    			
-    			formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-          
-    			String stringDatum = beginDatum.format(formatter);
-    			formatter = DateTimeFormatter.ofPattern("HH:mm");
-    			String stringBegin = beginDatum.format(formatter);
-          String StringEind = eindDatum.format(formatter);
-    			String lesNaam = les.getNaam();
-    			String docentNaam = les.getDocent().getGebruikersnaam();
-    			String lokaal = les.getLokaal();
-    			String klasNaam = les.getKlas().getNaam();
-    			
-    			//Hier voeg ik alle strings toe aan de JsonObjectBuilder zodat Polymer alles kan gebruiken
-    			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
-    			lJsonObjectBuilderVoorDocent
-    				.add("datum", stringDatum)
-    				.add("begin", stringBegin)
-    				.add("eind", StringEind)
-    				.add("vak", lesNaam)
-    				.add("docent", docentNaam)
-    				.add("lokaal", lokaal)
-    				.add("klas", klasNaam);
-    		  
-    		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
-    		}
-  		}
-  		lWeekBuilder.add(lJsonArrayBuilder.build());
+  		lWeekBuilder.add(transformLessenToJsonArray(lLessen));
 		}
 		String lJsonOutStr = lWeekBuilder.build().toString();
 		conversation.sendJSONMessage(lJsonOutStr);
 		
+	}
+	
+	private JsonArray transformLessenToJsonArray(ArrayList<Les> lessen){
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
+		if(lessen.isEmpty()){
+			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
+			lJsonObjectBuilderVoorDocent.add("vak", "Geen Lessen");
+			lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
+		} else {
+  		for (Les les : lessen) {
+  		  lJsonArrayBuilder.add(transformLesToJsonObject(les));
+  		}
+		}
+		return lJsonArrayBuilder.build();
+	}
+	
+	private JsonObject transformLesToJsonObject(Les les){
+		LocalDateTime beginDatum = les.getBeginData();
+		LocalDateTime eindDatum = les.getEindData();
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
+		String stringDatum = beginDatum.format(formatter);
+		formatter = DateTimeFormatter.ofPattern("HH:mm");
+		String stringBegin = beginDatum.format(formatter);
+    String StringEind = eindDatum.format(formatter);
+		String lesNaam = les.getNaam();
+		String docentNaam = les.getDocent().getGebruikersnaam();
+		String lokaal = les.getLokaal();
+		String klasNaam = les.getKlas().getNaam();
+		
+		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
+		
+		lJsonObjectBuilder
+			.add("datum", stringDatum)
+			.add("begin", stringBegin)
+			.add("eind", StringEind)
+			.add("vak", lesNaam)
+			.add("docent", docentNaam)
+			.add("lokaal", lokaal)
+			.add("klas", klasNaam);
+		
+		return lJsonObjectBuilder.build();
 	}
 
 	private void ophalenDocent(Conversation conversation) {

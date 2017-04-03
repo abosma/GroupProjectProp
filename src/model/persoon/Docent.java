@@ -17,4 +17,7 @@ public class Docent extends Persoon {
 		this.docentNummer = docentNummer;
 	}
 
+	public boolean equals(Docent docent){
+		return this.docentNummer == docent.docentNummer;
+	}	
 }

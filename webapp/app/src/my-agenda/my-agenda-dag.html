@@ -31,8 +31,9 @@
                   begin="[[item.begin]]" 
                   eind="[[item.eind]]" 
                   lokaal="[[item.lokaal]]" 
-                  groepen="[[item.vak]]" 
-                  docent="[[item.docent]]">
+                  groepen="[[item.klas]]" 
+                  docent="[[item.docent]]"
+                  rol="{{rol}}">
               </my-agenda-les>  
             </template>
           </div>
@@ -59,6 +60,9 @@
               },
               lessen: {
                 type: Object,
+              }, 
+              rol: {
+                type: String,
               }
             },
 

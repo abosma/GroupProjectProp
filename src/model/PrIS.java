@@ -233,6 +233,24 @@ public class PrIS {
 		return returnLessen;
 	}
 	
+	public ArrayList<Les> getLessenDocentForSingleDate(String dct, LocalDateTime date){
+		ArrayList<Les> lesDag = new ArrayList<Les>();
+		
+		Docent docent = this.getDocent(dct);
+		
+		for(Les les : deLessen){
+			LocalDateTime beginDatum = les.getBeginData();
+			if(les.getDocent().equals(docent)){
+				if( date.getYear() == beginDatum.getYear() &&
+						date.getMonth() == beginDatum.getMonth() &&
+						date.getDayOfMonth() == beginDatum.getDayOfMonth()){
+					lesDag.add(les);
+				}
+			}
+		}
+		return lesDag;
+	}
+	
 	public ArrayList<Les> getLessenStudentForSingleDate(String studentMail, LocalDateTime date){
 		//variabele waarin we de lessen van de gegeven dag opslaan
 		ArrayList<Les> lesdag = new ArrayList<Les>();
@@ -252,8 +270,6 @@ public class PrIS {
   				// als alles klopt, dan voegen we deze les toe aan de array.
   				lesdag.add(les);
   			}
-			} else {
-				continue;
 			}
 		}
 		return lesdag;
