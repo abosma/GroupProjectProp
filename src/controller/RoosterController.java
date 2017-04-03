@@ -84,8 +84,8 @@ public class RoosterController implements Handler{
 	}
 	
 	private JsonObject transformLesToJsonObject(Les les){
-		LocalDateTime beginDatum = les.getBeginData();
-		LocalDateTime eindDatum = les.getEindData();
+		LocalDateTime beginDatum = les.getBeginDatum();
+		LocalDateTime eindDatum = les.getEindDatum();
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     

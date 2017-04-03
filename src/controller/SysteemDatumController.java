@@ -43,7 +43,7 @@ public class SysteemDatumController implements Handler {
 		ArrayList<Les> alleLessen = informatieSysteem.getAlleLessen();
 		
 		for(Les l : alleLessen){
-			LocalDateTime beginData = l.getBeginData();
+			LocalDateTime beginData = l.getBeginDatum();
 			Calendar cal = Calendar.getInstance();
 			Instant instant = beginData.toInstant(ZoneOffset.UTC);
 			Date date = Date.from(instant);

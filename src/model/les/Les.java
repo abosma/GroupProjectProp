@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class Les {
 	
-  private LocalDateTime beginData;
-  private LocalDateTime eindData;
+  private LocalDateTime beginDatum;
+  private LocalDateTime eindDatum;
   private String lesNaam;
   private Docent docent;
   private String lokaal;
@@ -20,8 +20,8 @@ public class Les {
   private Map<String, Integer> presentieMap = new HashMap<String, Integer>();
   
   public Les(LocalDateTime bD, LocalDateTime bE, String lN, Docent doc, String lkl, Klas kl){
-  	this.beginData = bD;
-  	this.eindData = bE;
+  	this.beginDatum = bD;
+  	this.eindDatum = bE;
   	this.lesNaam = lN;
   	this.docent = doc;
   	this.lokaal = lkl;
@@ -44,17 +44,17 @@ public class Les {
   
   public ArrayList<LocalDateTime> getLesData(){
   	ArrayList<LocalDateTime> returnArray = new ArrayList<LocalDateTime>();
-  	returnArray.add(this.beginData);
-  	returnArray.add(this.eindData);
+  	returnArray.add(this.beginDatum);
+  	returnArray.add(this.eindDatum);
   	return returnArray;
   }
   
-  public LocalDateTime getBeginData(){
-  	return this.beginData;
+  public LocalDateTime getBeginDatum(){
+  	return this.beginDatum;
   }
   
-  public LocalDateTime getEindData(){
-  	return this.eindData;
+  public LocalDateTime getEindDatum(){
+  	return this.eindDatum;
   }
   
   public String getNaam(){
@@ -74,8 +74,8 @@ public class Les {
   }
   
   public String toString(){
-  	return "Begindatum: " + this.beginData + "\n"
-  			+ "Einddatum: " + this.eindData + "\n"
+  	return "Begindatum: " + this.beginDatum + "\n"
+  			+ "Einddatum: " + this.eindDatum + "\n"
   			+ "Lesnaam: " + this.lesNaam + "\n"
   			+ "Docent: " + this.docent.getVoornaam() + "\n"
   			+ "Lokaal: " + this.lokaal + "\n"

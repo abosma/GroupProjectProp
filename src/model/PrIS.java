@@ -239,7 +239,7 @@ public class PrIS {
 		Docent docent = this.getDocent(dct);
 		
 		for(Les les : deLessen){
-			LocalDateTime beginDatum = les.getBeginData();
+			LocalDateTime beginDatum = les.getBeginDatum();
 			if(les.getDocent().equals(docent)){
 				if( date.getYear() == beginDatum.getYear() &&
 						date.getMonth() == beginDatum.getMonth() &&
@@ -259,7 +259,7 @@ public class PrIS {
 		
 		// loop door alle lessen
 		for(Les les : deLessen){
-			LocalDateTime beginDatum = les.getBeginData();
+			LocalDateTime beginDatum = les.getBeginDatum();
 			// controleer of de datum overeenkomt, anders slaan we deze uberhaupt over.
 			if( date.getYear() == beginDatum.getYear() &&
 					date.getMonth() == beginDatum.getMonth() &&

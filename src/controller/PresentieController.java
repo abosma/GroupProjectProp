@@ -45,8 +45,8 @@ public class PresentieController implements Handler   {
 			JsonObjectBuilder lJsonObjectBuilderVoorLes = Json.createObjectBuilder();
 			
 			
-			LocalDateTime beginDatum = l.getBeginData();
-			LocalDateTime eindDatum = l.getEindData();
+			LocalDateTime beginDatum = l.getBeginDatum();
+			LocalDateTime eindDatum = l.getEindDatum();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	    
 			String beginDatumString = beginDatum.format(formatter);
@@ -103,8 +103,8 @@ public class PresentieController implements Handler   {
 		for (Les l : lessenStudent) {
 			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
 			
-			LocalDateTime beginDatum = l.getBeginData();
-			LocalDateTime eindDatum = l.getEindData();
+			LocalDateTime beginDatum = l.getBeginDatum();
+			LocalDateTime eindDatum = l.getEindDatum();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	    
 			String beginDatumString = beginDatum.format(formatter);
