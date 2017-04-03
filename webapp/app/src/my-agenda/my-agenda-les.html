@@ -72,7 +72,6 @@
               vak: {
                 type: String,
                 notify: true, 
-                observer: '_test',
               },
               begin: {
                 type: String,
@@ -110,15 +109,10 @@
               }
             },
 
-            _test : function(){
-              console.log("Test" + this.rol);
-            },
-
             _initializing : function() {
               if(this.rol == "undefined" || this.rol == "docent"){
                 this.rol = "docent";
                 this.isStudent = false;
-                console.log(this.rol);
               }
             },
         });

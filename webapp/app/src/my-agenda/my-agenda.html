@@ -151,14 +151,10 @@
             _initializing : function() {
               if (this.c_visible && this.isReady) {
                 if (this.c_rol=="student") {
-                  console.log("_initializing@Student: Logging...");
                   this._set_date_and_week();
-                  console.log("_initializing@Student: "+ this.l_date + " | " + this.c_username);
                   this._student_rooster_request();
                 } else if (this.c_rol=="docent"){
-                  console.log("_initializing@Student: Logging...");
                   this._set_date_and_week();
-                  console.log("_initializing@Student: "+ this.l_date + " | " + this.c_username);
                   this._docent_rooster_request();
 
                 }
@@ -178,8 +174,6 @@
             _update_date_and_week : function(days){
               this.l_date = this._get_date_with_offset(this.l_date, days);
               this.c_weeknummer = this._get_week_from_date(this.l_date);
-
-              console.log("log@_update_date_and_week: " + this.c_rol);
               if(this.c_rol == "student"){
                 this._student_rooster_request();
               } else if (this.c_rol == "docent"){
@@ -194,7 +188,6 @@
             },
 
             _get_date_from_string : function(date){
-              //console.log("_get_date_from_string: " + date);
               return new Date(date);
             },
 
@@ -207,7 +200,6 @@
             },
 
             _docent_rooster_request : function () {
-                console.log("log@_docent_rooster_request");
                 this.$.ajax_docent_rooster_ophalen.contentType = "application/json";
                 this.$.ajax_docent_rooster_ophalen.body = {
                     "username": this.c_username,
@@ -218,12 +210,10 @@
             },
 
             _docent_rooster_ophalen_response_handler: function (request) {
-                //console.log("_student_rooster_ophalen_response_handler: " + request.detail.response);
                 this._c_lessen = request.detail.response;
             },
 
             _student_rooster_request: function () {
-                console.log("log@_student_rooster_request");
                 this.$.ajax_student_rooster_ophalen.contentType = "application/json";
                 this.$.ajax_student_rooster_ophalen.body = {
                     "username": this.c_username,
@@ -257,9 +247,7 @@
             },
 
             _date_to_string : function(date) {
-              var date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-              //console.log("_date_to_string" + date);
-              return date;
+              return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
             },    
         });
     </script>
