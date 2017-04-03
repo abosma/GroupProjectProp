@@ -33,7 +33,8 @@
                   lokaal="[[item.lokaal]]" 
                   groepen="[[item.klas]]" 
                   docent="[[item.docent]]"
-                  rol="{{rol}}">
+                  rol="{{rol}}"
+                  c_username="{{c_username}}">
               </my-agenda-les>  
             </template>
           </div>
@@ -52,7 +53,7 @@
                     value: true,
               },
               datum: {
-                type: String,
+                type: Date,
                 notify: true,
               },
               c_username: {
@@ -66,15 +67,10 @@
               }
             },
 
-            _fix_date : function(dateString){
-              var tijd_datum = new Date(dateString);
-              var dag = tijd_datum.getDay(); //dag in woorden
-              var dag2 = tijd_datum.getDate(); // dag in getal
-              var maand = tijd_datum.getMonth(); // +1 want js begint bij 0 te tellen
-
+            _fix_date : function(date){
               var maandarray = new Array('JAN', 'FEB', 'MA', 'APR', 'MEI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEC');
               var dagarray = new Array('ZO','MA','DI', 'WO', 'DO', 'VR', 'ZA');
-              return(dagarray[dag]+" "+dag2+" "+maandarray[maand]);
+              return(dagarray[date.getDay()]+" "+date.getDate()+" "+maandarray[date.getMonth()]);
             }, 
 
             hasNoLesson: function () {

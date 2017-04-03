@@ -111,7 +111,9 @@
                     datum="[[_pas_datum_aan(l_date,index)]]" 
                     c_username="{{c_username}}" 
                     rol="{{c_rol}}"
-                    lessen="{{item}}">
+                    lessen="{{item}}"
+                    c_username="{{c_username}}"
+                    >
                 </my-agenda-dag>
             </template>
         </div>
@@ -148,20 +150,10 @@
           c_weeknummer: {
               type: Number,
           },
-          c_jaarnummer: {
-              type: Number,
-          },
           c_visible: {
             type: Boolean,
             value: false,
             observer: '_initializing',
-          },
-          l_display: {
-            type: String,
-            value: "",
-          },
-          systeemdatumlokaal: {
-            type: String,
           },
           systeemdatumstandaard: {
             type: String,
@@ -169,9 +161,6 @@
           isReady: {
             type: Boolean,
             value: false,
-          },
-          weekdatum: {
-            type: String,
           },
           l_date: {
             type: Date,
@@ -258,7 +247,7 @@
         },
 
         _pas_datum_aan : function(dateString, dayOfWeek){
-            return this._date_to_string(this._get_date_with_offset(new Date(this.l_date), dayOfWeek)); // new date omdat anders 'l_date' overschreven word.
+            return this._get_date_with_offset(new Date(this.l_date), dayOfWeek); // new date omdat anders 'l_date' overschreven word.
         },
 
         _date_to_string : function(date) {
