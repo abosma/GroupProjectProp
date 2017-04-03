@@ -39,8 +39,6 @@ public class Application {
 		
 		server.registerHandler("/student/presentie", presentieController);
 		server.registerHandler("/student/presentie/tonen", presentieController);
-		
-		
 		server.registerHandler("/systeemdatum/lesinfo", systeemDatumController);
 		server.registerHandler("/login", loginController);
   	server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
@@ -48,6 +46,7 @@ public class Application {
   	server.registerHandler("/student/rooster/lesdagophalen", roosterController);
   	server.registerHandler("/docent/rooster/ophalen", roosterController);
   	server.registerHandler("/student/rooster/ophalen", roosterController);
+  	
 		server.start();
 	}
 }

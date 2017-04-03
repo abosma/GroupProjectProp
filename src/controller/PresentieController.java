@@ -36,16 +36,14 @@ public class PresentieController implements Handler   {
 	
 	private void studentOphalen(Conversation conversation)  {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		String lVaknaam = lJsonObjectIn.getString("vaknaam");
-		
-		ArrayList<Les> lessenStudent = informatieSysteem.getVakStudent(lVaknaam, lGebruikersnaam);
-		
+		ArrayList<Les> lessenStudent = informatieSysteem.getLessenStudent(lGebruikersnaam);
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		
 		for (Les l : lessenStudent) {
 			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
+			JsonObjectBuilder lJsonObjectBuilderVoorLes = Json.createObjectBuilder();
+			
 			
 			LocalDateTime beginDatum = l.getBeginData();
 			LocalDateTime eindDatum = l.getEindData();
@@ -57,13 +55,32 @@ public class PresentieController implements Handler   {
 			String lokaal = l.getLokaal();
 			
 			lJsonObjectBuilderVoorStudent
-				.add("beginDatum", beginDatumString)
-				.add("eindDatum", eindDatumString)
-				.add("docentNaam", docentNaam)
-				.add("lokaal", lokaal);
+				.add(l.getNaam(), lJsonObjectBuilderVoorLes)
+  				.add("beginDatum", beginDatumString)
+  				.add("eindDatum", eindDatumString)
+  				.add("docentNaam", docentNaam)
+  				.add("lokaal", lokaal);
 			for(Map.Entry<String, Integer> pres : l.getPresentie().entrySet()){
     		if(pres.getKey().equals(lGebruikersnaam)){
-    			lJsonObjectBuilderVoorStudent.add(pres.getKey(), pres.getValue());
+    			String s = null;
+    			switch(pres.getValue()){
+    				case 0:
+    					s = "Afwezig";
+    					break;
+    				case 1:
+    					s = "Aanwezig";
+    					break;
+    				case 2:
+    					s = "Ziek";
+    					break;
+    				case 3:
+    					s = "Afgemeld";
+    					break;
+    				case 4:
+    					s = "Afgemeld (Niet geaccepteerd)";
+    					break;
+    			}
+    			lJsonObjectBuilderVoorLes.add(pres.getKey(), s);
     		}
     	}
 		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
