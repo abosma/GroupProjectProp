@@ -89,7 +89,6 @@ public class RoosterController implements Handler{
 			JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
 			// creeer JsonObject
 			lJsonObjectBuilder
-				.add("vak", "Geen Lessen")
 				.add("leeg", true);
 			
 			// Voeg object toe aan de array

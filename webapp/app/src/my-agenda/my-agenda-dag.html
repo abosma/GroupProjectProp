@@ -15,10 +15,10 @@
             }
 
             my-agenda-les {
-                border-bottom: 1px solid #ccc;
+                border-top: 1px solid #ccc;
             }
 
-            my-agenda-les:last-child {
+            my-agenda-les:first-child {
                 border-bottom: none;
             }
 
@@ -27,13 +27,7 @@
           <div class="dagen-agenda">[[_fix_date(datum)]]</div>
             <template is="dom-repeat" items="[[lessen]]">
               <my-agenda-les 
-                  vak="[[item.vak]]" 
-                  datum="[[item.datum]]"
-                  begin="[[item.begin]]" 
-                  eind="[[item.eind]]" 
-                  lokaal="[[item.lokaal]]" 
-                  groepen="[[item.klas]]" 
-                  docent="[[item.docent]]"
+                  item=[[item]]
                   rol="{{rol}}"
                   c_username="{{c_username}}">
               </my-agenda-les>  

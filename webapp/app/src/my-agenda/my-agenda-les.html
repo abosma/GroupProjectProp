@@ -15,7 +15,7 @@
                 list-style: none;
                 padding: 1em;
                 font-size: 0.8em;
-]                margin: 0px;
+                margin: 0px;
             }
 
             .dagen-content ul:last-child {
@@ -39,14 +39,13 @@
         
         <div class="dagen-content">
           <ul>
-            <template is="dom-if" if="{{vak}}">
-              <template is="dom-if" if="{{lokaal}}">
-                <li><b>[[vak]]</b></li>
-                <li><i>[[datum]]</i></li>
-                <li><i>[[begin]] - [[eind]]</i></li>
-                <li>[[lokaal]]</li>
-                <li>Groep(en): [[groepen]]</li>
-                <li>[[docent]]</li>
+            <template is="dom-if" if="{{item.vak}}">
+                <li><b>[[item.vak]]</b></li>
+                <li><i>[[item.datum]]</i></li>
+                <li><i>[[item.begin]] - [[item.eind]]</i></li>
+                <li>[[item.lokaal]]</li>
+                <li>Groep(en): [[item.klas]]</li>
+                <li>[[item.docent]]</li>
                 <li hidden$="{{!isStudent}}">
                   <my-presentie-melden></my-presentie-melden>
                 </li>
@@ -59,7 +58,12 @@
                         Presentie invoeren
                     </paper-button>
                 </li>
-              </template>
+            </template>
+            <template is="dom-if" if={{item.leeg}}>
+              <li>Geen lessen</li>
+            </template>
+            <template is="dom-if" if={{!succes}}>
+              <li>Geen gegevens gevonden</li>
             </template>
           </ul>
         </div>
@@ -69,33 +73,6 @@
         Polymer({
             is: 'my-agenda-les',
             properties: {
-              vak: {
-                type: String,
-                notify: true, 
-              },
-              begin: {
-                type: String,
-                notify: true,
-              },
-              eind: {
-                type: String,
-                notify: true,  
-              },
-              datum: {
-                type: String,
-              },
-              lokaal: {
-                type: String,
-                notify: true,  
-              },
-              groepen: {
-                type: String,
-                notify: true,  
-              },
-              docent: {
-                type: String,
-                notify: true, 
-              },
               isStudent: {
                     type: Boolean,
                     value: true,
@@ -106,6 +83,14 @@
               },
               c_username: {
                 type: String,
+              },
+              item: {
+                type: Object,
+                observer: '_item_observer',
+              },
+              succes: {
+                type: Boolean,
+                value: false,
               }
             },
 
@@ -114,6 +99,10 @@
                 this.rol = "docent";
                 this.isStudent = false;
               }
+            },
+
+            _item_observer : function(){
+              this.succes = typeof this.item == 'object'; // Wanneer item een object bevat, is alles in orde en is succes true.
             },
         });
     </script>
