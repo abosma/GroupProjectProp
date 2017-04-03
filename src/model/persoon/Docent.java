@@ -18,6 +18,6 @@ public class Docent extends Persoon {
 	}
 
 	public boolean equals(Docent docent){
-		return this.docentNummer == docent.docentNummer;
+		return this.getGebruikersnaam().equals(docent.getGebruikersnaam());
 	}	
 }

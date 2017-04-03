@@ -37,26 +37,20 @@
             }
         </style>
 
-        <!-- Header Agenda  -->
-        <div class="container">
-            <div>
-                <h2>Mijn weekrooster || [[rol]]</h2>
-            </div>
-            <div>
-                <h3>
-                    <iron-icon icon="arrow-back" on-click="changeWeekDown" class="mouseHover"></iron-icon> Week [[ c_currentWeek ]]
-                    <iron-icon icon="arrow-forward" on-click="changeWeekUp" class="mouseHover"></iron-icon>
-                </h3>
-            </div>
-        </div>
 
-        <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" systeemdatumlokaal="{{systeemdatumstandaard}}" lessen="{{_c_lessen}}"></my-agenda>
 
         <paper-toast id="toast_invalid_aanroep"
                      duration="0"
                      text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
             <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
         </paper-toast>
+
+        <my-agenda 
+          c_rol="{{ c_rol }}" 
+          c_visible="{{c_visible}}" 
+          c_username="{{c_username}}" 
+          systeemdatumstandaard="{{systeemdatumstandaard}}">
+        </my-agenda>
     </template>
 
     <script>
@@ -71,18 +65,32 @@
         is: 'my-rooster-docent',
 
         properties: {
-          _c_lessen: {
-            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
-										array is constant groepnr is changable */
-          },
           c_rol: {
             type: String,
+            observer: '_initializing'
           },
           c_username: {
             type: String,
           },
-        },
+          c_visible: {
+            type: String,
+          },
+          systeemdatumstandaard: {
+            type: String,
+          },
 
+        }, // end of properties
+        _initializing : function() {
+          if (this.c_visible) {
+            if (this.c_rol=="docent") {
+              // all is good...
+            } else {
+                console.log(this.c_username + " " + this.c_rol + " ");
+                var lToast = this.$.toast_invalid_aanroep;
+                lToast.open();
+            }
+          }
+        },
       });
     })();
     </script>

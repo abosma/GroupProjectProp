@@ -6,86 +6,260 @@
                 display: block;
             }
 
+            :root {
+                --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+            }
+
+            span {
+                @apply(--paper-font-body1);
+            }
+
             .container {
               @apply(--layout-horizontal);
               @apply(--layout-justified);
             }
+            .toast-button {
+                text-transform: none;
+                color: white; /* white tekst */
+                background: #1a9fd9; /* kind of blue */
+                --paper-button-ink-color: #00567B; /* kind of dark blue */
+            }
 
-            .agenda {
-                border: 1px solid #1693c9;            
+            .my-title {
+                font-size: 20px;
+                color: blue;
+                border-bottom: 1px solid red; /* a red line */
+                padding-bottom: 2px; /* space above the border line */
+            }
+
+            .voornaam {
+                min-width: 100px;
+                text-align: left;
+            }
+
+            .achternaam {
+                min-width: 100px;
+                text-align: left;
+            }
+
+            .groepid-header {
+                min-width: 100px;
+                text-align: left;
+            }
+
+            .groepid {
+                min-width: 100px;
+            }
+
+            .my-button {
+                width: 100%; /* full width */
+                color: white; /* white tekst */
+                background: #1a9fd9; /* kind of blue */
+                --paper-button-ink-color: #00567B; /* kind of dark blue */
+                margin-top: 5px; /* enlarge thet default */
+                margin-left: 0px; /* reduce the default */
             }
 
             .mouseHover:hover {
                 cursor: pointer;
                 color: #33aadd;
             }
+
+            .agenda {
+                border: 1px solid #1693c9;  
+                border-right: none;
+            }
+            my-agenda-dag {
+              border-right: 1px solid #1693c9;
+            }
         </style>
 
+        <!-- Header Agenda  -->
+        <div class="container">
+            <div>
+                <h2>Mijn weekrooster || [[c_rol]]</h2>
+            </div>
+            <div>
+                <h3>
+                    <iron-icon icon="arrow-back" on-click="_week_down" class="mouseHover"></iron-icon> Week [[ c_weeknummer ]]
+                    <iron-icon icon="arrow-forward" on-click="_week_up" class="mouseHover"></iron-icon>
+                </h3>
+            </div>
+        </div>
+
         <div class="container agenda">
-            <template is="dom-repeat" items=[[lessen]]>
+            <template is="dom-repeat" items=[[_c_lessen]]>
                 <my-agenda-dag 
-                    datum="[[_pas_datum_aan(roosterdatum,index)]]" 
+                    datum="[[_pas_datum_aan(l_date,index)]]" 
                     c_username="{{c_username}}" 
-                    rol="{{rol}}"
-                    lessen="{{item}}">
+                    rol="{{c_rol}}"
+                    lessen="{{item}}"
+                    c_username="{{c_username}}"
+                    >
                 </my-agenda-dag>
             </template>
         </div>
+
+        <iron-ajax id="ajax_student_rooster_ophalen"
+                   method="POST"
+                   url="/student/rooster/lesdagophalen"
+                   handle-as="json"
+                   on-response="_student_rooster_ophalen_response_handler">
+        </iron-ajax>
+
+        <iron-ajax id="ajax_docent_rooster_ophalen"
+                   method="POST"
+                   url="/docent/rooster/lesdagophalen"
+                   handle-as="json"
+                   on-response="_docent_rooster_ophalen_response_handler">
+        </iron-ajax>
 
     </template>
     <script>
         Polymer({
             is: 'my-agenda',
             properties: {
-                rol: {
-                    type: String,
-                    notify: true,   
-                    observer: '_tester',
-                },
+                _c_lessen: {
+                type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
+                                            array is constant groepnr is changable */
+              },
+              c_rol: {
+                type: String,
+              },
+              c_username: {
+                type: String,
+              },
+              c_weeknummer: {
+                  type: Number,
+              },
+              c_visible: {
+                type: Boolean,
+                value: false,
+                observer: '_initializing',
+              },
+              systeemdatumstandaard: {
+                type: String,
+              },
+              isReady: {
+                type: Boolean,
+                value: false,
+              },
+              l_date: {
+                type: Date,
+              },
+            },
+            _initializing : function() {
+              if (this.c_visible && this.isReady) {
+                if (this.c_rol=="student") {
+                  console.log("_initializing@Student: Logging...");
+                  this._set_date_and_week();
+                  console.log("_initializing@Student: "+ this.l_date + " | " + this.c_username);
+                  this._student_rooster_request();
+                } else if (this.c_rol=="docent"){
+                  console.log("_initializing@Student: Logging...");
+                  this._set_date_and_week();
+                  console.log("_initializing@Student: "+ this.l_date + " | " + this.c_username);
+                  this._docent_rooster_request();
 
-                isStudent: {
-                    type: Boolean,
-                    value: true,
-                },
-                datum: {
-                    type: String,
-                    notify: true,   
-                },
-                c_visible: {
-                    type: Boolean,
-                    value: false,
-                },
-                c_username: {
-                    type: String
-                },
-
-                c_currentWeek: {
-                    type: Number,
-                },
-                lessen: {
-                    type: Object,
-                    observer: '_initializing',
                 }
-            },  // end of properties
-            _tester : function(){                
-                console.log("_initializing@my-agenda: " + this.rol);
+              }
             },
 
-             _initializing : function() {
-                lDatum = new Date(this.datum);
-                this.roosterdatum = this.datum;
-                lDatum.setHours(0,0,0);
-                lDatum.setDate(lDatum.getDate() + 4 - (lDatum.getDay()||7));
-                var yearStart = new Date(lDatum.getFullYear(),0,1);
-                this.c_currentWeek = Math.ceil(( ( (lDatum - yearStart) / 86400000) + 1)/7)
+            _set_date_and_week : function(){
+              var date = this._get_date_from_string(this.systeemdatumstandaard);
+              this.l_date = this._get_date_with_offset(date, 1-date.getDay()); // set date to first day of the week, then convert it back to a date object.
+              this.c_weeknummer = this._get_week_from_date(this.l_date);
             },
 
-            _pas_datum_aan : function(string_datum, int_weekdag){
-                var lDatum = new Date(string_datum);
-                int_weekdag = int_weekdag+1; // offset voor ind
-                lDatum.setDate(lDatum.getDate() + (int_weekdag - lDatum.getDay()));
-                var return_string_datum = lDatum.getFullYear()+"-"+(lDatum.getMonth()+1)+"-"+lDatum.getDate();
-                return return_string_datum;
+            _get_date_with_offset : function(date, offset) {
+              return new Date(date.setDate(date.getDate() + offset));
+            },
+
+            _update_date_and_week : function(days){
+              this.l_date = this._get_date_with_offset(this.l_date, days);
+              this.c_weeknummer = this._get_week_from_date(this.l_date);
+
+              console.log("log@_update_date_and_week: " + this.c_rol);
+              if(this.c_rol == "student"){
+                this._student_rooster_request();
+              } else if (this.c_rol == "docent"){
+                this._docent_rooster_request();
+              }
+            },
+
+            _get_week_from_date : function(date){
+              var years = new Date(date.getFullYear(), 0 , 1);
+              var singleYear = date - years;
+              return Math.ceil(((singleYear / 86400000) + 1) / 7);
+            },
+
+            _get_date_from_string : function(date){
+              //console.log("_get_date_from_string: " + date);
+              return new Date(date);
+            },
+
+            ready : function(){
+                this.isReady = true;
+                while(this.systeemdatumstandaard == null){
+                  // this ugly piece of code ensures the agenda wont be loaded until the systemdate is available
+                } 
+                this._initializing();
+            },
+
+            _docent_rooster_request : function () {
+                console.log("log@_docent_rooster_request");
+                this.$.ajax_docent_rooster_ophalen.contentType = "application/json";
+                this.$.ajax_docent_rooster_ophalen.body = {
+                    "username": this.c_username,
+                    "date": this.l_date,
+                    "days": 6
+                };
+                this.$.ajax_docent_rooster_ophalen.generateRequest();
+            },
+
+            _docent_rooster_ophalen_response_handler: function (request) {
+                //console.log("_student_rooster_ophalen_response_handler: " + request.detail.response);
+                this._c_lessen = request.detail.response;
+            },
+
+            _student_rooster_request: function () {
+                console.log("log@_student_rooster_request");
+                this.$.ajax_student_rooster_ophalen.contentType = "application/json";
+                this.$.ajax_student_rooster_ophalen.body = {
+                    "username": this.c_username,
+                    "date": this.l_date,
+                    "days": 6
+                };
+                this.$.ajax_student_rooster_ophalen.generateRequest();
+            },
+
+            _student_rooster_ophalen_response_handler: function (request) {
+                this._c_lessen = request.detail.response;
+            },
+
+            _go_home: function() {
+              var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+              var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+              lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
+                                                            // door de two way binding in <app-route> en <app-location>
+                                                            // zal ook de url echt wijzigen
+            },
+            _week_up: function() {
+              this._update_date_and_week(7);
+            },
+
+            _week_down: function() {
+              this._update_date_and_week(-7);
+            },
+
+            _pas_datum_aan : function(dateString, dayOfWeek){
+                return this._get_date_with_offset(new Date(this.l_date), dayOfWeek); // new date omdat anders 'l_date' overschreven word.
+            },
+
+            _date_to_string : function(date) {
+              var date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+              //console.log("_date_to_string" + date);
+              return date;
             },    
         });
     </script>
