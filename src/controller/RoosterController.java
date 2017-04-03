@@ -25,14 +25,18 @@ public class RoosterController implements Handler{
 	
 	public void handle(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/docent/rooster/lesdagophalen")){
-			ophalenDocentLesWeek(conversation);
+			ophalenDocentLessen(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
-			ophalenStudentLesdag(conversation);
+			ophalenStudentLessen(conversation);
 		}
 	}
 	
-	private void ophalenDocentLesWeek(Conversation conversation) {
+	private void ophalenDocentLessen(Conversation conversation) {
 		ophalenLesWeek(conversation, "docent");		
+	}
+	
+	private void ophalenStudentLessen(Conversation conversation) {
+		ophalenLesWeek(conversation, "student");
 	}
 	
 	private void ophalenLesWeek(Conversation conversation, String rol){
@@ -43,43 +47,62 @@ public class RoosterController implements Handler{
 		
 		JsonArrayBuilder lWeekBuilder = Json.createArrayBuilder();
 		
+		// Hieronder maken we een datum object op basis van de ontvangen datum. 
 		LocalDateTime lDate = LocalDateTime.parse(lStringDate.substring(0, lStringDate.length()-2)); // remove the 'Z' from the javascript date object to make it reable for Java
 		
+		// Haal per dag de lessen op en stop ze in een array
 		for(int i = 0; i < lDays; i++){
   		
-			if(i>0)lDate = lDate.plusDays(1);
+			// voeg een offset aan de datum toe
+			LocalDateTime lDateWithOffset = lDate.plusDays(i);
+			
+  		ArrayList<Les> lLessen;
 			
   		//Alle lessen ophalen via PrIS
-			ArrayList<Les> lLessen;
-			if(rol.equals("docent")){
-				lLessen = informatieSysteem.getLessenDocentForSingleDate(lGebruikersnaam, lDate);
+  		if(rol.equals("docent")){
+				//de rol is docent, dus haal de lessen op via de docent methode
+  			lLessen = informatieSysteem.getLessenDocentForSingleDate(lGebruikersnaam, lDateWithOffset);
 			} else if (rol.equals("student")){
-				lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDate);
+				//de rol is student, dus haal de lessen op via de student methode
+				lLessen = informatieSysteem.getLessenStudentForSingleDate(lGebruikersnaam, lDateWithOffset);
 			} else {
+				//er is geen rol herkend, dus we gebruiken een lege array. 
+				//dit resulteerd in een dag zonder lessen.
 				lLessen = new ArrayList<Les>();
 			}
 			
+  		// genereer de lesdag en voeg deze aan de lesweek toe
   		lWeekBuilder.add(transformLessenToJsonArray(lLessen));
 		}
+		// genereer het antwoord op de request
 		String lJsonOutStr = lWeekBuilder.build().toString();
+		// stuur het antwoord terug
 		conversation.sendJSONMessage(lJsonOutStr);
-	}
-	
-	private void ophalenStudentLesdag(Conversation conversation) {
-		ophalenLesWeek(conversation, "student");
 	}
 	
 	private JsonArray transformLessenToJsonArray(ArrayList<Les> lessen){
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
+		// Controleren of er lessen zijn meegegeven
 		if(lessen.isEmpty()){
-			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
-			lJsonObjectBuilderVoorDocent.add("vak", "Geen Lessen");
-			lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
+			//geen lessen
+			
+			JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
+			// creeer JsonObject
+			lJsonObjectBuilder
+				.add("vak", "Geen Lessen")
+				.add("leeg", true);
+			
+			// Voeg object toe aan de array
+			lJsonArrayBuilder.add(lJsonObjectBuilder);
 		} else {
+			// er zijn lessen meegegeven
+			
+			// genereer array met JsonObjecten die lessen representeren
   		for (Les les : lessen) {
   		  lJsonArrayBuilder.add(transformLesToJsonObject(les));
   		}
 		}
+		// geef de JsonArray met alle lessen terug
 		return lJsonArrayBuilder.build();
 	}
 	
@@ -87,28 +110,28 @@ public class RoosterController implements Handler{
 		LocalDateTime beginDatum = les.getBeginDatum();
 		LocalDateTime eindDatum = les.getEindDatum();
 		
+		// Stel de formatter in op een datum met de yyyy-MM-dd specificatie
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    
 		String stringDatum = beginDatum.format(formatter);
+		
+		// Stel de formatter in op uren en minutes teruggeven in het formaat HH:mm
 		formatter = DateTimeFormatter.ofPattern("HH:mm");
 		String stringBegin = beginDatum.format(formatter);
     String StringEind = eindDatum.format(formatter);
-		String lesNaam = les.getNaam();
-		String docentNaam = les.getDocent().getGebruikersnaam();
-		String lokaal = les.getLokaal();
-		String klasNaam = les.getKlas().getNaam();
 		
 		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
 		
+		// genereer het JsonObject
 		lJsonObjectBuilder
 			.add("datum", stringDatum)
 			.add("begin", stringBegin)
 			.add("eind", StringEind)
-			.add("vak", lesNaam)
-			.add("docent", docentNaam)
-			.add("lokaal", lokaal)
-			.add("klas", klasNaam);
+			.add("vak", les.getNaam())
+			.add("docent", les.getDocent().getGebruikersnaam())
+			.add("lokaal", les.getLokaal())
+			.add("klas", les.getKlas().getNaam());
 		
+		// Geef het JsonObject terug
 		return lJsonObjectBuilder.build();
 	}
 }
