@@ -26,6 +26,7 @@
                 <my-agenda-dag 
                     datum="[[_pas_datum_aan(roosterdatum,index)]]" 
                     c_username="{{c_username}}" 
+                    rol="{{rol}}"
                     lessen="{{item}}">
                 </my-agenda-dag>
             </template>
@@ -39,6 +40,7 @@
                 rol: {
                     type: String,
                     notify: true,   
+                    observer: '_tester',
                 },
 
                 isStudent: {
@@ -65,8 +67,11 @@
                     observer: '_initializing',
                 }
             },  // end of properties
-             _initializing : function() {
+            _tester : function(){                
+                console.log("_initializing@my-agenda: " + this.rol);
+            },
 
+             _initializing : function() {
                 lDatum = new Date(this.datum);
                 this.roosterdatum = this.datum;
                 lDatum.setHours(0,0,0);

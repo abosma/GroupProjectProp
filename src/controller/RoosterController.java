@@ -57,33 +57,39 @@ public class RoosterController implements Handler{
   		
   		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
   		
-  		for (Les les : lLessen) {
-  			LocalDateTime beginDatum = les.getBeginData();
-  			LocalDateTime eindDatum = les.getEindData();
-  			
-  			formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        
-  			String stringDatum = beginDatum.format(formatter);
-  			formatter = DateTimeFormatter.ofPattern("HH:mm");
-  			String stringBegin = beginDatum.format(formatter);
-        String StringEind = eindDatum.format(formatter);
-  			String lesNaam = les.getNaam();
-  			String docentNaam = les.getDocent().getGebruikersnaam();
-  			String lokaal = les.getLokaal();
-  			String klasNaam = les.getKlas().getNaam();
-  			
-  			//Hier voeg ik alle strings toe aan de JsonObjectBuilder zodat Polymer alles kan gebruiken
+  		if(lLessen.isEmpty()){
   			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
-  			lJsonObjectBuilderVoorDocent
-  				.add("datum", stringDatum)
-  				.add("begin", stringBegin)
-  				.add("eind", StringEind)
-  				.add("vak", lesNaam)
-  				.add("docent", docentNaam)
-  				.add("lokaal", lokaal)
-  				.add("klas", klasNaam);
-  		  
-  		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
+  			lJsonObjectBuilderVoorDocent.add("vak", "Geen Lessen");
+  			lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
+  		} else {
+    		for (Les les : lLessen) {
+    			LocalDateTime beginDatum = les.getBeginData();
+    			LocalDateTime eindDatum = les.getEindData();
+    			
+    			formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+          
+    			String stringDatum = beginDatum.format(formatter);
+    			formatter = DateTimeFormatter.ofPattern("HH:mm");
+    			String stringBegin = beginDatum.format(formatter);
+          String StringEind = eindDatum.format(formatter);
+    			String lesNaam = les.getNaam();
+    			String docentNaam = les.getDocent().getGebruikersnaam();
+    			String lokaal = les.getLokaal();
+    			String klasNaam = les.getKlas().getNaam();
+    			
+    			//Hier voeg ik alle strings toe aan de JsonObjectBuilder zodat Polymer alles kan gebruiken
+    			JsonObjectBuilder lJsonObjectBuilderVoorDocent = Json.createObjectBuilder();
+    			lJsonObjectBuilderVoorDocent
+    				.add("datum", stringDatum)
+    				.add("begin", stringBegin)
+    				.add("eind", StringEind)
+    				.add("vak", lesNaam)
+    				.add("docent", docentNaam)
+    				.add("lokaal", lokaal)
+    				.add("klas", klasNaam);
+    		  
+    		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorDocent);
+    		}
   		}
   		lWeekBuilder.add(lJsonArrayBuilder.build());
 		}

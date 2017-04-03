@@ -110,12 +110,11 @@
                 <my-agenda-dag 
                     datum="[[_pas_datum_aan(l_date,index)]]" 
                     c_username="{{c_username}}" 
+                    rol="{{c_rol}}"
                     lessen="{{item}}">
                 </my-agenda-dag>
             </template>
         </div>
-
-        <!-- <my-agenda rol="{{ c_rol }}" c_visible="{{c_visible}}" c_username="{{c_username}}" datum="{{weekdatum}}" lessen="{{_c_lessen}}"></my-agenda> -->
 
         <iron-ajax id="ajax_student_rooster_ophalen"
                    method="POST"
@@ -215,7 +214,7 @@
         },
 
         _get_date_from_string : function(date){
-          console.log("_get_date_from_string: " + date);
+          //console.log("_get_date_from_string: " + date);
           return new Date(date);
         },
 
@@ -238,7 +237,7 @@
         },
 
         _student_rooster_ophalen_response_handler: function (request) {
-            console.log("_student_rooster_ophalen_response_handler: " + request.detail.response);
+            //console.log("_student_rooster_ophalen_response_handler: " + request.detail.response);
             this._c_lessen = request.detail.response;
         },
 
@@ -264,7 +263,7 @@
 
         _date_to_string : function(date) {
           var date = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-          console.log("_date_to_string" + date);
+          //console.log("_date_to_string" + date);
           return date;
         },
 

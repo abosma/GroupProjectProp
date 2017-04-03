@@ -63,31 +63,35 @@
 
         
         <div class="dagen-content">
-            <ul>
+          <ul>
+            <template is="dom-if" if="{{vak}}">
+              <template is="dom-if" if="{{lokaal}}">
                 <li><b>[[vak]]</b></li>
                 <li><i>[[datum]]</i></li>
                 <li><i>[[begin]] - [[eind]]</i></li>
                 <li>[[lokaal]]</li>
                 <li>Groep(en): [[groepen]]</li>
                 <li>[[docent]]</li>
-                <li hidden$="{{!isStudent}}"><paper-button
-                      id="login_button_element"
-                      class="ziekmeld-button"
-                      raised
-                      >
-                        Ziekmelden
-                    </paper-button>
+                <li hidden$="{{!isStudent}}">
+                  <paper-button
+                    id="login_button_element"
+                    class="ziekmeld-button"
+                    raised>
+                      Ziekmelden
+                   </paper-button>
                 </li>
 
-                <li hidden$="{{isStudent}}"><paper-button
+                <li hidden$="{{isStudent}}">
+                  <paper-button
                       id="login_button_element"
                       class="presentie-button"
-                      raised
-                      >
+                      raised>
                         Presentie invoeren
                     </paper-button>
                 </li>
-            </ul>
+              </template>
+            </template>
+          </ul>
         </div>
 
     </template>
@@ -95,55 +99,53 @@
         Polymer({
             is: 'my-agenda-les',
             properties: {
-               vak: {
+              vak: {
                 type: String,
-                notify: true,
-                observer: '_initializing',   
+                notify: true, 
+                observer: '_test',
               },
               begin: {
                 type: String,
                 notify: true,
-                observer: '_initializing',   
               },
               eind: {
                 type: String,
-                notify: true,
-                observer: '_initializing',   
+                notify: true,  
               },
               datum: {
                 type: String,
               },
               lokaal: {
                 type: String,
-                notify: true,
-                observer: '_initializing',   
+                notify: true,  
               },
               groepen: {
                 type: String,
-                notify: true,
-                observer: '_initializing',   
+                notify: true,  
               },
               docent: {
                 type: String,
-                notify: true,
-                observer: '_initializing',   
+                notify: true, 
               },
-
               isStudent: {
                     type: Boolean,
                     value: true,
               },
-              c_username: {
-                    type: String,
-              }
+              rol: {
+                type: String,
+                observer: '_initializing',
+              },
+            },
 
-
+            _test : function(){
+              console.log("Test" + this.rol);
             },
 
             _initializing : function() {
               if(this.rol == "undefined" || this.rol == "docent"){
                 this.rol = "docent";
                 this.isStudent = false;
+                console.log(this.rol);
               }
             },
         });
