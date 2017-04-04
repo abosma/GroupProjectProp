@@ -1,4 +1,6 @@
 <link rel="import" href="../my-agenda/my-presentie-melden.html">
+<link rel="import" href="../my-agenda/my-presentie-invoeren.html">
+
 <dom-module id="my-agenda-les">
     <template>
         <style>
@@ -51,12 +53,7 @@
                 </li>
 
                 <li hidden$="{{isStudent}}">
-                  <paper-button
-                      id="login_button_element"
-                      class="presentie-button"
-                      raised>
-                        Presentie invoeren
-                    </paper-button>
+                   <my-presentie-invoeren></my-presentie-invoeren>
                 </li>
             </template>
             <template is="dom-if" if={{item.leeg}}>
