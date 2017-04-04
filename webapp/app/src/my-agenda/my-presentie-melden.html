@@ -28,8 +28,17 @@
           id="login_button_element"
           class="ziekmeld-button"
           on-tap="openDialog"
-          raised>
+          raised
+          hidden$="{{ziek}}">
             Afmelden
+         </paper-button>
+
+        <paper-button
+          id="login_button_element"
+          class="ziekgemeld-button"
+          raised
+          hidden$="{{!ziek}}">
+            Afgemeld
          </paper-button>
 
         <paper-dialog id="presentieMelden" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
@@ -41,11 +50,11 @@
             </paper-menu>
           </paper-dropdown-menu>
 
-           <paper-input hidden$="{{!redenVeldWeergeven}}" id="afmeldReden" label="Reden afmelden"></paper-input>
+           <paper-input hidden$="{{!redenVeldWeergeven}}" id="afmeldReden" label="Reden afmelden" value="{{ redenVeld }}"></paper-input>
 
           <div class="buttons">
             <paper-button dialog-dismiss>Sluiten</paper-button>
-            <paper-button dialog-confirm autofocus>Melden</paper-button>
+            <paper-button dialog-confirm autofocus on-tap="confirmDialog" hidden$="{{!displayMelden}}">Melden</paper-button>
           </div>
     
         </paper-dialog>
@@ -55,23 +64,61 @@
         Polymer({
             is: 'my-presentie-melden',
             properties: {
+              ziek: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
               redenVeldWeergeven: {
                 type: Boolean,
                 value: false,
                 notify: true, 
               },
+              redenVeld: {
+                type: String,
+              },
+              redenOptie: {
+                type: String,
+              },
+              displayMelden: {
+                type: Boolean,
+                value: false,
+                notify: true,               
+              }
             },
 
             _initializing : function() {
             },
 
-             openDialog: function() {
+            openDialog: function() {
               this.$.presentieMelden.open();
+            },
+
+            confirmDialog: function() {
+              if(this.redenOptie == "Afmelden"){
+                if(this.redenVeld.length < 3){
+                  alert('Reden is te kort');
+                  
+                  var that = this;
+                   setTimeout(function () {
+                      that.$.presentieMelden.open();
+                  }, 200);
+
+                  return;
+                }
+              }else{
+
+              }
+
+              this.ziek = true;
             },
 
             _itemSelected : function(e) {
               var selectedItem = e.target.selectedItem;
               if (selectedItem) {
+
+                this.redenOptie = selectedItem.innerText;
+                this.displayMelden = true;
 
                 if(selectedItem.innerText == "Afmelden"){
                   this.redenVeldWeergeven = true;
