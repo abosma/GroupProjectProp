@@ -60,11 +60,11 @@ public class Vak {
 		return klas;
 	}
 	
-	public void addPresentie(Student pStudent) {
+	public void addPresentieLijst(Student pStudent) {
 		this.presentieLijsten.add(new PresentieLijst(pStudent));
 	}
 
-	public ArrayList<PresentieLijst> getPresenties() {
+	public ArrayList<PresentieLijst> getPresentieLijsten() {
 		return this.presentieLijsten;
 	}
 

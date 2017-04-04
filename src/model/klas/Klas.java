@@ -61,7 +61,7 @@ public class Klas {
 			this.getStudenten().add(pStudent);
 			pStudent.setKlas(this);
 			for(Vak v : this.deVakken){
-				v.addPresentie(pStudent);
+				v.addPresentieLijst(pStudent);
 			}
 		}
 	}
