@@ -37,18 +37,6 @@ public class Student extends Persoon {
 		return this.studentNummer;
 	}
 
-	public ArrayList<Vak> getVakken() {
-		return this.klas.getVakken();
-	}
-	
-	public ArrayList<Les> getLessen(){
-		ArrayList<Les> tList = new ArrayList<Les>();
-		for(Vak vak : this.getVakken()){
-			tList.addAll(vak.getLessen());
-		}
-		return tList;
-	}
-
 	private void setStudentNummer(int pStudentNummer) {
 		this.studentNummer = pStudentNummer;
 	}
@@ -57,7 +45,19 @@ public class Student extends Persoon {
 		this.klas = klas;
 	}
 
+	public Klas getKlas(){
+		return this.klas;
+	}
+	
 	public Vak getVak(String naam) {
 		return this.klas.getVak(naam);
+	}
+	
+	public boolean equals(Object o){
+		if(o instanceof Student){
+			Student tStudent = (Student)o;
+			return tStudent.getGebruikersnaam().equals(this.getGebruikersnaam());
+		}
+		return false;
 	}
 }

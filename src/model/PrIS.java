@@ -54,7 +54,6 @@ public class PrIS {
 		deDocenten = new ArrayList<Docent>();
 		deStudenten = new ArrayList<Student>();
 		deKlassen = new ArrayList<Klas>();
-		deLessen = new ArrayList<Les>();
 
 		// Inladen klassen
 		vulKlassen(deKlassen);
@@ -198,7 +197,7 @@ public class PrIS {
 	}
 
 	public ArrayList<Les> getLessenStudent(String stuMail) {
-		return this.getStudent(stuMail).getLessen();
+		return this.getStudent(stuMail).getKlas().getLessen();
 	}
 
 	public ArrayList<Les> getLessenDocentForSingleDate(String dct, LocalDateTime date) {
@@ -222,9 +221,9 @@ public class PrIS {
 		ArrayList<Les> lesdag = new ArrayList<Les>();
 		// haal student op
 		Student theStudent = this.getStudent(studentMail);
-
+		
 		// loop door alle lessen
-		for (Les les : theStudent.getLessen()) {
+		for (Les les : theStudent.getKlas().getLessen()) {
 			LocalDate beginDatum = les.getDatum();
 			// controleer of de datum overeenkomt
 			if (date.getYear() == beginDatum.getYear() 
