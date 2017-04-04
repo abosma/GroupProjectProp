@@ -1,5 +1,6 @@
 package controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.les.Les;
+import model.vak.Vak;
 import server.Conversation;
 import server.Handler;
 
@@ -106,29 +108,25 @@ public class RoosterController implements Handler{
 	}
 	
 	private JsonObject transformLesToJsonObject(Les les){
-		LocalDateTime beginDatum = les.getBeginDatum();
-		LocalDateTime eindDatum = les.getEindDatum();
+		LocalDate datum = les.getDatum();
 		
 		// Stel de formatter in op een datum met de yyyy-MM-dd specificatie
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String stringDatum = beginDatum.format(formatter);
-		
-		// Stel de formatter in op uren en minutes teruggeven in het formaat HH:mm
-		formatter = DateTimeFormatter.ofPattern("HH:mm");
-		String stringBegin = beginDatum.format(formatter);
-    String StringEind = eindDatum.format(formatter);
+		String stringDatum = datum.format(formatter);
 		
 		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
+		
+		Vak lVak = les.getVak();
 		
 		// genereer het JsonObject
 		lJsonObjectBuilder
 			.add("datum", stringDatum)
-			.add("begin", stringBegin)
-			.add("eind", StringEind)
-			.add("vak", les.getNaam())
-			.add("docent", les.getDocent().getGebruikersnaam())
+			.add("begin", les.getBegin())
+			.add("eind", les.getEind())
+			.add("vak", lVak.getNaam())
+			.add("docent", lVak.getDocent().getGebruikersnaam())
 			.add("lokaal", les.getLokaal())
-			.add("klas", les.getKlas().getNaam());
+			.add("klas", lVak.getKlas().getNaam());
 		
 		// Geef het JsonObject terug
 		return lJsonObjectBuilder.build();
