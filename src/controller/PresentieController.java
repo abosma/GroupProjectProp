@@ -17,7 +17,7 @@ import javax.json.JsonObjectBuilder;
 import model.PrIS;
 import model.les.Les;
 import model.persoon.Student;
-import model.presentie.Presentie;
+import model.presentie.PresentieLijst;
 import model.vak.Vak;
 import server.Conversation;
 import server.Handler;
@@ -70,7 +70,7 @@ public class PresentieController implements Handler   {
 			//lesnummer(als string bijv:les1) en de aanwezigheid als string
 			JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
 
-			Presentie lPresentie = vak.getPresentieForStudent(lStudent);
+			PresentieLijst lPresentie = vak.getPresentieLijstForStudent(lStudent);
 			
 			for(Map.Entry<Les, Integer> entry : lPresentie.getPresentieMap().entrySet()){
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();

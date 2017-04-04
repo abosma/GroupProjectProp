@@ -197,7 +197,7 @@ public class PrIS {
 	}
 
 	public ArrayList<Les> getLessenStudent(String stuMail) {
-		return this.getStudent(stuMail).getKlas().getLessen();
+		return this.getStudent(stuMail).getKlas().getAllLessen();
 	}
 
 	public ArrayList<Les> getLessenDocentForSingleDate(String dct, LocalDateTime date) {
@@ -223,7 +223,7 @@ public class PrIS {
 		Student theStudent = this.getStudent(studentMail);
 		
 		// loop door alle lessen
-		for (Les les : theStudent.getKlas().getLessen()) {
+		for (Les les : theStudent.getKlas().getAllLessen()) {
 			LocalDate beginDatum = les.getDatum();
 			// controleer of de datum overeenkomt
 			if (date.getYear() == beginDatum.getYear() 

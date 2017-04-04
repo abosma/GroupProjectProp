@@ -26,6 +26,7 @@ public class RoosterController implements Handler{
 	}
 	
 	public void handle(Conversation conversation) {
+		System.out.println(System.currentTimeMillis());
 		if (conversation.getRequestedURI().startsWith("/docent/rooster/lesdagophalen")){
 			ophalenDocentLessen(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
@@ -80,6 +81,8 @@ public class RoosterController implements Handler{
 		String lJsonOutStr = lWeekBuilder.build().toString();
 		// stuur het antwoord terug
 		conversation.sendJSONMessage(lJsonOutStr);
+		System.out.println(System.currentTimeMillis());
+		System.out.println();
 	}
 	
 	private JsonArray transformLessenToJsonArray(ArrayList<Les> lessen){
