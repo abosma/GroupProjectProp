@@ -79,7 +79,8 @@
           id="ajax_studenten_rooster_opslaan"
           method="POST"
           url="/docent/rooster/les/studenten/opslaan"
-          handle-as="json">
+          handle-as="json"
+          on-response="_studenten_rooster_opslaan_response_handler">>
         </iron-ajax>
 
     </template>
@@ -127,8 +128,8 @@
             },
 
             confirmDialog: function() {
-              this.$.ajax_student_rooster_opslaan.contentType = "application/json";
-              this.$.ajax_student_rooster_opslaan.body = {
+              this.$.ajax_studenten_rooster_opslaan.contentType = "application/json";
+              this.$.ajax_studenten_rooster_opslaan.body = {
                   "datum": this.item.datum,
                   "begin": this.item.begin,
                   "eind": this.item.eind,
@@ -136,12 +137,16 @@
                   "studenten": this._c_studenten,
               };
 
-              this.$.ajax_student_rooster_opslaan.generateRequest();
+              this.$.ajax_studenten_rooster_opslaan.generateRequest();
             },
 
             _studenten_rooster_ophalen_response_handler: function (request) {
              this._c_studenten = request.detail.response;
              this.totaalStudenten = request.detail.response.length;
+            },
+
+            _studenten_rooster_opslaan_response_handler: function (request) {
+              console.log(request);
             },
 
         });
