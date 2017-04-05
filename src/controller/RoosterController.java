@@ -10,6 +10,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 import model.PrIS;
 import model.les.Les;
@@ -32,6 +33,8 @@ public class RoosterController implements Handler{
 			veranderPresentieStudent(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/studenten")){
 			ophalenPresentieStudenten(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/opslaan")){
+			veranderPresentieDocent(conversation);
 		}
 	}
 	
@@ -170,6 +173,39 @@ public class RoosterController implements Handler{
 		}
 		
 		conversation.sendJSONMessage("true");
+	}
+	
+	private void veranderPresentieDocent(Conversation conversation){
+		JsonObject JsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		ArrayList<Les> lessen = informatieSysteem.getAlleLessen();
+		
+		JsonArray studenten = JsonObjectIn.getJsonArray("studenten");
+		
+		String beginDatum = JsonObjectIn.getString("datum") + " " + JsonObjectIn.getString("begin");
+		String eindDatum = JsonObjectIn.getString("datum") + " " + JsonObjectIn.getString("eind");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		
+		LocalDateTime bDatum = LocalDateTime.parse(beginDatum, formatter);
+		LocalDateTime eDatum = LocalDateTime.parse(eindDatum, formatter);
+		
+		String vNaam = JsonObjectIn.getString("vak");
+		for(Les l : lessen){
+			if(l.getBeginDatum().equals(bDatum) && l.getEindDatum().equals(eDatum) && l.getNaam().equals(vNaam)){
+				for(int i = 0; i < studenten.size(); i++){
+					JsonObject o = studenten.getJsonObject(i);
+					int tempint = 0;
+					
+					if(o.getBoolean("aanwezig")){
+						tempint = 1;
+					}
+					
+					l.veranderPresentie(o.getString("naam"), tempint);
+				}
+			}
+		}
+		
+		
 	}
 	
 	private void ophalenPresentieStudenten(Conversation conversation){
