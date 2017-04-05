@@ -28,6 +28,8 @@ public class RoosterController implements Handler{
 			ophalenDocentLessen(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
 			ophalenStudentLessen(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/student/rooster/afmelden")){
+			veranderPresentieLes(conversation);
 		}
 	}
 	
@@ -132,5 +134,9 @@ public class RoosterController implements Handler{
 		
 		// Geef het JsonObject terug
 		return lJsonObjectBuilder.build();
+	}
+	
+	private void veranderPresentieLes(Conversation conversation){
+		
 	}
 }
