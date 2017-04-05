@@ -29,7 +29,9 @@ public class RoosterController implements Handler{
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
 			ophalenStudentLessen(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/afmelden")){
-			veranderPresentieLes(conversation);
+			veranderPresentieStudent(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/studenten")){
+			ophalenPresentieStudenten(conversation);
 		}
 	}
 	
@@ -136,7 +138,76 @@ public class RoosterController implements Handler{
 		return lJsonObjectBuilder.build();
 	}
 	
-	private void veranderPresentieLes(Conversation conversation){
+	private void veranderPresentieStudent(Conversation conversation){
+		JsonObject JsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		ArrayList<Les> lessen = informatieSysteem.getAlleLessen();
 		
+		String beginDatum = JsonObjectIn.getString("datum") + " " + JsonObjectIn.getString("begin");
+		String eindDatum = JsonObjectIn.getString("datum") + " " + JsonObjectIn.getString("eind");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		
+		LocalDateTime bDatum = LocalDateTime.parse(beginDatum, formatter);
+		LocalDateTime eDatum = LocalDateTime.parse(eindDatum, formatter);
+		
+		String gNaam = JsonObjectIn.getString("username");
+		String vNaam = JsonObjectIn.getString("vak");
+		String pNummer = JsonObjectIn.getString("redenoptie");
+		
+		int presentieID = 0;
+		
+		if(pNummer.equals("Ziek")){
+			presentieID = 2;
+		}else{
+			presentieID = 3;
+		}
+		
+		for(Les l : lessen){
+			if(l.getBeginDatum().equals(bDatum) && l.getEindDatum().equals(eDatum) && l.getNaam().equals(vNaam)){
+				l.veranderPresentie(gNaam, presentieID);
+				System.out.println(l.getPresentie());
+			}
+		}
+		
+		conversation.sendJSONMessage("true");
+	}
+	
+	private void ophalenPresentieStudenten(Conversation conversation){
+		JsonObject JsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		ArrayList<Les> lessen = informatieSysteem.getAlleLessen();
+		
+		String beginDatum = JsonObjectIn.getString("datum") + " " + JsonObjectIn.getString("begin");
+		String eindDatum = JsonObjectIn.getString("datum") + " " + JsonObjectIn.getString("eind");
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		
+		LocalDateTime bDatum = LocalDateTime.parse(beginDatum, formatter);
+		LocalDateTime eDatum = LocalDateTime.parse(eindDatum, formatter);
+		
+		String vNaam = JsonObjectIn.getString("vak");
+		
+		JsonArrayBuilder JsonArrayVoorDocent = Json.createArrayBuilder();
+		
+		for(Les l : lessen){
+			if(l.getBeginDatum().equals(bDatum) && l.getEindDatum().equals(eDatum) && l.getNaam().equals(vNaam)){
+				for(Map.Entry<String, Integer> pres : l.getPresentie().entrySet()){
+					JsonObjectBuilder JsonObjectVoorDocent = Json.createObjectBuilder();
+					
+					boolean tempBool = false;
+					
+					if(pres.getValue() == 1){
+						tempBool = true;
+					}else{
+						tempBool = false;
+					}
+					
+					JsonObjectVoorDocent.add("naam", pres.getKey());
+					JsonObjectVoorDocent.add("aanwezig", tempBool);
+					
+	  			JsonArrayVoorDocent.add(JsonObjectVoorDocent);
+	    	}
+			}
+		}
+		conversation.sendJSONMessage(JsonArrayVoorDocent.build().toString());
 	}
 }

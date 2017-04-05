@@ -47,6 +47,8 @@ public class Application {
   	server.registerHandler("/docent/rooster/lesdagophalen", roosterController);
   	server.registerHandler("/docent/rooster/ophalen", roosterController);
   	server.registerHandler("/student/rooster/ophalen", roosterController);
+  	server.registerHandler("/student/rooster/afmelden", roosterController);
+  	server.registerHandler("/docent/rooster/les/studenten", roosterController);
   	
 		server.start();
 	}
