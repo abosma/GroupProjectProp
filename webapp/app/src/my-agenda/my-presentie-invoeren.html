@@ -117,9 +117,12 @@
                   "begin": this.les.begin,
                   "eind": this.les.eind,
                   "vak": this.les.vak,
+                  "username" : this.les.docent,
               };
-
-              this.$.ajax_studenten_rooster_ophalen.generateRequest();
+              // alleen een request doen wanneer de docent bekend is.
+              if(this.les.docent){
+                this.$.ajax_studenten_rooster_ophalen.generateRequest();
+              }
             },
 
             openDialog: function() {

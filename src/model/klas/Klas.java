@@ -120,4 +120,13 @@ public class Klas {
 		}
 		return tmp;
 	}
+
+	public Student getStudentByName(String name) {
+		for(Student s : deStudenten){
+			if(s.getGebruikersnaam().equals(name)){
+				return s;
+			}
+		}
+		return null;
+	}
 }

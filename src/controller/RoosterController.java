@@ -4,18 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 import model.PrIS;
 import model.les.Les;
+import model.persoon.Docent;
 import model.persoon.Student;
-import model.presentie.PresentieLijst;
 import model.vak.Vak;
 import server.Conversation;
 import server.Handler;
@@ -28,7 +28,6 @@ public class RoosterController implements Handler{
 	}
 	
 	public void handle(Conversation conversation) {
-		System.out.println(System.currentTimeMillis());
 		if (conversation.getRequestedURI().startsWith("/docent/rooster/lesdagophalen")){
 			ophalenDocentLessen(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
@@ -37,12 +36,63 @@ public class RoosterController implements Handler{
 			veranderPresentieStudent(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/studenten")){
 			ophalenPresentieStudenten(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/opslaan")){
+			opslaanPresentieVoorLes(conversation);
 		}
 	}
 	
-	private void ophalenPresentieStudenten(Conversation conversation) {
-		// TODO Auto-generated method stub
+	private void opslaanPresentieVoorLes(Conversation conversation) {
+		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
 		
+		JsonArray ja = verzoek.getJsonArray("studenten");
+
+		Student s = informatieSysteem.getStudent(ja.getJsonObject(0).getString("email"));
+		Vak vak = s.getVak(verzoek.getString("vak"));
+		Les les = vak.getLes(LocalDate.parse(verzoek.getString("datum")), verzoek.getString("begin"));
+		
+		// loop alle studenten af
+		for(JsonValue jv : ja){
+			JsonObject jo = (JsonObject) jv;
+			String name = jo.getString("email");
+			Student student = vak.getKlas().getStudentByName(name);
+			
+			if(student != null){
+				int presentie = vak.getPresentieLijstForStudent(student).getPresentieForLes(les);
+				Boolean isAanwezig = jo.getBoolean("aanwezig");
+				if(isAanwezig){
+					vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, 1);
+				} 
+				//ToDo maak deze code specifieker voor alle gevallen'
+				else if(presentie != informatieSysteem.translatePresentieStringToInt("ziek")){
+					vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, 0);					
+				}
+			}
+		}
+	}
+
+	private void ophalenPresentieStudenten(Conversation conversation) {
+		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
+		
+		Docent docent = informatieSysteem.getDocent(verzoek.getString("username"));
+		Vak vak = docent.getVak(verzoek.getString("vak"));
+		Les les = vak.getLes(LocalDate.parse(verzoek.getString("datum")), verzoek.getString("begin"));
+		
+		ArrayList<Student> studenten = vak.getKlas().getStudenten();
+		
+		JsonArrayBuilder jab = Json.createArrayBuilder();
+		for(Student s : studenten){
+			int presentieVoorLes = vak.getPresentieLijstForStudent(s).getPresentieForLes(les);
+			
+			JsonObjectBuilder job = Json.createObjectBuilder();
+			job
+				.add("naam", s.getVoornaam() + " " + s.getVolledigeAchternaam())
+				.add("email", s.getGebruikersnaam())
+				.add("presentie", presentieVoorLes)
+				.add("aanwezig", presentieVoorLes == 1);
+			
+			jab.add(job);
+		}
+		conversation.sendJSONMessage(jab.build().toString());
 	}
 
 	private void veranderPresentieStudent(Conversation conversation) {
@@ -113,8 +163,6 @@ public class RoosterController implements Handler{
 		String lJsonOutStr = lWeekBuilder.build().toString();
 		// stuur het antwoord terug
 		conversation.sendJSONMessage(lJsonOutStr);
-		System.out.println(System.currentTimeMillis());
-		System.out.println();
 	}
 	
 	private JsonArray transformLessenToJsonArray(ArrayList<Les> lessen){
