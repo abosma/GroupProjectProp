@@ -1,1 +1,4 @@
 bin/
+bin/controller/
+bin/model/
+bin/.DS_Store

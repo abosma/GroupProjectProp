@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
-
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="my-presentie-melden">
     <style>
@@ -59,6 +59,14 @@
     
         </paper-dialog>
 
+        <iron-ajax
+          id="ajax_student_rooster_afmelden"
+          method="POST"
+          url="/student/rooster/afmelden"
+          handle-as="json"
+          on-response="_student_rooster_afmelden_response_handler">
+        </iron-ajax>
+
     </template>
     <script>
         Polymer({
@@ -84,10 +92,17 @@
                 type: Boolean,
                 value: false,
                 notify: true,               
-              }
-            },
+              },
 
-            _initializing : function() {
+              item: {
+                type: Object,
+                notify: true,               
+              },
+
+              c_username: {
+                type: String,
+              },
+
             },
 
             openDialog: function() {
@@ -95,6 +110,7 @@
             },
 
             confirmDialog: function() {
+
               if(this.redenOptie == "Afmelden"){
                 if(this.redenVeld.length < 3){
                   alert('Reden is te kort');
@@ -106,11 +122,30 @@
 
                   return;
                 }
-              }else{
-
               }
 
+              this.$.ajax_student_rooster_afmelden.contentType = "application/json";
+              this.$.ajax_student_rooster_afmelden.body = {
+                  "datum": this.item.datum,
+                  "begin": this.item.begin,
+                  "eind": this.item.eind,
+                  "username": this.c_username,
+                  "vak": this.item.vak,
+                  "redenoptie": this.redenOptie,
+                  "redenveld": this.redenVeld,
+              };
+
+              this.$.ajax_student_rooster_afmelden.generateRequest();
+
               this.ziek = true;
+            },
+
+            _docent_rooster_ophalen_response_handler: function (request) {
+                if(request.detail.response == true){
+                  this.ziek = true;
+                }else{
+                  this.ziek = false;
+                }
             },
 
             _itemSelected : function(e) {
