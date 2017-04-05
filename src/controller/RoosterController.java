@@ -46,26 +46,24 @@ public class RoosterController implements Handler{
 	}
 
 	private void veranderPresentieStudent(Conversation conversation) {
-		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
 		
-		String strDatum = jsonObjectIn.getString("datum");
-		System.out.println("-debug-RoosterController-veranderPresentieStudent strDatum: " + strDatum);
-		String strAanvang = jsonObjectIn.getString("begin");
-		String strNaam = jsonObjectIn.getString("username");
-		String strVak = jsonObjectIn.getString("vak");
-		String strReden = jsonObjectIn.getString("redenoptie");
+		//Ophalen afmeldingsreden
+		int reden = informatieSysteem.translatePresentieStringToInt(verzoek.getString("redenoptie"));
 		
-		int reden = informatieSysteem.translatePresentieStringToInt(strReden);
-		Student student = informatieSysteem.getStudent(strNaam);
-		Vak vak = student.getVak(strVak);
-		LocalDate datum = LocalDate.parse(strDatum);
-		System.out.println("-debug-RoosterController-veranderPresentieStudent datum: " + datum.toString());
-		Les les = vak.getLes(datum, strAanvang);
-		//updaten presentie
-		PresentieLijst presentieLijst = vak.getPresentieLijstForStudent(student);
-		System.out.println("-debug-RoosterController-veranderPresentieStudent presentie voor: " + informatieSysteem.translatePresentieIntToString(presentieLijst.getPresentieForLes(les)));
-		presentieLijst.updatePresentieLijstForLes(les, reden);
-		System.out.println("-debug-RoosterController-veranderPresentieStudent presentie na: " + informatieSysteem.translatePresentieIntToString(presentieLijst.getPresentieForLes(les)));
+		//Ophalen student
+		Student student = informatieSysteem.getStudent(verzoek.getString("username"));
+		
+		//Ophalen vak waarvoor word afgemeld
+		Vak vak = student.getVak(verzoek.getString("vak"));
+		
+		//Ophalen specifieke les waarvoor word afgememeld
+		Les les = vak.getLes(
+				LocalDate.parse(verzoek.getString("datum")), 
+				verzoek.getString("begin"));
+		
+		//De presentiestatus voor een les aanpassen
+		vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden);
 	}
 
 	private void ophalenDocentLessen(Conversation conversation) {

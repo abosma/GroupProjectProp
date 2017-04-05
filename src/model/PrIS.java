@@ -212,6 +212,7 @@ public class PrIS {
 	}
 	
 	public int translatePresentieStringToInt(String s){
+		s = s.toLowerCase();
 		if(s.equals("afwezig")){
 			return 0;
 		} else if(s.equals("aanwezig")){
@@ -219,6 +220,8 @@ public class PrIS {
 		} else if(s.equals("ziek")){
 			return 2;
 		} else if(s.equals("afgemeld")){
+			return 3;
+		} else if (s.equals("afmelden")){
 			return 3;
 		} else if(s.equals("afgemeld (niet geaccepteerd)")){
 			return 4;
