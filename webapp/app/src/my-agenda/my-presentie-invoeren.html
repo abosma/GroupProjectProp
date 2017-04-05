@@ -1,0 +1,122 @@
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+
+
+<dom-module id="my-presentie-invoeren">
+    <style>
+      .ziekmeld-button {
+        margin-top: 20px;
+        width: 100%;
+        height: 2em;
+        background-color: #33aadd; 
+        color: white;
+        font-size: 0.9em;
+      }
+
+      .ziekgemeld-button {
+        margin-top: 20px;
+        width: 100%;
+        height: 2em;
+        cursor: default;
+      }
+    </style>
+    <template>
+        <paper-button
+          id="login_button_element"
+          class="ziekmeld-button"
+          on-tap="openDialog"
+          raised>
+            Presentie invoeren
+         </paper-button>
+
+        <paper-dialog id="presentieInvoeren" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+         <h2>Presentie invoeren</h2>
+          <table>
+            <tr>
+              <th class="voornaam">Voornaam </th>
+              <th class="achternaam">Achternaam </th>
+              <th class="groepid-header">Aanwezig</th>
+            </tr>
+              <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+               <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+               <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+               <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+               <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+               <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+               <tr>
+                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
+                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
+                <td class="groepid">
+                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
+                  </paper-checkbox>
+               </td>
+              </tr>
+         </table>
+        </paper-dialog>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'my-presentie-invoeren',
+            properties: {
+            },
+
+            _initializing : function() {
+            },
+
+            openDialog: function() {
+              this.$.presentieInvoeren.open();
+            },
+
+            confirmDialog: function() {
+            },
+
+        });
+    </script>
+</dom-module>
