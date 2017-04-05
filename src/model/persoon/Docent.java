@@ -12,7 +12,7 @@ public class Docent extends Persoon {
 	
 	public Docent(String voornaam, String tussenvoegsel, String achternaam, String wachtwoord, String gebruikersnaam, int docentNummer) {
 		super(voornaam, tussenvoegsel, achternaam, wachtwoord, gebruikersnaam);
-		docentNummer = 0;
+		this.docentNummer = docentNummer;
 		this.vakken = new ArrayList<Vak>();
 	}
 

@@ -200,8 +200,8 @@ public class PrIS {
 		return this.getStudent(stuMail).getKlas().getAllLessen();
 	}
 	
-	public String translatePresentieIntToString(int i){
-		switch(i){
+	public String translatePresentieIntToString(int iPresentie){
+		switch(iPresentie){
   		case 0: return "afwezig";
   		case 1: return "aanwezig";
   		case 2: return "ziek";
@@ -211,21 +211,23 @@ public class PrIS {
   	}
 	}
 	
-	public int translatePresentieStringToInt(String s){
-		s = s.toLowerCase();
-		if(s.equals("afwezig")){
+	public int translatePresentieStringToInt(String sPresentie){
+		// we maken van de zin een zin in kleine letters
+		// dit doen we om te voorkomen dat de presentie niet herkend word
+		sPresentie = sPresentie.toLowerCase();
+		if(sPresentie.equals("afwezig")){
 			return 0;
-		} else if(s.equals("aanwezig")){
+		} else if(sPresentie.equals("aanwezig")){
 			return 1;
-		} else if(s.equals("ziek")){
+		} else if(sPresentie.equals("ziek")){
 			return 2;
-		} else if(s.equals("afgemeld")){
+		} else if(sPresentie.equals("afgemeld")){
 			return 3;
-		} else if (s.equals("afmelden")){
+		} else if (sPresentie.equals("afmelden")){
 			return 3;
-		} else if(s.equals("afgemeld (niet geaccepteerd)")){
+		} else if(sPresentie.equals("afgemeld (niet geaccepteerd)")){
 			return 4;
-		} else if(s.equals("niet geregistreerd")){
+		} else if(sPresentie.equals("niet geregistreerd")){
 			return -1;
 		} else {
 			return -1;
@@ -276,6 +278,7 @@ public class PrIS {
 		try {
 
 			br = new BufferedReader(new FileReader(csvFile));
+			int count = 0;
 			while ((line = br.readLine()) != null) {
 
 				// use comma as separator
@@ -284,7 +287,7 @@ public class PrIS {
 				String voornaam = element[1];
 				String tussenvoegsel = element[2];
 				String achternaam = element[3];
-				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, 1));
+				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, ++count));
 
 				// System.out.println(gebruikersnaam);
 

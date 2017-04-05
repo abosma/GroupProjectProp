@@ -44,26 +44,42 @@ public class RoosterController implements Handler{
 	private void opslaanPresentieVoorLes(Conversation conversation) {
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
 		
+		// Haal de array met studenten uit de Json request
 		JsonArray ja = verzoek.getJsonArray("studenten");
 
+		// vind de student
 		Student s = informatieSysteem.getStudent(ja.getJsonObject(0).getString("email"));
+		// haal het vak op
 		Vak vak = s.getVak(verzoek.getString("vak"));
+		// haalde desbetreffende les op
 		Les les = vak.getLes(LocalDate.parse(verzoek.getString("datum")), verzoek.getString("begin"));
 		
 		// loop alle studenten af
 		for(JsonValue jv : ja){
 			JsonObject jo = (JsonObject) jv;
 			String name = jo.getString("email");
-			Student student = vak.getKlas().getStudentByName(name);
 			
+			Student student = null;
+			for(Student _s : vak.getKlas().getStudenten()){
+				if(s.getGebruikersnaam().equals(name)){
+					student = _s;
+				}
+			}
+			
+			/* Controleren of de opgehaalde student-object een daadwerkelijk student obejct is
+			 * Anders crasht het programma hier... 
+			 */
 			if(student != null){
-				int presentie = vak.getPresentieLijstForStudent(student).getPresentieForLes(les);
-				Boolean isAanwezig = jo.getBoolean("aanwezig");
-				if(isAanwezig){
+				int huidigePresentie = vak.getPresentieLijstForStudent(student).getPresentieForLes(les);
+				
+				// Afhandelen van alle mogelijke opties
+				if(jo.getBoolean("aanwezig")){
+					//student aanwezig melden
 					vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, 1);
 				} 
 				//ToDo maak deze code specifieker voor alle gevallen'
-				else if(presentie != informatieSysteem.translatePresentieStringToInt("ziek")){
+				// wanneer een student zich niet ziekgemeld heeft, moeten we de presentie op afwezig zetten
+				else if(huidigePresentie != informatieSysteem.translatePresentieStringToInt("ziek")){
 					vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, 0);					
 				}
 			}

@@ -10,7 +10,8 @@ import model.persoon.Student;
 import model.presentie.PresentieLijst;
 
 public class Vak {
-	private String naam, code;
+	private String naam; 
+	private String code; // word op dit moment niet gebruikt
 	private Docent docent;
 	private Klas klas;
 	private ArrayList<Les> lessen;
@@ -49,6 +50,7 @@ public class Vak {
 		return naam;
 	}
 
+	/* NIET GEBRUIKEN! */ 
 	public String getCode() {
 		return code;
 	}
