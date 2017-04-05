@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 
 <dom-module id="my-presentie-invoeren">
@@ -100,14 +101,46 @@
          </table>
         </paper-dialog>
 
+
+        <iron-ajax
+          id="ajax_studenten_rooster_ophalen"
+          method="POST"
+          url="/docent/rooster/les/studenten"
+          handle-as="json"
+          on-response="_studenten_rooster_ophalen_response_handler">
+        </iron-ajax>
+
     </template>
     <script>
         Polymer({
             is: 'my-presentie-invoeren',
             properties: {
+              les: {
+                type: Object,
+                notify: true,   
+                observer: '_initializing',
+              },
+
+              c_username: {
+                type: String,
+              },
+
+              items: {
+                type: Object,
+              }
             },
 
             _initializing : function() {
+              this.$.ajax_studenten_rooster_ophalen.contentType = "application/json";
+              this.$.ajax_studenten_rooster_ophalen.body = {
+                  "datum": this.les.datum,
+                  "begin": this.les.begin,
+                  "eind": this.les.eind,
+                  "username": this.c_username,
+                  "vak": this.les.vak,
+              };
+
+              this.$.ajax_studenten_rooster_ophalen.generateRequest();
             },
 
             openDialog: function() {
@@ -115,6 +148,10 @@
             },
 
             confirmDialog: function() {
+            },
+
+            _studenten_rooster_ophalen_response_handler: function (request) {
+                console.log(request.detail.response);
             },
 
         });
