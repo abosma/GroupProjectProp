@@ -14,6 +14,8 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.les.Les;
+import model.persoon.Student;
+import model.presentie.PresentieLijst;
 import model.vak.Vak;
 import server.Conversation;
 import server.Handler;
@@ -31,9 +33,41 @@ public class RoosterController implements Handler{
 			ophalenDocentLessen(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/student/rooster/lesdagophalen")){
 			ophalenStudentLessen(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/student/rooster/afmelden")){
+			veranderPresentieStudent(conversation);
+		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/studenten")){
+			ophalenPresentieStudenten(conversation);
 		}
 	}
 	
+	private void ophalenPresentieStudenten(Conversation conversation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void veranderPresentieStudent(Conversation conversation) {
+		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		
+		String strDatum = jsonObjectIn.getString("datum");
+		System.out.println("-debug-RoosterController-veranderPresentieStudent strDatum: " + strDatum);
+		String strAanvang = jsonObjectIn.getString("begin");
+		String strNaam = jsonObjectIn.getString("username");
+		String strVak = jsonObjectIn.getString("vak");
+		String strReden = jsonObjectIn.getString("redenoptie");
+		
+		int reden = informatieSysteem.translatePresentieStringToInt(strReden);
+		Student student = informatieSysteem.getStudent(strNaam);
+		Vak vak = student.getVak(strVak);
+		LocalDate datum = LocalDate.parse(strDatum);
+		System.out.println("-debug-RoosterController-veranderPresentieStudent datum: " + datum.toString());
+		Les les = vak.getLes(datum, strAanvang);
+		//updaten presentie
+		PresentieLijst presentieLijst = vak.getPresentieLijstForStudent(student);
+		System.out.println("-debug-RoosterController-veranderPresentieStudent presentie voor: " + informatieSysteem.translatePresentieIntToString(presentieLijst.getPresentieForLes(les)));
+		presentieLijst.updatePresentieLijstForLes(les, reden);
+		System.out.println("-debug-RoosterController-veranderPresentieStudent presentie na: " + informatieSysteem.translatePresentieIntToString(presentieLijst.getPresentieForLes(les)));
+	}
+
 	private void ophalenDocentLessen(Conversation conversation) {
 		ophalenLesWeek(conversation, "docent");		
 	}

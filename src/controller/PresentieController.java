@@ -39,17 +39,6 @@ public class PresentieController implements Handler   {
 		}
 	}
 	
-	private String translatePresentieIntToString(int i){
-		switch(i){
-  		case 0: return "Afwezig";
-  		case 1: return "Aanwezig";
-  		case 2: return "Ziek";
-  		case 3: return "Afgemeld";
-  		case 4: return "Afgemeld (Niet geaccepteerd)";
-  		default: return "Niet geregistreerd";
-  	}
-	}
-	
 	private void studentOphalen(Conversation conversation)  {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
@@ -74,7 +63,7 @@ public class PresentieController implements Handler   {
 			
 			for(Map.Entry<Les, Integer> entry : lPresentie.getPresentieMap().entrySet()){
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
-				String s = this.translatePresentieIntToString(entry.getValue());
+				String s = this.informatieSysteem.translatePresentieIntToString(entry.getValue());
 				
 				String lesnummer = "Les "+ String.valueOf(++count);
 				lBuilder.add(lesnummer, s);

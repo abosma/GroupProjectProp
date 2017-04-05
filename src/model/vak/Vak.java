@@ -1,5 +1,6 @@
 package model.vak;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import model.klas.Klas;
@@ -76,6 +77,16 @@ public class Vak {
 		for(PresentieLijst p : this.presentieLijsten){
 			if(p.getStudent().equals(lStudent)){
 				return p;
+			}
+		}
+		return null;
+	}
+
+	public Les getLes(LocalDate datum, String begin) {
+		for(Les les : this.lessen){
+			if(les.getDatum().equals(datum)
+				&& les.getBegin().equals(begin)){
+				return les;
 			}
 		}
 		return null;

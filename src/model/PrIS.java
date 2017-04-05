@@ -199,6 +199,35 @@ public class PrIS {
 	public ArrayList<Les> getLessenStudent(String stuMail) {
 		return this.getStudent(stuMail).getKlas().getAllLessen();
 	}
+	
+	public String translatePresentieIntToString(int i){
+		switch(i){
+  		case 0: return "afwezig";
+  		case 1: return "aanwezig";
+  		case 2: return "ziek";
+  		case 3: return "afgemeld";
+  		case 4: return "afgemeld (niet geaccepteerd)";
+  		default: return "niet geregistreerd";
+  	}
+	}
+	
+	public int translatePresentieStringToInt(String s){
+		if(s.equals("afwezig")){
+			return 0;
+		} else if(s.equals("aanwezig")){
+			return 1;
+		} else if(s.equals("ziek")){
+			return 2;
+		} else if(s.equals("afgemeld")){
+			return 3;
+		} else if(s.equals("afgemeld (niet geaccepteerd)")){
+			return 4;
+		} else if(s.equals("niet geregistreerd")){
+			return -1;
+		} else {
+			return -1;
+		}
+	}
 
 	public ArrayList<Les> getLessenDocentForSingleDate(String dct, LocalDateTime date) {
 		ArrayList<Les> lesDag = new ArrayList<Les>();

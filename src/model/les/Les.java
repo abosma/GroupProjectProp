@@ -41,5 +41,15 @@ public class Les {
 
 	public Vak getVak() {
 		return this.vak;
-	}  
+	}
+	
+	public boolean equals(Object object){
+		if(object instanceof Les){
+			Les tmp = (Les) object;
+			return tmp.getDatum().isEqual(this.datum) 
+					&& tmp.getBegin().equals(this.begin)
+					&& tmp.getLokaal().equals(this.lokaal);
+		}
+		return false;
+	}
 }
