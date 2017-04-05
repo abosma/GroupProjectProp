@@ -79,8 +79,7 @@
           id="ajax_studenten_rooster_opslaan"
           method="POST"
           url="/docent/rooster/les/presentie/opslaan"
-          handle-as="json"
-          on-response="_studenten_rooster_opslaan_response_handler">>
+          handle-as="json">
         </iron-ajax>
 
     </template>
@@ -143,10 +142,6 @@
             _studenten_rooster_ophalen_response_handler: function (request) {
              this._c_studenten = request.detail.response;
              this.totaalStudenten = request.detail.response.length;
-            },
-
-            _studenten_rooster_opslaan_response_handler: function (request) {
-              console.log(request);
             },
 
         });
