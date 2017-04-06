@@ -55,13 +55,14 @@ public class RoosterController implements Handler{
 		Les les = vak.getLes(LocalDate.parse(verzoek.getString("datum")), verzoek.getString("begin"));
 		
 		// loop alle studenten af
+		System.out.println(ja.toString());
 		for(JsonValue jv : ja){
 			JsonObject jo = (JsonObject) jv;
 			String name = jo.getString("email");
 			
 			Student student = null;
 			for(Student _s : vak.getKlas().getStudenten()){
-				if(s.getGebruikersnaam().equals(name)){
+				if(_s.getGebruikersnaam().equals(name)){
 					student = _s;
 				}
 			}
@@ -80,8 +81,8 @@ public class RoosterController implements Handler{
 				//ToDo maak deze code specifieker voor alle gevallen'
 				// wanneer een student zich niet ziekgemeld heeft, moeten we de presentie op afwezig zetten
 				else if(huidigePresentie != informatieSysteem.translatePresentieStringToInt("ziek")){
-					vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, 0);					
-				}
+					vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, 0);			
+				} 
 			}
 		}
 	}
