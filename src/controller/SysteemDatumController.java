@@ -12,6 +12,7 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
+import model.klas.Klas;
 import model.les.Les;
 import server.Conversation;
 import server.Handler;
@@ -41,14 +42,22 @@ public class SysteemDatumController implements Handler {
   	//De volgende statements moeten gewijzigd worden zodat daadwerkelijk de eerste en laatste lesdatum wordt bepaald
   	Calendar lEersteLesDatum = Calendar.getInstance();
 		Calendar lLaatsteLesDatum = Calendar.getInstance();
-		ArrayList<Les> alleLessen = informatieSysteem.getAlleLessen();
+		
+		ArrayList<Klas> alleKlassen = informatieSysteem.getAlleKlassen();
+		ArrayList<Les> alleLessen = new ArrayList<Les>();
+		
+		for(Klas k : alleKlassen){
+			alleLessen.addAll(k.getAllLessen());
+		}
 		
 		for(Les l : alleLessen){
-			LocalDateTime beginData = LocalDateTime.of(l.getDatum(), LocalTime.MIDNIGHT); 
+			LocalDateTime beginDatum = l.getDatum().atTime(LocalTime.parse(l.getBegin()));
+			
 			Calendar cal = Calendar.getInstance();
-			Instant instant = beginData.toInstant(ZoneOffset.UTC);
+			Instant instant = beginDatum.toInstant(ZoneOffset.UTC);
 			Date date = Date.from(instant);
 			cal.setTime(date);
+			
 			if(cal.compareTo(lEersteLesDatum) == 0){
 				lEersteLesDatum = cal;
 			}

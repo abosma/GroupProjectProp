@@ -1,8 +1,6 @@
 package model.les;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import model.vak.Vak;
 
 public class Les {
