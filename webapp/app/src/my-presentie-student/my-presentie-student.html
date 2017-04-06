@@ -88,31 +88,22 @@
             }
       
 </style>  
-  <div id= "pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>
-    
-	<paper-button
-      class="my-button"
-      data-args="about, num-input"  
-      on-click="_make_visible_clicked"
-      >verwijder
-    </paper-button>
-	    
+  <div id= "pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>	    
     <iron-list items="{{_vakken}}" as="item" scroll-target="document" scroll-offset="200">
-    
-     <template>
-      <div class="item">
-        
-        <paper-button
-          class="my-button"
-          on-click="_make_visible_clicked"
-     	    data-args="about">
-          [[item.vak]]
-        </paper-button>
-        
-       	<template is="dom-repeat" items="{{item.lessen}}" as="les">            
-       	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.lesnummer]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
-       	</template>
-        </div>
+      <template>
+        <div>
+          <paper-button
+            class="my-button"
+            on-click="_toggle_this"
+       	    data-args$="{{item.vak}}"
+          >[[item.vak]]</paper-button>
+
+          <div id="[[item.vak]]">        
+           	<template is="dom-repeat" items="{{item.lessen}}" as="les">            
+           	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.lesnummer]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
+           	</template>
+          </div>
+        </div>  
       </template> 
     </iron-list> 
 	
@@ -208,6 +199,11 @@
             }
           }
         },
+
+        _toggle_this : function(e){
+          var arg = e.target.getAttribute('data-args').split(',')[0];
+          console.log("_toggle_this: " + arg);          
+        }, 
 			
           /*  Functie wordt aangeroepen voor de pagina begin,
            Er moet nog voor gezorgt worden dat wanneer deze functie aangeroepen wordt het ervoor zorgt dat de vakken die de student volgt
