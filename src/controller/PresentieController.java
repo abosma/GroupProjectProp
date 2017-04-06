@@ -1,7 +1,6 @@
 
 package controller;
 
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import server.Conversation;
 import server.Handler;
 
 
+
 public class PresentieController implements Handler   {
 	private PrIS informatieSysteem;
  
@@ -29,6 +29,7 @@ public class PresentieController implements Handler   {
 	}
 
 	public void handle(Conversation conversation) {
+		System.out.println(conversation.getRequestedURI());
 		if(conversation.getRequestedURI().startsWith("/student/presentie")) {
 			studentOphalen(conversation);
 		}if (conversation.getRequestedURI().startsWith("/docent/presentie")) {
@@ -37,55 +38,49 @@ public class PresentieController implements Handler   {
 	}
 	
 	private void studentOphalen(Conversation conversation)  {
+		//Opgehaalde username polymer
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
+		//Array die je terug stuurt naar polymer
+		JsonArrayBuilder lJsonArrayBuilderVoorPresentie = Json.createArrayBuilder();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
 		ArrayList<Les> lessenStudent = informatieSysteem.getLessenStudent(lGebruikersnaam);
-
-//		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
-		
-//		JsonArrayBuilder lJsonArrayAui = Json.createArrayBuilder();
-		
 		ArrayList<String> vakken = new ArrayList<String>();
-//		ArrayList<String> V1AUI = new ArrayList<String>();
 		
-//		JsonObjectBuilder lJsonObjectBuilderVoorAuiLijst = Json.createObjectBuilder();
-		
-		
-		//De verschillende vakken in een lijst zetten
-		
+		//Een lijst maken met alle vakken die een student heeft, zodat deze lijst later benaderd kan worden.
 		for (Les l : lessenStudent) {
 			if(vakken.isEmpty()){vakken.add(l.getNaam()); ;}
-			
 			else if(!vakken.contains(l.getNaam())) {
 					vakken.add(l.getNaam());
 			}
 		}
-		JsonObjectBuilder lJsonObjectBuilderVoorPresentie = Json.createObjectBuilder();
+		
+		
 		for(String vak: vakken){
+			//Zorgt ervoor dat het lesnummer meegegeven wordt.
 			int aui = 0;
-			//Key die het hele JSON bestand in een lijst heeft staan
 			
-			//Een naam van het vak die een lijst bevat met de lesgegevens
+			//Een naam van het vak die een lijst bevat met voor elke les een object.
 			JsonObjectBuilder lJsonObjectBuilderVoorVak = Json.createObjectBuilder();
 			
-			//lesnummer(als string bijv:les1) en de aanwezigheid als string
+			//lesnummer(als string bijv:les1) en de aanwezigheid (als string bijv: aanwezig).
 			JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
-//			System.out.println(lJsonArrayBuilderVoorLes);
 			
 			for (Les l : lessenStudent) {
 				JsonObjectBuilder lJsonObjectBuilderVoorLes = Json.createObjectBuilder();
-				LocalDateTime beginDatum = l.getBeginData();
-				LocalDateTime eindDatum = l.getEindData();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime beginDatum = l.getBeginDatum();
+				LocalDateTime eindDatum = l.getEindDatum();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yy");
 		    
 				String beginDatumString = beginDatum.format(formatter);
 		    String eindDatumString = eindDatum.format(formatter);
-				String docentNaam = l.getDocent().getGebruikersnaam();
+		    String docentNaam = l.getDocent().getGebruikersnaam();
 				String lokaal = l.getLokaal();
+				
 				
 				for(Map.Entry<String, Integer> pres : l.getPresentie().entrySet()){
 	  		if(pres.getKey().equals(lGebruikersnaam)){
+	  			
 	  			String s = null;
 	  			switch(pres.getValue()){
 	  				case 0:
@@ -108,24 +103,25 @@ public class PresentieController implements Handler   {
 
 	  				aui = aui+1;
   					String lesnummer = "Les "+ String.valueOf(aui);
-	  				lJsonObjectBuilderVoorLes.add(lesnummer, s);
+	  				lJsonObjectBuilderVoorLes.add("les", lesnummer)
+	  				.add("datum", beginDatumString)
+	  				.add("P", s);
 	  				lJsonArrayBuilderVoorLes.add(lJsonObjectBuilderVoorLes);
+	  				}
 	  			}
-	  	}
-	  }
-	}
-			
-	
-			
-			lJsonObjectBuilderVoorVak.add(vak, lJsonArrayBuilderVoorLes);
-			//hier toevoegen aan json voor de ene vak
-			
-			
-			String lJsonOutStr = lJsonObjectBuilderVoorVak.build().toString();	
-			
-			System.out.println(lJsonOutStr);
+	  		}
 			}
-		
+			lJsonObjectBuilderVoorVak.add("vaknaam", vak);
+			lJsonObjectBuilderVoorVak.add("vak", lJsonArrayBuilderVoorLes);
+		  //Json object voor het vak in de loop.
+			lJsonArrayBuilderVoorPresentie.add(lJsonObjectBuilderVoorVak);
+			//Json object toe voegen aan Json array die terug gestuurd wordt naar pagina.
+			
+//		Het bestand van een vak --> String lJsonOutStr = lJsonObjectBuilderVoorVak.build().toString();	
+			}
+		String lJsonOutStr = lJsonArrayBuilderVoorPresentie.build().toString();	
+		System.out.println(lJsonOutStr);
+		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
 	
@@ -143,18 +139,18 @@ public class PresentieController implements Handler   {
 		for (Les l : lessenStudent) {
 			JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
 			
-			LocalDateTime beginDatum = l.getBeginData();
-			LocalDateTime eindDatum = l.getEindData();
+			LocalDateTime beginDatum = l.getBeginDatum();
+			LocalDateTime eindDatum = l.getEindDatum();
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	    
-			String beginDatumString = beginDatum.format(formatter);
-	    String eindDatumString = eindDatum.format(formatter);
+//			String beginDatumString = beginDatum.format(formatter);
+//	    String eindDatumString = eindDatum.format(formatter);
 			String docentNaam = l.getDocent().getGebruikersnaam();
 			String lokaal = l.getLokaal();
 			
 			lJsonObjectBuilderVoorStudent
-				.add("beginDatum", beginDatumString)
-				.add("eindDatum", eindDatumString)
+//				.add("beginDatum", beginDatumString)
+//				.add("eindDatum", eindDatumString)
 				.add("docentNaam", docentNaam)
 				.add("lokaal", lokaal);
 			for(Map.Entry<String, Integer> pres : l.getPresentie().entrySet()){
@@ -163,7 +159,6 @@ public class PresentieController implements Handler   {
 		  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);
 		}
     String lJsonOutStr = lJsonArrayBuilder.build().toString();		
-//    System.out.println(lJsonOutStr);
     
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
