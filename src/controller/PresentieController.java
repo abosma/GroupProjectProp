@@ -2,8 +2,6 @@
 package controller;
 
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -48,7 +46,6 @@ public class PresentieController implements Handler   {
 
 		ArrayList<Vak> vakken = lStudent.getKlas().getVakken();
 
-		JsonObjectBuilder lJsonObjectBuilderVoorPresentie = Json.createObjectBuilder();
 		for(Vak vak : vakken){
 			int count = 0;
 			//Key die het hele JSON bestand in een lijst heeft staan

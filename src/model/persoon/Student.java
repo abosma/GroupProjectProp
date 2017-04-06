@@ -1,19 +1,10 @@
 //checked
 package model.persoon;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import model.klas.Klas;
-import model.les.Les;
 import model.vak.Vak;
 
 public class Student extends Persoon {
-	private ArrayList<String> vakken = new ArrayList<String>();
-
 	private int studentNummer;
 	private Klas klas;
 	private String groepId;

@@ -3,7 +3,6 @@ package model.klas;
 import java.util.ArrayList;
 
 import model.les.Les;
-import model.persoon.Docent;
 import model.persoon.Student;
 import model.presentie.PresentieLijst;
 import model.vak.Vak;

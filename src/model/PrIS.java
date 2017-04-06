@@ -15,12 +15,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Calendar;
-import java.util.Date;
 
 public class PrIS {
 	private ArrayList<Docent> deDocenten;
@@ -175,8 +172,8 @@ public class PrIS {
 		return "undefined";
 	}
 
-	public ArrayList<Les> getAlleLessen() {
-		return this.deLessen;
+	public ArrayList<Klas> getAlleKlassen(){
+		return this.deKlassen;
 	}
 
 	public ArrayList<Les> getLessenDocent(String gebruikersnaam) {
