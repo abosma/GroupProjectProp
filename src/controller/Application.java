@@ -36,8 +36,7 @@ public class Application {
 		MedestudentenController medestudentenController = new MedestudentenController(infoSysteem);
 		RoosterController roosterController = new RoosterController(infoSysteem);
 		PresentieController presentieController  = new PresentieController(infoSysteem);
-		
-		presentieController.docentOphalen("john.smeets@hu.nl");
+
 		
 		server.registerHandler("/student/presentie", presentieController);
 		server.registerHandler("/student/presentie/tonen", presentieController);

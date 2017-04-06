@@ -156,6 +156,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <iron-icon icon="icons:today"></iron-icon>
               <span>Rooster</span>
           </a>
+          
+           <a name="Presentie inzien leerlingen" href$="[[_c_baseURL]]docent/presentie" verborgen$="[[!_are_strings_equal(_rol, 'docent')]]">
+              <iron-icon icon="icons:info-outline"></iron-icon>
+              <span>Presentie</span>
+          </a>
           <!-- beschikbaar voor student--------------------------------------------------- -->
           <a name="Rooster" href$="[[_c_baseURL]]student/rooster" verborgen$="[[!_are_strings_equal(_rol, 'student')]]">
               <iron-icon icon="icons:today"></iron-icon>
@@ -262,6 +267,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                       c_rol="[[_rol]]"
                       c_username="[[_username]]">
                   </my-rooster-docent>
+              </paper-material>
+          </section>
+          
+          <section name="docent_presentie"
+                   title="Presentie inzien docent"
+                   element$="my-presentie-docent">
+              <paper-material elevation="1">
+                  <my-presentie-docent
+                      c_visible="[[_are_strings_equal(_ar_page, 'docent_presentie')]]"
+                      c_rol="[[_rol]]"
+                      c_username="[[_username]]">
+                  </my-presentie-docent>
               </paper-material>
           </section>
  

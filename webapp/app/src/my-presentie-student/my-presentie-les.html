@@ -73,13 +73,17 @@
             color: #fff;
             font-size: 15px;
             background: #1a9fd9;
-            width: 80px;
+            width: 100px;
             height:30px;
             border-radius: 3px;
             }
             .Aanwezigheid{
-            width: 80px;
-            border: 1px solid #000;
+        /*     background: #fff; */
+            text-align:center;
+            width: 90px;
+            height: 46px;
+            border: 1px solid #000; 
+            border-radius: 3px;
             }
             
             em {  /* or .call em, but you should aim for consistency in your styling */
@@ -91,7 +95,7 @@
         <!-- Header Agenda  -->
             <table>
                 <tr>
-                    <th class = "Les" scope="col">[[c_lesnummer]] &nbsp; &nbsp; &nbsp;<em>[[c_datumles]]</em></th>
+                    <th class = "Les" scope="col">[[c_lesnummer]]<br><em>[[c_datumles]]</em> </th>
                 </tr>
                 <tr>
                     <td class="Aanwezigheid">[[c_aanwezigheid]]</td>

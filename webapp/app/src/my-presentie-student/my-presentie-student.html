@@ -83,8 +83,9 @@
      my-presentie-les {
 	   float: left;
 	   margin-top: 10px;   
-	   margin-right: 1px;    
-       width: 80px;
+	   margin-right: 5px;  
+	   margin-bottom: 15px;  
+       width: 90px;
             }
       
 </style>  
@@ -100,7 +101,7 @@
 
           <div id="[[item.vak]]">        
            	<template is="dom-repeat" items="{{item.lessen}}" as="les">            
-           	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.lesnummer]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
+           	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.les]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
            	</template>
           </div>
         </div>  

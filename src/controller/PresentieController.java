@@ -31,10 +31,11 @@ public class PresentieController implements Handler   {
 	}
 
 	public void handle(Conversation conversation) {
+		System.out.println(conversation.getRequestedURI());
 		if(conversation.getRequestedURI().startsWith("/student/presentie")) {
 			studentOphalen(conversation);
 		}if (conversation.getRequestedURI().startsWith("/docent/presentie")) {
-			//docentOphalen(conversation);
+			docentOphalen(conversation);
 		}
 	}
 	
@@ -42,6 +43,7 @@ public class PresentieController implements Handler   {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		System.out.println(lGebruikersnaam);
 		
 		Student lStudent = informatieSysteem.getStudent(lGebruikersnaam);
 
@@ -49,7 +51,7 @@ public class PresentieController implements Handler   {
 
 		JsonArrayBuilder lJsonArrayBuilderVoorPresentie = Json.createArrayBuilder();
 		for(Vak vak : vakken){
-			int count = 0;		
+			int aui = 0;
 			
 			JsonObjectBuilder lJsonObjectBuilderVoorVak = Json.createObjectBuilder();
 			
@@ -61,9 +63,10 @@ public class PresentieController implements Handler   {
 			for(Map.Entry<Les, Integer> entry : lPresentie.getPresentieMap().entrySet()){
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
 				String s = this.informatieSysteem.translatePresentieIntToString(entry.getValue());
-				
+				aui = aui+1;
+				String lesnummer = "Les "+ String.valueOf(aui);
 				lBuilder
-					.add("les", ++count)
+					.add("les", lesnummer)
 					.add("presentie", s)
 					.add("datum", entry.getKey().getDatum().toString());
 				lJsonArrayBuilderVoorLes.add(lBuilder);
@@ -83,12 +86,12 @@ public class PresentieController implements Handler   {
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
-	public void docentOphalen(String gebruikersnaam)  {
-		//JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+	
+	public void docentOphalen(Conversation conversation)  {
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
-		//String lGebruikersnaam = lJsonObjectIn.getString("username");
-		
-		String lGebruikersnaam = gebruikersnaam;
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		System.out.println(lGebruikersnaam);
 		
 		Docent doc = informatieSysteem.getDocent(lGebruikersnaam);
 
