@@ -37,8 +37,6 @@ public class Application {
 		RoosterController roosterController = new RoosterController(infoSysteem);
 		PresentieController presentieController  = new PresentieController(infoSysteem);
 		
-		presentieController.docentOphalen("john.smeets@hu.nl");
-		
 		server.registerHandler("/student/presentie", presentieController);
 		server.registerHandler("/student/presentie/tonen", presentieController);
 		server.registerHandler("/docent/presentie", presentieController);
