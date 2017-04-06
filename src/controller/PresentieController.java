@@ -2,13 +2,10 @@
 package controller;
 
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.json.Json;
-
 
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -48,12 +45,10 @@ public class PresentieController implements Handler   {
 
 		ArrayList<Vak> vakken = lStudent.getKlas().getVakken();
 
-		JsonObjectBuilder lJsonObjectBuilderVoorPresentie = Json.createObjectBuilder();
+		JsonArrayBuilder lJsonArrayBuilderVoorPresentie = Json.createArrayBuilder();
 		for(Vak vak : vakken){
-			int count = 0;
-			//Key die het hele JSON bestand in een lijst heeft staan
+			int count = 0;		
 			
-			//Een naam van het vak die een lijst bevat met de lesgegevens
 			JsonObjectBuilder lJsonObjectBuilderVoorVak = Json.createObjectBuilder();
 			
 			//lesnummer(als string bijv:les1) en de aanwezigheid als string
@@ -65,18 +60,25 @@ public class PresentieController implements Handler   {
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
 				String s = this.informatieSysteem.translatePresentieIntToString(entry.getValue());
 				
-				String lesnummer = "Les "+ String.valueOf(++count);
-				lBuilder.add(lesnummer, s);
+				lBuilder
+					.add("les", ++count)
+					.add("presentie", s)
+					.add("datum", entry.getKey().getDatum().toString());
 				lJsonArrayBuilderVoorLes.add(lBuilder);
 			}
-					
-			lJsonObjectBuilderVoorVak.add(vak.getNaam(), lJsonArrayBuilderVoorLes);
+
 			//hier toevoegen aan json voor de ene vak
 			
-			String lJsonOutStr = lJsonObjectBuilderVoorVak.build().toString();	
+			lJsonObjectBuilderVoorVak
+				.add("vak",vak.getNaam())
+				.add("lessen", lJsonArrayBuilderVoorLes);
 			
-			conversation.sendJSONMessage(lJsonOutStr);
+			lJsonArrayBuilderVoorPresentie.add(lJsonObjectBuilderVoorVak);
+			
 		}
+		String lJsonOutStr = lJsonArrayBuilderVoorPresentie.build().toString();	
+		System.out.println(lJsonOutStr);
+		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
 	/*

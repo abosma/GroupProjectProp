@@ -87,54 +87,50 @@
        width: 80px;
             }
       
-</style>
+</style>  
+  <div id= "pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>
     
-    <div id= "pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>
+	<paper-button
+      class="my-button"
+      data-args="about, num-input"  
+      on-click="_make_visible_clicked"
+      >verwijder
+    </paper-button>
+	    
+    <iron-list items="{{_vakken}}" as="item" scroll-target="document" scroll-offset="200">
     
-    <iron-ajax
+     <template>
+      <div class="item">
+        
+        <paper-button
+          class="my-button"
+          on-click="_make_visible_clicked"
+     	    data-args="about">
+          [[item.vak]]
+        </paper-button>
+        
+       	<template is="dom-repeat" items="{{item.lessen}}" as="les">            
+       	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.lesnummer]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
+       	</template>
+        </div>
+      </template> 
+    </iron-list> 
+	
+	  <iron-ajax
       id="ajax_vakken_ophalen"
       method="POST"
       url="/student/presentie"
       handle-as="json"
       on-response="_vakken_ophalen_response_handler">
     </iron-ajax>
- 	      
+        
     <iron-ajax
       id="ajax_presentie_tonen"
       method="POST"
       url="/student/presentie/tonen" 
       handle-as="json"
       on-response="_vakken_ophalen_response_handler">
-    </iron-ajax>  
-   
-	<paper-button
-      class="my-button"
-      data-args="about, num-input"  
-      on-click="_unhide_clicked"
-      >verwijder</a>
-    </paper-button>
-	    
-    <iron-list items="{{_c_studenten}}" as="item" scroll-target="document" scroll-offset="200">
-    
-   <template>
-    <div class="item">
-    
-     <paper-button
-      class="my-button"
-      on-click="_unhide_clicked"
- 	  data-args="about"   
-      >[[item.vaknaam]]</a>
-    </paper-button>
-    
-   	 <template is="dom-repeat" items="{{item.vak}}">            
-   	 <my-presentie-les id="about" class="unhidden"c_lesnummer="[[item.les]]" c_aanwezigheid="[[item.P]]" c_datumles="[[item.datum]]"> </my-presentie-les>
-   	 </template>
-    
-    </div>
-    </template>
-    </iron-list> 
-	
-	
+    </iron-ajax>
   </template>  
   	
 
@@ -151,7 +147,7 @@
         is: "my-presentie-student",
 
         properties: {
-          _c_studenten: {
+          _vakken: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
 										array is constant groepnr is changable */
           },
@@ -173,12 +169,12 @@
         },
         
         
-        _unhide_clicked: function(e){
+        _make_visible_clicked: function(e){
         	var args = e.target.dataset.args.split(',');
         	alert(args[0]);
         	var item = document.getElementById(args[0]);
         	alert(item);
-        	console.log("_unhide_clicked");
+        	console.log("_make_visible_clicked");
         	about.className = 'unhidden';
         	
         	/* var item = document.getElementById(divID); */
@@ -228,40 +224,17 @@
 		
         /* Response handler functie hierboven */
         _vakken_ophalen_response_handler: function(request) {
-          console.log("_vakken_ophalen_response_handler aantal studenten="+request.detail.response.length);
-          this._c_studenten = request.detail.response;
+          console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response.length);
+          console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response);
+          this._vakken = request.detail.response;
         },
 
-		
-        
         /* Onderstaande functie zou ervoor moeten zorgen dat de aanwezigheid gegevens van het aangeklikte vak getoond moeten worden */
-         
-        
-        _presentie_tonen_request_handler: function() {
-        	
-        	console.log("_presentie_tonen_request_handler user="+this.c_username);
-            this.$.ajax_presentie_tonen.contentType="application/json";
-            this.$.ajax_presentie_tonen.body={
-                "vak":this.c_username
-            };
-            this.$.ajax_presentie_tonen.generateRequest();
-          }, 
-        
-        
-        
-        
-        
        _toast_clicked: function(e) {
          var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
          lToast.toggle();
          this._go_home();
         },
-        
-       
-        
-        
-        
-
       });
     })();
   </script>
