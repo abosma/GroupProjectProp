@@ -49,11 +49,11 @@
                 <li>Groep(en): [[item.klas]]</li>
                 <li>[[item.docent]]</li>
                 <li hidden$="{{!isStudent}}">
-                  <my-presentie-melden></my-presentie-melden>
+                  <my-presentie-melden item="{{item}}" c_username="{{c_username}}"></my-presentie-melden>
                 </li>
 
                 <li hidden$="{{isStudent}}">
-                   <my-presentie-invoeren></my-presentie-invoeren>
+                   <my-presentie-invoeren les="{{item}}" c_username="{{c_username}}"></my-presentie-invoeren>
                 </li>
             </template>
             <template is="dom-if" if={{item.leeg}}>

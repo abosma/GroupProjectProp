@@ -39,14 +39,21 @@ public class Application {
 		
 		server.registerHandler("/student/presentie", presentieController);
 		server.registerHandler("/student/presentie/tonen", presentieController);
+		
 		server.registerHandler("/systeemdatum/lesinfo", systeemDatumController);
+		
 		server.registerHandler("/login", loginController);
+		
   	server.registerHandler("/student/medestudenten/ophalen", medestudentenController);
   	server.registerHandler("/student/medestudenten/opslaan", medestudentenController);
+  	
   	server.registerHandler("/student/rooster/lesdagophalen", roosterController);
   	server.registerHandler("/docent/rooster/lesdagophalen", roosterController);
   	server.registerHandler("/docent/rooster/ophalen", roosterController);
   	server.registerHandler("/student/rooster/ophalen", roosterController);
+  	server.registerHandler("/student/rooster/afmelden", roosterController);
+  	server.registerHandler("/docent/rooster/les/studenten", roosterController);
+  	server.registerHandler("/docent/rooster/les/presentie/opslaan", roosterController);
   	
 		server.start();
 	}

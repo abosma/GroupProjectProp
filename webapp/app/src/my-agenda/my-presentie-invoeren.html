@@ -4,6 +4,10 @@
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+
 
 
 <dom-module id="my-presentie-invoeren">
@@ -34,80 +38,88 @@
          </paper-button>
 
         <paper-dialog id="presentieInvoeren" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-         <h2>Presentie invoeren</h2>
-          <table>
-            <tr>
-              <th class="voornaam">Voornaam </th>
-              <th class="achternaam">Achternaam </th>
-              <th class="groepid-header">Aanwezig</th>
-            </tr>
+         <h2>Presentie invoeren <small>(totaal studenten: [[totaalStudenten]])</small></h2>
+          <paper-dialog-scrollable>
+            <table>
               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
+                <th class="voornaam">Leerling</th>
+                <th class="groepid-header">Aanwezig</th>
               </tr>
-               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
-              </tr>
-               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
-              </tr>
-               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
-              </tr>
-               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
-              </tr>
-               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
-              </tr>
-               <tr>
-                <td class="voornaam">  <a href="#/student/details/Jan-Achterberg">Jan</a></td>
-                <td class="achternaam"><a href="#/student/details/Jan-Achterberg">Achterberg </a></td>
-                <td class="groepid">
-                   <paper-checkbox class="my-check" role="checkbox" tabindex="0" toggles="" aria-checked="false" aria-disabled="false">
-                  </paper-checkbox>
-               </td>
-              </tr>
-         </table>
+              <template is="dom-repeat" items="[[_c_studenten]]">
+                <tr>
+                  <td class="leerling">[[item.naam]]</td>
+                  <td class="groepid">
+                     <paper-checkbox
+                      class="my-check"
+                      checked="{{item.aanwezig}}">
+                    </paper-checkbox>
+                 </td>
+                </tr>
+              </template>
+           </table>
+        </paper-dialog-scrollable>
+          
+          <div class="buttons">
+            <paper-button dialog-dismiss>Sluiten</paper-button>
+            <paper-button dialog-confirm autofocus on-tap="confirmDialog">Opslaan</paper-button>
+          </div>
+
         </paper-dialog>
+
+
+        <iron-ajax
+          id="ajax_studenten_rooster_ophalen"
+          method="POST"
+          url="/docent/rooster/les/studenten"
+          handle-as="json"
+          on-response="_studenten_rooster_ophalen_response_handler">
+        </iron-ajax>
+
+        <iron-ajax
+          id="ajax_studenten_rooster_opslaan"
+          method="POST"
+          url="/docent/rooster/les/presentie/opslaan"
+          handle-as="json">
+        </iron-ajax>
 
     </template>
     <script>
         Polymer({
             is: 'my-presentie-invoeren',
             properties: {
+              les: {
+                type: Object,
+                notify: true,   
+                observer: '_initializing',
+              },
+
+              c_username: {
+                type: String,
+              },
+
+              items: {
+                type: Object,
+              },
+
+              _c_studenten: {
+                type: Array,
+              },
+
+              totaalStudenten: {
+                type: Number,
+              },
             },
 
             _initializing : function() {
+              this.$.ajax_studenten_rooster_ophalen.contentType = "application/json";
+              this.$.ajax_studenten_rooster_ophalen.body = {
+                  "datum": this.les.datum,
+                  "begin": this.les.begin,
+                  "eind": this.les.eind,
+                  "vak": this.les.vak,
+              };
+
+              this.$.ajax_studenten_rooster_ophalen.generateRequest();
             },
 
             openDialog: function() {
@@ -115,6 +127,21 @@
             },
 
             confirmDialog: function() {
+              this.$.ajax_studenten_rooster_opslaan.contentType = "application/json";
+              this.$.ajax_studenten_rooster_opslaan.body = {
+                  "datum": this.les.datum,
+                  "begin": this.les.begin,
+                  "eind": this.les.eind,
+                  "vak": this.les.vak,
+                  "studenten": this._c_studenten,
+              };
+
+              this.$.ajax_studenten_rooster_opslaan.generateRequest();
+            },
+
+            _studenten_rooster_ophalen_response_handler: function (request) {
+             this._c_studenten = request.detail.response;
+             this.totaalStudenten = request.detail.response.length;
             },
 
         });
