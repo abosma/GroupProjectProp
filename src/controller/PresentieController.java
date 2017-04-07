@@ -60,7 +60,12 @@ public class PresentieController implements Handler   {
 
 			PresentieLijst lPresentie = vak.getPresentieLijstForStudent(lStudent);
 			
-			for(Presentie p: lPresentie.getPresenties()){
+			ArrayList<Presentie> presenties = lPresentie.getPresenties();
+			
+			Collections.sort(presenties, Presentie.presentieDateComparator);
+			
+			
+			for(Presentie p: presenties){
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
 				String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
 				
