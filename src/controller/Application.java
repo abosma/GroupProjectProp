@@ -51,7 +51,8 @@ public class Application {
     server.registerHandler("/student/rooster/afmelden", roosterController);
     server.registerHandler("/docent/rooster/les/studenten", roosterController);
     server.registerHandler("/docent/rooster/les/presentie/opslaan", roosterController);
- 	
+    server.registerHandler("/docent/rooster/les/presentie/current", roosterController);
+
 		server.start();
 	}
 }
