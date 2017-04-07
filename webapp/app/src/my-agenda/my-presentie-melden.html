@@ -29,17 +29,35 @@
           class="ziekmeld-button"
           on-tap="openDialog"
           raised
-          hidden$="{{ziek}}">
+          hidden$="{{afwezig}}">
             Afmelden
          </paper-button>
 
-        <paper-button
-          id="login_button_element"
-          class="ziekgemeld-button"
-          raised
-          hidden$="{{!ziek}}">
-            Afgemeld
-         </paper-button>
+         <div hidden$="{{!afwezig}}">
+            <paper-button
+            id="login_button_element"
+            class="ziekgemeld-button"
+            raised
+            hidden$="{{!ziek}}">
+              Ziek
+           </paper-button>
+
+          <paper-button
+            id="login_button_element"
+            class="ziekgemeld-button"
+            raised
+            hidden$="{{!afgemeld}}">
+              Afgemeld
+           </paper-button>
+
+           <paper-button
+            id="login_button_element"
+            class="ziekgemeld-button"
+            raised
+            hidden$="{{!afgemeldNiet}}">
+              Afgemeld (niet geaccepteerd)
+           </paper-button>
+         </div>
 
         <paper-dialog id="presentieMelden" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
           <h2>Afmelden</h2>
@@ -67,6 +85,14 @@
           on-response="_student_rooster_afmelden_response_handler">
         </iron-ajax>
 
+        <iron-ajax
+          id="ajax_student_rooster_current"
+          method="POST"
+          url="/docent/rooster/les/presentie/current"
+          handle-as="text"
+          on-response="_student_rooster_current_response_handler">
+        </iron-ajax>
+
     </template>
     <script>
         Polymer({
@@ -77,6 +103,24 @@
                 value: false,
                 notify: true, 
               },
+
+              afgemeld: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+              afgemeldNiet: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+
+              afwezig: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+
               redenVeldWeergeven: {
                 type: Boolean,
                 value: false,
@@ -101,8 +145,22 @@
 
               c_username: {
                 type: String,
+                observer: '_initializing',
               },
 
+            },
+
+            _initializing : function() {
+              this.$.ajax_student_rooster_current.contentType = "application/json";
+              this.$.ajax_student_rooster_current.body = {
+                  "datum": this.item.datum,
+                  "begin": this.item.begin,
+                  "eind": this.item.eind,
+                  "username": this.c_username,
+                  "vak": this.item.vak,
+              };
+
+              this.$.ajax_student_rooster_current.generateRequest();
             },
 
             openDialog: function() {
@@ -136,16 +194,30 @@
               };
 
               this.$.ajax_student_rooster_afmelden.generateRequest();
-
-              this.ziek = true;
+              this.afwezig = true;
+              if(this.redenOptie == "Afmelden"){
+                  this.afgemeld = true;
+                }else{
+                  this.ziek = true;
+                }
             },
 
             _student_rooster_afmelden_response_handler: function (request) {
-                //if(request.detail.response == true){
-                  this.ziek = true;
-                //}else{
-                 // this.ziek = false;
-                //}
+            },
+
+            _student_rooster_current_response_handler: function (request) {
+              var response = JSON.parse(request.detail.response).value;
+
+              if(response == 2){
+                this.afwezig = true;
+                this.ziek = true;
+              }else if(response == 3){
+                this.afwezig = true;
+                this.afgemeld = true;
+              }else if(response == 4){
+                this.afwezig = true;
+                this.afgemeldNiet = true;
+              }
             },
 
             _itemSelected : function(e) {

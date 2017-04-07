@@ -3,7 +3,7 @@ package controller;
 
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Collections;
 
 import javax.json.Json;
 
@@ -13,7 +13,6 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.klas.Klas;
-import model.les.Les;
 import model.persoon.Docent;
 import model.persoon.Student;
 import model.presentie.Presentie;
@@ -61,7 +60,12 @@ public class PresentieController implements Handler   {
 
 			PresentieLijst lPresentie = vak.getPresentieLijstForStudent(lStudent);
 			
-			for(Presentie p: lPresentie.getPresenties()){
+			ArrayList<Presentie> presenties = lPresentie.getPresenties();
+			
+			Collections.sort(presenties, Presentie.presentieDateComparator);
+			
+			
+			for(Presentie p: presenties){
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
 				String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
 				
@@ -136,6 +140,10 @@ public class PresentieController implements Handler   {
 					JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
 					
   				PresentieLijst lPresentie = vak.getPresentieLijstForStudent(stu);
+  				
+  				ArrayList<Presentie> presenties = lPresentie.getPresenties();
+  				
+  				Collections.sort(presenties, Presentie.presentieDateComparator);
   				
   				for(Presentie p : lPresentie.getPresenties()){
   					JsonObjectBuilder lBuilder = Json.createObjectBuilder();

@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../my-presentie-student/my-presentie-les.html">
+<dom-module id="my-presentie-overzicht">
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    :root {
+      --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+    }
+    span {
+      @apply(--paper-font-body1);
+    } 
+    .date{
+      font-size: 80%;
+    }
+    th {
+      color: white;
+    } 
+    my-presentie-les {
+  	   float: left;
+  	   margin-top: 10px;   
+  	   margin-right: 5px;  
+  	   margin-bottom: 15px;  
+       width: 90px;
+    }
+    th{
+      background: #1a9fd9;
+      width: 100px;
+      height:30px;
+    }
+  </style>
+  <template>
+  <table>
+    <tr>
+      <template is="dom-repeat" items="{{vak.lessen}}">
+        <th>[[item.les]]<br/><span class="date">[[_reverse(item.datum)]]</span></th>
+      </template>
+    </tr>
+    <tr>
+      <template is="dom-repeat" items="{{vak.lessen}}">
+        <td>[[item.presentie]]</td>
+      </template>
+    </tr>
+  </table>
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: "my-presentie-overzicht",
+
+        properties: {
+          vak: {
+            type: Array,
+          },
+        },
+        _reverse : function(e){
+          return e.split("-").reverse().join("-");
+        }
+      });
+    })();
+  </script>
+</dom-module>

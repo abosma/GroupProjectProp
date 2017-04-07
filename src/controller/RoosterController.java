@@ -39,6 +39,30 @@ public class RoosterController implements Handler{
 		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/opslaan")){
 			opslaanPresentieVoorLes(conversation);
 		}
+		else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/current")){
+			currentPresentieVoorLes(conversation);
+		}
+	}
+	
+	private void currentPresentieVoorLes(Conversation conversation) {
+		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
+				
+		//Ophalen student
+		Student s = informatieSysteem.getStudent(verzoek.getString("username"));
+		
+		//Ophalen vak waarvoor word afgemeld
+		Vak vak = s.getVak(verzoek.getString("vak"));
+		
+		//Ophalen specifieke les waarvoor word afgememeld
+		Les les = vak.getLes(
+				LocalDate.parse(verzoek.getString("datum")), 
+				verzoek.getString("begin"));
+		
+		int presentieVoorLes = vak.getPresentieLijstForStudent(s).getPresentieForLes(les);
+		
+		JsonObjectBuilder job = Json.createObjectBuilder();
+		job.add("value", presentieVoorLes);
+		conversation.sendJSONMessage(job.build().toString());
 	}
 	
 	private void opslaanPresentieVoorLes(Conversation conversation) {
@@ -100,12 +124,26 @@ public class RoosterController implements Handler{
 		for(Student s : studenten){
 			int presentieVoorLes = vak.getPresentieLijstForStudent(s).getPresentieForLes(les);
 			
+			String opmerking = "Geen opmerking";
+			boolean accepteerbaar = false;
+			
+			if(presentieVoorLes >= 2 && presentieVoorLes <= 4){
+				opmerking = vak.getPresentieLijstForStudent(s).getPresentieObjectForLes(les).getReden();
+				
+				if(presentieVoorLes >= 2 && presentieVoorLes <= 3){
+					accepteerbaar = true;
+				}
+			}
+			
 			JsonObjectBuilder job = Json.createObjectBuilder();
 			job
 				.add("naam", s.getVoornaam() + " " + s.getVolledigeAchternaam())
 				.add("email", s.getGebruikersnaam())
 				.add("presentie", presentieVoorLes)
-				.add("aanwezig", presentieVoorLes == 1);
+				.add("aanwezig", presentieVoorLes == 1)
+				.add("opmerking", opmerking)
+				.add("accepteerbaar", accepteerbaar);
+
 			
 			jab.add(job);
 		}
@@ -131,7 +169,7 @@ public class RoosterController implements Handler{
 		
 		//De presentiestatus voor een les aanpassen
 		if(reden == 2){
-			vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden, "Geen opmerking");
+			vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden, "Ziek");
 		}else{
 			vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden, verzoek.getString("redenveld"));
 		}

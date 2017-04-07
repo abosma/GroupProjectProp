@@ -1,9 +1,10 @@
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../my-presentie-student/my-presentie-les.html">
+<link rel="import" href="../my-presentie-student/my-presentie-overzicht.html">
 <dom-module id="my-presentie-student-vak">
   <style>
     :host {
       display: block;
+      width: 100%;
     }
     :root {
       --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
@@ -20,19 +21,18 @@
     }
   </style>
   <template>
-    <div>
-      <!-- <paper-toggle-button>[[vak.vak]]</paper-toggle-button> -->
-      <div id="[[vak.vak]]">
-       	<template is="dom-repeat" items="{{vak.lessen}}" as="les">          
+    <paper-toggle-button on-change="_toggle_hide">{{vak.vak}}</paper-toggle-button>
+      <div id="student-vak-lessen" hidden$="{{_hide}}">
+        <my-presentie-overzicht vak="{{vak}}"></my-presentie-overzicht>
+       	<!-- <template is="dom-repeat" items="{{vak.lessen}}" as="les">          
        	  <my-presentie-les 
             c_lesnummer="[[les.les]]" 
             c_aanwezigheid="[[les.presentie]]" 
             c_datumles="[[les.datum]]">
           </my-presentie-les>
-       	</template>
+       	</template> -->
       </div>
-    </div> 
-  </template>
+    </template>
   <script>
     (function() {
       'use strict';
@@ -45,10 +45,19 @@
             type: Array,
             observer: '_observer',
           },
+          _hide: {
+            type: Boolean,
+            value: true,
+          },
         },
 
         _observer : function(){
           console.log(this.vak);
+        },
+        
+        _toggle_hide : function(){
+          this._hide = !this._hide;
+          console.log("_toggle_hide");
         },
       });
     })();

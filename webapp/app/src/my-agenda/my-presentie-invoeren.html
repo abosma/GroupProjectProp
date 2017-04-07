@@ -55,9 +55,13 @@
                       checked="{{item.aanwezig}}">
                     </paper-checkbox>
                  </td>
-                 <td>Ik heb tifus
-                 <iron-icon icon="icons:check" class="mouseHover"></iron-icon>
-                 <iron-icon icon="icons:close" class="mouseHover"></iron-icon></td>
+                 <td>[[item.opmerking]]
+                   <span hidden$="{{!item.accepteerbaar}}">
+                      <iron-icon icon="icons:check" class="mouseHover"></iron-icon>
+                      <iron-icon icon="icons:close" class="mouseHover"></iron-icon>
+                    </span>
+                </td>
+
                 </tr>
               </template>
            </table>
