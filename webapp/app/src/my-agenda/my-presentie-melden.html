@@ -98,6 +98,10 @@
         Polymer({
             is: 'my-presentie-melden',
             properties: {
+               rol: {
+                type: String,
+              },
+
               ziek: {
                 type: Boolean,
                 value: false,
@@ -151,16 +155,17 @@
             },
 
             _initializing : function() {
-              this.$.ajax_student_rooster_current.contentType = "application/json";
-              this.$.ajax_student_rooster_current.body = {
-                  "datum": this.item.datum,
-                  "begin": this.item.begin,
-                  "eind": this.item.eind,
-                  "username": this.c_username,
-                  "vak": this.item.vak,
-              };
-
-              this.$.ajax_student_rooster_current.generateRequest();
+              if(this.rol == "student"){
+                this.$.ajax_student_rooster_current.contentType = "application/json";
+                this.$.ajax_student_rooster_current.body = {
+                    "datum": this.item.datum,
+                    "begin": this.item.begin,
+                    "eind": this.item.eind,
+                    "username": this.c_username,
+                    "vak": this.item.vak,
+                };
+                this.$.ajax_student_rooster_current.generateRequest();
+              }
             },
 
             openDialog: function() {
@@ -207,7 +212,6 @@
 
             _student_rooster_current_response_handler: function (request) {
               var response = JSON.parse(request.detail.response).value;
-
               if(response == 2){
                 this.afwezig = true;
                 this.ziek = true;
