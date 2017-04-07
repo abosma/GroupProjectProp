@@ -169,7 +169,7 @@ public class RoosterController implements Handler{
 		
 		//De presentiestatus voor een les aanpassen
 		if(reden == 2){
-			vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden, "Geen opmerking");
+			vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden, "Ziek");
 		}else{
 			vak.getPresentieLijstForStudent(student).updatePresentieLijstForLes(les, reden, verzoek.getString("redenveld"));
 		}
