@@ -167,7 +167,7 @@ public class PresentieController implements Handler   {
 				
 				jobPresentieVoorKlas
 					.add("klas", klas.getNaam())
-					.add("presentie", jabStudentPresentiesVoorKlas);
+					.add("studenten", jabStudentPresentiesVoorKlas);
 				
 				jabGroepVakken.add(jobPresentieVoorKlas);
 			}
@@ -181,7 +181,7 @@ public class PresentieController implements Handler   {
 		}
 		
 		String lJsonOutStr = jabAlleGroepen.build().toString();	
-		//System.out.println(lJsonOutStr);
+		System.out.println(lJsonOutStr);
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 }
