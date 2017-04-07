@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../my-presentie-docent/my-presentie-docent-vak.html">
 
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
@@ -90,80 +91,12 @@
     <div class="my-title">
       Selecteer het vak waarvan u de presentie in wilt zien
     </div>
-    <div>
-      <table> AUI
-        <tr>
-          <th>
-          Klas1
-          </th>
-          <th>
-            Les1
-          </th>
-          <th>
-            Les2
-          </th>
-          <th>
-            Les3
-          </th>
-          <th>
-            Les4
-          </th>
-        </tr>
-        <tr>
-          <th>
-          Student1
-          </th>
-          <th>
-            afwezig
-          </th>
-          <th>
-            afwezig
-          </th>
-          <th>
-            afwezig
-          </th>
-          <th>
-            afwezig
-          </th>
-        </tr>
-      </table>
-      <table> OODC
-        <tr>
-          <th>
-          Klas1
-          </th>
-          <th>
-            Les1
-          </th>
-          <th>
-            Les2
-          </th>
-          <th>
-            Les3
-          </th>
-          <th>
-            Les4
-          </th>
-        </tr>
-        <tr>
-          <th>
-          Student1
-          </th>
-          <th>
-            afwezig
-          </th>
-          <th>
-            afwezig
-          </th>
-          <th>
-            afwezig
-          </th>
-          <th>
-            afwezig
-          </th>
-        </tr>
-      </table>
-    </div>
+    <template is="dom-repeat" items="[[_vakken]]">
+      <div>
+          <my-presentie-docent-vak vak="[[item]]"></my-presentie-docent-vak>
+      </div>
+
+    </template>
 
     <iron-ajax
       id="ajax_vakken_ophalen"

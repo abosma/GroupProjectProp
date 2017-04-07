@@ -1,0 +1,92 @@
+<dom-module id="my-presentie-docent-klas">
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    :root {
+      --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+    }
+    span {
+      @apply(--paper-font-body1);
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    }
+  </style>
+  <template>
+    <table>
+      <!-- Header row -->
+      <tr>
+        <th>
+          [[klas.klas]]
+        </th>
+        <template is="dom-repeat" items="[[_get_lessen_for_header(klas)]]">
+          <th>Les [[item.les]]</th>
+        </template>
+      </tr>
+
+        <!-- rest -->
+      <template is="dom-repeat" items="[[klas.studenten]]">
+        <tr>
+          <td>
+          [[item.naam]]
+          </td>
+          <template is="dom-repeat" items="[[item.lessen]]">
+            <td title="[[item.datum]]">
+              [[item.presentie]]
+            </td>
+          </template>
+        </tr>
+      </template>
+    </table>
+
+
+
+<!--
+
+    <template is="dom-repeat" items="[[klas.studenten]]">
+      <div>
+        [[item.naam]]
+        <template is="dom-repeat" items="[[item.lessen]]">
+          <div>
+            [[item.les]]
+          </div>
+        </template>
+      </div>
+    </template> -->
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: "my-presentie-docent-klas",
+
+        properties: {
+          klas: {
+            type: Array,
+            observer: '_observer',
+          },
+          _hide: {
+            type: Boolean,
+            value: true,
+          },
+        },
+
+        _observer : function(){
+          console.log(this.vak);
+        },
+
+        _toggle_hide : function(){
+          this._hide = !this._hide;
+        },
+
+        _get_lessen_for_header : function(e){
+          return e.studenten[0].lessen;
+        },
+      });
+    })();
+  </script>
+</dom-module>
