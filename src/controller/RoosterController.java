@@ -124,13 +124,13 @@ public class RoosterController implements Handler{
 		for(Student s : studenten){
 			int presentieVoorLes = vak.getPresentieLijstForStudent(s).getPresentieForLes(les);
 			
-			String opmerking = "Geen opmerking";
+			String opmerking = "";
 			boolean accepteerbaar = false;
 			
 			if(presentieVoorLes >= 2 && presentieVoorLes <= 4){
 				opmerking = vak.getPresentieLijstForStudent(s).getPresentieObjectForLes(les).getReden();
 				
-				if(presentieVoorLes >= 2 && presentieVoorLes <= 3){
+				if(presentieVoorLes == 3){
 					accepteerbaar = true;
 				}
 			}
