@@ -16,84 +16,89 @@
 -->
 
 <dom-module id="my-presentie-student">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-      :root {
-        --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
-      }
+  <style>
+    :host {
+      display: block;
+    }
+    :root {
+      --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+    }
 
-      span {
-        @apply(--paper-font-body1);
-      }
-      .toast-button {
-        text-transform: none;
-        color: white;                           /* white tekst */
-        background: #1a9fd9;                    /* kind of blue */
-        --paper-button-ink-color: #00567B;      /* kind of dark blue */
-      }
-      .my-title {
-        font-size: 20px;
-        color: black;
-        border-bottom: 1px solid blue;           /* a red line */
-        padding-bottom: 5px;
-        margin-bottom: 10px;       
-        
-      }
-      .voornaam {
-        min-width: 100px;
-        text-align: left;
-       }
-      .achternaam {
-        min-width: 100px;
-        text-align: left;
-      }
-      .groepid-header {
-        min-width: 100px;
-        text-align: left;
-      }
-      .groepid{
-        min-width: 100px;
-      }
-      .my-button {
-        width: 100%;                        /* full width */
-        color: white;                       /* white tekst */
-        background: #1a9fd9;                /* kind of blue */
-        --paper-button-ink-color: #00567B;  /* kind of dark blue */
-        margin-top: 5px;                    /* enlarge thet default */
-        margin-left: 0px;                   /* reduce the default */
-        
-      }
-      .hidden{
-      	display:none;
-      	}
-      	
-      .unhidden{
-		display:block;
-		}
+    span {
+      @apply(--paper-font-body1);
+    }
+    .toast-button {
+      text-transform: none;
+      color: white;                           /* white tekst */
+      background: #1a9fd9;                    /* kind of blue */
+      --paper-button-ink-color: #00567B;      /* kind of dark blue */
+    }
+    .my-title {
+      font-size: 20px;
+      color: black;
+      border-bottom: 1px solid blue;           /* a red line */
+      padding-bottom: 5px;
+      margin-bottom: 10px;       
       
-      .item {
-      padding: 10px;
-      padding-left: 20px;
-      border-bottom: 1px solid #ccc;
-      }
+    }
+    .voornaam {
+      min-width: 100px;
+      text-align: left;
+     }
+    .achternaam {
+      min-width: 100px;
+      text-align: left;
+    }
+    .groepid-header {
+      min-width: 100px;
+      text-align: left;
+    }
+    .groepid{
+      min-width: 100px;
+    }
+    .my-button {
+      width: 100%;                        /* full width */
+      color: white;                       /* white tekst */
+      background: #1a9fd9;                /* kind of blue */
+      --paper-button-ink-color: #00567B;  /* kind of dark blue */
+      margin-top: 5px;                    /* enlarge thet default */
+      margin-left: 0px;                   /* reduce the default */
       
-     my-presentie-les {
-	   float: left;
-	   margin-top: 10px;   
-	   margin-right: 5px;  
-	   margin-bottom: 15px;  
-       width: 90px;
-            }
-      
-</style>  
+    }
+    .hidden{
+    	display:none;
+    	}
+    	
+    .unhidden{
+	 display:block;
+	}
+    
+  .item {
+    padding: 10px;
+    padding-left: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+    
+  my-presentie-student-vak{
+    width:100%;
+    float: left;
+  }
+
+  my-presentie-les {
+    float: left;
+    margin-top: 10px;   
+    margin-right: 5px;  
+    margin-bottom: 15px;  
+    width: 90px;
+  }
+    
+</style>
+<template>  
   <div id="pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>	    
   <!-- <iron-list items="{{_vakken}}" as="item" scroll-target="document" scroll-offset="200"> -->
-    <template is="dom-repeat" items="{{_vakken}}">
-      <my-presentie-student-vak vak="{{item}}"></my-presentie-student-vak>
-    </template>
+  <template is="dom-repeat" items="{{_vakken}}">
+    <my-presentie-student-vak vak="{{item}}"></my-presentie-student-vak>
+  </template>
   <!-- /iron-list --> 
 
   <iron-ajax

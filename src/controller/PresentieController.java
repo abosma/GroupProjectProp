@@ -3,6 +3,8 @@ package controller;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.json.Json;
@@ -136,6 +138,10 @@ public class PresentieController implements Handler   {
 					JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
 					
   				PresentieLijst lPresentie = vak.getPresentieLijstForStudent(stu);
+  				
+  				ArrayList<Presentie> presenties = lPresentie.getPresenties();
+  				
+  				Collections.sort(presenties, Presentie.presentieDateComparator);
   				
   				for(Presentie p : lPresentie.getPresenties()){
   					JsonObjectBuilder lBuilder = Json.createObjectBuilder();
