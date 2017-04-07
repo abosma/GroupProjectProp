@@ -91,65 +91,85 @@ public class PresentieController implements Handler   {
 	}
 	
 	
-	public void docentOphalen()  {
-		//Uncomment deze en voeg Conversation conversation toe als argument
-		//JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+	public void docentOphalen(Conversation conversation)  {
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
-		//String lGebruikersnaam = lJsonObjectIn.getString("username");
-		
-		//Verwijder dit
-		String lGebruikersnaam = "john.smeets@hu.nl";
+		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		System.out.println(lGebruikersnaam);
 		
 		Docent doc = informatieSysteem.getDocent(lGebruikersnaam);
 
 		ArrayList<Vak> vakken = doc.getVakken();
 		
-		JsonObjectBuilder JsonObjectVak = Json.createObjectBuilder();
-		
-		//Zo ongeveer??
-//				"Vak1" : {
-//					"Studentnaam" : {
-//						"Les" : 0,
-//						"Presentie" : Niet geregistreerd,
-//						"Datum" : 2017-03-07
-//					}
-//				}
+		JsonArrayBuilder JsonArrayDocentVakken = Json.createArrayBuilder();
+		ArrayList<ArrayList<Vak>> list = new ArrayList<ArrayList<Vak>>();
 		
 		for(Vak vak : vakken){
-			int count = 0;				
-			
-			Klas k = vak.getKlas();
-			ArrayList<Student> studenten = k.getStudenten();
-			
-			JsonObjectBuilder JsonObjectStudent = Json.createObjectBuilder();
-			
-			JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
-			
-			for(Student stu : studenten){
-				
-				PresentieLijst lPresentie = vak.getPresentieLijstForStudent(stu);		
-				
-				for(Map.Entry<Les, Integer> entry : lPresentie.getPresentieMap().entrySet()){
-					
-					JsonObjectBuilder lBuilder = Json.createObjectBuilder();
-					
-					String s = this.informatieSysteem.translatePresentieIntToString(entry.getValue());
-					
-					lBuilder
-						.add("les", ++count)
-						.add("presentie", s)
-						.add("datum", entry.getKey().getDatum().toString());
-					lJsonArrayBuilderVoorLes.add(lBuilder);
-					
+			Boolean flag = true;
+			for(ArrayList<Vak> sublist : list){
+				if(sublist.get(0).getNaam().equals(vak.getNaam())){
+					sublist.add(vak);
+					flag = false;
+					break;
 				}
-				JsonObjectStudent.add("Naam", stu.getGebruikersnaam());
-				JsonObjectStudent.add("Les", lJsonArrayBuilderVoorLes);
 			}
-			JsonObjectVak.add("Vak", vak.getNaam());
-			JsonObjectVak.add("Student", JsonObjectStudent);
+			if(flag){
+				ArrayList<Vak> tmp = new ArrayList<Vak>();
+				tmp.add(vak);
+				list.add(tmp);
+			}
 		}
-		System.out.println(JsonObjectVak.build().toString());
-		//Uncomment
-		//conversation.sendJSONMessage(JsonObjectVak.build().toString());
+		
+		for(ArrayList<Vak> vakkenLijst : list){
+			
+			JsonArrayBuilder lJsonArrayBuilderVoorPresentie = Json.createArrayBuilder();
+			
+			for(Vak vak : vakkenLijst){
+				int count = 0;
+				
+				JsonObjectBuilder lJsonObjectBuilderVoorVak = Json.createObjectBuilder();
+				
+				Klas k = vak.getKlas();
+				ArrayList<Student> studenten = k.getStudenten();
+				
+				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
+				
+				for(Student stu : studenten){
+					JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
+					
+  				PresentieLijst lPresentie = vak.getPresentieLijstForStudent(stu);
+  				
+  				ArrayList<Presentie> presenties = lPresentie.getPresenties();
+  				
+  				Collections.sort(presenties, Presentie.presentieDateComparator);
+  				
+  				for(Presentie p : lPresentie.getPresenties()){
+  					JsonObjectBuilder lBuilder = Json.createObjectBuilder();
+  					String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
+  					
+  					lBuilder
+  						.add("les", ++count)
+  						.add("presentie", s)
+  						.add("datum", p.getLes().getDatum().toString())
+  						.add("reden", p.getReden());
+  					lJsonArrayBuilderVoorLes.add(lBuilder);
+  					lJsonObjectBuilderVoorStudent.add("naam", stu.getGebruikersnaam());
+  					lJsonObjectBuilderVoorStudent.add("les", lJsonArrayBuilderVoorLes);
+  				}
+  
+  				//hier toevoegen aan json voor de ene vak
+  				
+  				lJsonObjectBuilderVoorVak
+  					.add("student", lJsonObjectBuilderVoorStudent);
+  				
+  				lJsonArrayBuilderVoorPresentie.add(lJsonObjectBuilderVoorVak);
+  			}
+				JsonArrayDocentVakken.add(vak.getNaam());
+			}
+			JsonArrayDocentVakken.add(lJsonArrayBuilderVoorPresentie);
+		}
+		String lJsonOutStr = JsonArrayDocentVakken.build().toString();	
+		System.out.println(lJsonOutStr);
+		//conversation.sendJSONMessage(lJsonOutStr);
 	}
 }
