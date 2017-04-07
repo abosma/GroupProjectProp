@@ -6,7 +6,7 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 
-<link rel="import" href="../my-presentie-student/my-presentie-les.html">
+<link rel="import" href="../my-presentie-student/my-presentie-student-vak.html">
 
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
@@ -89,40 +89,28 @@
             }
       
 </style>  
-  <div id= "pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>	    
-    <iron-list items="{{_vakken}}" as="item" scroll-target="document" scroll-offset="200">
-      <template>
-        <div>
-          <paper-button
-            class="my-button"
-            on-click="_toggle_this"
-       	    data-args$="{{item.vak}}"
-          >[[item.vak]]</paper-button>
+  <div id="pizza" class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>	    
+  <!-- <iron-list items="{{_vakken}}" as="item" scroll-target="document" scroll-offset="200"> -->
+    <template is="dom-repeat" items="{{_vakken}}">
+      <my-presentie-student-vak vak="{{item}}"></my-presentie-student-vak>
+    </template>
+  <!-- /iron-list --> 
 
-          <div id="[[item.vak]]">        
-           	<template is="dom-repeat" items="{{item.lessen}}" as="les">            
-           	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.les]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
-           	</template>
-          </div>
-        </div>  
-      </template> 
-    </iron-list> 
-	
-	  <iron-ajax
-      id="ajax_vakken_ophalen"
-      method="POST"
-      url="/student/presentie"
-      handle-as="json"
-      on-response="_vakken_ophalen_response_handler">
-    </iron-ajax>
-        
-    <iron-ajax
-      id="ajax_presentie_tonen"
-      method="POST"
-      url="/student/presentie/tonen" 
-      handle-as="json"
-      on-response="_vakken_ophalen_response_handler">
-    </iron-ajax>
+  <iron-ajax
+    id="ajax_vakken_ophalen"
+    method="POST"
+    url="/student/presentie"
+    handle-as="json"
+    on-response="_vakken_ophalen_response_handler">
+  </iron-ajax>
+      
+  <iron-ajax
+    id="ajax_presentie_tonen"
+    method="POST"
+    url="/student/presentie/tonen" 
+    handle-as="json"
+    on-response="_vakken_ophalen_response_handler">
+  </iron-ajax>
   </template>  
   	
 

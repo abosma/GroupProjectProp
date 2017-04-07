@@ -1,0 +1,57 @@
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../my-presentie-student/my-presentie-les.html">
+<dom-module id="my-presentie-student">
+  <style>
+    :host {
+      display: block;
+    }
+    :root {
+      --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+    }
+    span {
+      @apply(--paper-font-body1);
+    } 
+    my-presentie-les {
+  	   float: left;
+  	   margin-top: 10px;   
+  	   margin-right: 5px;  
+  	   margin-bottom: 15px;  
+       width: 90px;
+    }
+  </style>
+  <template>
+    <div>
+      <!-- <paper-toggle-button>[[vak.vak]]</paper-toggle-button> -->
+      <div id="[[vak.vak]]">
+      DDDD
+       	<template is="dom-repeat" items="{{vak.lessen}}" as="les">            
+       	  <my-presentie-les 
+            c_lesnummer="[[les.les]]" 
+            c_aanwezigheid="[[les.presentie]]" 
+            c_datumles="[[les.datum]]">
+          </my-presentie-les>
+       	</template>
+      </div>
+    </div> 
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: "my-presentie-student-vak",
+
+        properties: {
+          vak: {
+            type: Array,
+            observer: '_observer',
+          },
+        },
+
+        _observer : function(){
+          console.log(this.vak);
+        },
+      });
+    })();
+  </script>
+</dom-module>
