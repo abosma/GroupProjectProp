@@ -6,7 +6,6 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 
-
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
      en ook zodra hij weer gedeselecteerd wordt.
@@ -86,14 +85,49 @@
        width: 90px;
             }
 
-
   </style>
   <template>
     <div class="my-title">
-      Selecteer het vak waarvan uw de presentie in wilt zien
+      Selecteer het vak waarvan u de presentie in wilt zien
     </div>
     <div>
-      <table>
+      <table> AUI
+        <tr>
+          <th>
+          Klas1
+          </th>
+          <th>
+            Les1
+          </th>
+          <th>
+            Les2
+          </th>
+          <th>
+            Les3
+          </th>
+          <th>
+            Les4
+          </th>
+        </tr>
+        <tr>
+          <th>
+          Student1
+          </th>
+          <th>
+            afwezig
+          </th>
+          <th>
+            afwezig
+          </th>
+          <th>
+            afwezig
+          </th>
+          <th>
+            afwezig
+          </th>
+        </tr>
+      </table>
+      <table> OODC
         <tr>
           <th>
           Klas1
@@ -130,6 +164,7 @@
         </tr>
       </table>
     </div>
+
     <iron-ajax
       id="ajax_vakken_ophalen"
       method="POST"
@@ -139,8 +174,6 @@
     </iron-ajax>
 
   </template>
-
-
 
   <script>
     (function() {
