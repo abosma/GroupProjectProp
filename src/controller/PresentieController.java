@@ -16,6 +16,7 @@ import model.klas.Klas;
 import model.les.Les;
 import model.persoon.Docent;
 import model.persoon.Student;
+import model.presentie.Presentie;
 import model.presentie.PresentieLijst;
 import model.vak.Vak;
 import server.Conversation;
@@ -60,15 +61,16 @@ public class PresentieController implements Handler   {
 
 			PresentieLijst lPresentie = vak.getPresentieLijstForStudent(lStudent);
 			
-			for(Map.Entry<Les, Integer> entry : lPresentie.getPresentieMap().entrySet()){
+			for(Presentie p: lPresentie.getPresenties()){
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
-				String s = this.informatieSysteem.translatePresentieIntToString(entry.getValue());
-				aui = aui+1;
-				String lesnummer = "Les "+ String.valueOf(aui);
+				String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
+				
+				String lesnummer = "Les "+ (++aui);
 				lBuilder
 					.add("les", lesnummer)
 					.add("presentie", s)
-					.add("datum", entry.getKey().getDatum().toString());
+					.add("datum", p.getLes().getDatum().toString())
+					.add("reden", p.getReden());
 				lJsonArrayBuilderVoorLes.add(lBuilder);
 			}
 
@@ -135,14 +137,15 @@ public class PresentieController implements Handler   {
 					
   				PresentieLijst lPresentie = vak.getPresentieLijstForStudent(stu);
   				
-  				for(Map.Entry<Les, Integer> entry : lPresentie.getPresentieMap().entrySet()){
+  				for(Presentie p : lPresentie.getPresenties()){
   					JsonObjectBuilder lBuilder = Json.createObjectBuilder();
-  					String s = this.informatieSysteem.translatePresentieIntToString(entry.getValue());
+  					String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
   					
   					lBuilder
   						.add("les", ++count)
   						.add("presentie", s)
-  						.add("datum", entry.getKey().getDatum().toString());
+  						.add("datum", p.getLes().getDatum().toString())
+  						.add("reden", p.getReden());
   					lJsonArrayBuilderVoorLes.add(lBuilder);
   					lJsonObjectBuilderVoorStudent.add("naam", stu.getGebruikersnaam());
   					lJsonObjectBuilderVoorStudent.add("les", lJsonArrayBuilderVoorLes);

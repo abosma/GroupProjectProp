@@ -1,5 +1,6 @@
 package model.presentie;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,18 +9,16 @@ import model.persoon.Student;
 
 public class PresentieLijst {
 	private Student student;
-	private Map<Les, Integer> presentie;
+	private ArrayList<Presentie> presenties;
 	
 	public PresentieLijst(Student student) {
 		this.student = student;
-		this.presentie = new HashMap<Les, Integer>();
-		
-		//Debug line
-		//System.out.println("-Presentie-Constructor: " + student.getGebruikersnaam());
+		this.presenties = new ArrayList<Presentie>();
 	}
 	public void addPresentie(Les les, int type){
-		if(!hasPresentieForLes(les)){
-			this.presentie.put(les, type);
+		Presentie tmp = new Presentie(les, type);
+		if(!this.presenties.contains(tmp)){
+			this.presenties.add(tmp);
 		}
 	}
 	
@@ -28,33 +27,45 @@ public class PresentieLijst {
 	}
 	
 	public int getPresentieForLes(Les les){
-		if(this.presentie.containsKey(les)){
-			return (int) this.presentie.get(les);
+		for(Presentie p : this.presenties){
+			if(p.getLes().equals(les)){
+				return p.getCode();
+			}
 		}
 		return -1;
 	}
 	
 	public boolean hasPresentieForLes(Les les){
-		return this.presentie.containsKey(les);
+		return this.presenties.contains(new Presentie(les,0));
 	}
 	
 	public void updatePresentieLijstForLes(Les l, int i, String opm) {
 		if(this.hasPresentieForLes(l)){
-			this.presentie.replace(l, i);
+			for(Presentie p : this.presenties){
+				if(p.getLes().equals(l)){
+					p.update(i, opm);
+					break;
+				}
+			}
 		} else {
-			this.addPresentie(l, i);
+			this.presenties.add(new Presentie(l,i,opm));
 		}
 	}
 	
 	public void updatePresentieLijstForLes(Les l, int i) {
 		if(this.hasPresentieForLes(l)){
-			this.presentie.replace(l, i);
+			for(Presentie p : this.presenties){
+				if(p.getLes().equals(l)){
+					p.update(i, "");
+					break;
+				}
+			}
 		} else {
 			this.addPresentie(l, i);
 		}
 	}
 	
-	public Map<Les, Integer> getPresentieMap(){
-		return this.presentie;
+	public ArrayList<Presentie> getPresenties(){
+		return this.presenties;
 	}
 }
