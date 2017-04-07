@@ -37,6 +37,9 @@ public class Application {
 		RoosterController roosterController = new RoosterController(infoSysteem);
 		PresentieController presentieController  = new PresentieController(infoSysteem);
 		
+		//om docentophalen te testen, verwijder dit en verander docentophalen in de presentiecontroller
+		presentieController.docentOphalen();
+		
 		server.registerHandler("/student/presentie", presentieController);
 		server.registerHandler("/student/presentie/tonen", presentieController);
 		server.registerHandler("/docent/presentie", presentieController);

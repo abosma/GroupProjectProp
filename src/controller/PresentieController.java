@@ -34,7 +34,7 @@ public class PresentieController implements Handler   {
 		if(conversation.getRequestedURI().startsWith("/student/presentie")) {
 			studentOphalen(conversation);
 		}if (conversation.getRequestedURI().startsWith("/docent/presentie")) {
-			docentOphalen(conversation);
+			//docentOphalen(conversation);
 		}
 	}
 	
@@ -83,10 +83,14 @@ public class PresentieController implements Handler   {
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
-	public void docentOphalen(Conversation conversation)  {
-		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+	public void docentOphalen()  {
+		//Uncomment deze en voeg Conversation conversation toe als argument
+		//JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
-		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		//String lGebruikersnaam = lJsonObjectIn.getString("username");
+		
+		//Verwijder dit
+		String lGebruikersnaam = "john.smeets@hu.nl";
 		
 		Docent doc = informatieSysteem.getDocent(lGebruikersnaam);
 
@@ -94,6 +98,7 @@ public class PresentieController implements Handler   {
 		
 		JsonObjectBuilder JsonObjectVak = Json.createObjectBuilder();
 		
+		//Zo ongeveer??
 //				"Vak1" : {
 //					"Studentnaam" : {
 //						"Les" : 0,
@@ -129,10 +134,14 @@ public class PresentieController implements Handler   {
 					lJsonArrayBuilderVoorLes.add(lBuilder);
 					
 				}
-				JsonObjectStudent.add(stu.getGebruikersnaam(), lJsonArrayBuilderVoorLes);
+				JsonObjectStudent.add("Naam", stu.getGebruikersnaam());
+				JsonObjectStudent.add("Les", lJsonArrayBuilderVoorLes);
 			}
-			JsonObjectVak.add(vak.getNaam(), JsonObjectStudent);
+			JsonObjectVak.add("Vak", vak.getNaam());
+			JsonObjectVak.add("Student", JsonObjectStudent);
 		}
-		conversation.sendJSONMessage(JsonObjectVak.build().toString());
+		System.out.println(JsonObjectVak.build().toString());
+		//Uncomment
+		//conversation.sendJSONMessage(JsonObjectVak.build().toString());
 	}
 }
