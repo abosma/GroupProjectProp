@@ -161,7 +161,7 @@ public class PresentieController implements Handler   {
   					.add("naam", student.getVoornaam() + " " + student.getVolledigeAchternaam())
   					.add("email", student.getGebruikersnaam())
 						.add("lessen", jabPresenties)
-  					.add("percentage", ((double)lessenAanwezig/(double)totaalAantalLessen)*100);  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
+  					.add("percentage", ((double)lessenAanwezig/(double)totaalAantalLessen)*100).toString();  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
   				jabStudentPresentiesVoorKlas
   					.add(jobStudent);
   			}
