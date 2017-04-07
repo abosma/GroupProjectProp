@@ -100,7 +100,6 @@
             properties: {
                rol: {
                 type: String,
-                observer: '_initializing',
               },
 
               ziek: {
@@ -165,7 +164,6 @@
                     "username": this.c_username,
                     "vak": this.item.vak,
                 };
-
                 this.$.ajax_student_rooster_current.generateRequest();
               }
             },
@@ -214,7 +212,6 @@
 
             _student_rooster_current_response_handler: function (request) {
               var response = JSON.parse(request.detail.response).value;
-
               if(response == 2){
                 this.afwezig = true;
                 this.ziek = true;
