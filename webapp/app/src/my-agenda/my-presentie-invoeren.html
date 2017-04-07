@@ -44,6 +44,7 @@
               <tr>
                 <th class="voornaam">Leerling</th>
                 <th class="groepid-header">Aanwezig</th>
+                <th class="groepid-header">Opmerking</th>
               </tr>
               <template is="dom-repeat" items="[[_c_studenten]]">
                 <tr>
@@ -54,6 +55,9 @@
                       checked="{{item.aanwezig}}">
                     </paper-checkbox>
                  </td>
+                 <td>Ik heb tifus
+                 <iron-icon icon="icons:check" class="mouseHover"></iron-icon>
+                 <iron-icon icon="icons:close" class="mouseHover"></iron-icon></td>
                 </tr>
               </template>
            </table>

@@ -37,6 +37,15 @@ public class PresentieLijst {
 	public boolean hasPresentieForLes(Les les){
 		return this.presentie.containsKey(les);
 	}
+	
+	public void updatePresentieLijstForLes(Les l, int i, String opm) {
+		if(this.hasPresentieForLes(l)){
+			this.presentie.replace(l, i);
+		} else {
+			this.addPresentie(l, i);
+		}
+	}
+	
 	public void updatePresentieLijstForLes(Les l, int i) {
 		if(this.hasPresentieForLes(l)){
 			this.presentie.replace(l, i);
