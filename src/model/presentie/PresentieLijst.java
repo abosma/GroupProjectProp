@@ -26,11 +26,19 @@ public class PresentieLijst {
 		return this.student;
 	}
 	
-	public int getPresentieForLes(Les les){
+	public Presentie getPresentieObjectForLes(Les les){
 		for(Presentie p : this.presenties){
 			if(p.getLes().equals(les)){
-				return p.getCode();
+				return p;
 			}
+		}
+		return null;
+	}
+	
+	public int getPresentieForLes(Les les){
+		Presentie tmp = this.getPresentieObjectForLes(les);
+		if(tmp!=null){
+			return tmp.getCode();
 		}
 		return -1;
 	}

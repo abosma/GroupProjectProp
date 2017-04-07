@@ -124,12 +124,26 @@ public class RoosterController implements Handler{
 		for(Student s : studenten){
 			int presentieVoorLes = vak.getPresentieLijstForStudent(s).getPresentieForLes(les);
 			
+			String opmerking = "Geen opmerking";
+			boolean accepteerbaar = false;
+			
+			if(presentieVoorLes >= 2 && presentieVoorLes <= 4){
+				opmerking = vak.getPresentieLijstForStudent(s).getPresentieObjectForLes(les).getReden();
+				
+				if(presentieVoorLes >= 2 && presentieVoorLes <= 3){
+					accepteerbaar = true;
+				}
+			}
+			
 			JsonObjectBuilder job = Json.createObjectBuilder();
 			job
 				.add("naam", s.getVoornaam() + " " + s.getVolledigeAchternaam())
 				.add("email", s.getGebruikersnaam())
 				.add("presentie", presentieVoorLes)
-				.add("aanwezig", presentieVoorLes == 1);
+				.add("aanwezig", presentieVoorLes == 1)
+				.add("opmerking", opmerking)
+				.add("accepteerbaar", accepteerbaar);
+
 			
 			jab.add(job);
 		}

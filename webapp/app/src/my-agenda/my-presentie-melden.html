@@ -49,6 +49,14 @@
             hidden$="{{!afgemeld}}">
               Afgemeld
            </paper-button>
+
+           <paper-button
+            id="login_button_element"
+            class="ziekgemeld-button"
+            raised
+            hidden$="{{!afgemeldNiet}}">
+              Afgemeld (niet geaccepteerd)
+           </paper-button>
          </div>
 
         <paper-dialog id="presentieMelden" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
@@ -97,6 +105,11 @@
               },
 
               afgemeld: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+              afgemeldNiet: {
                 type: Boolean,
                 value: false,
                 notify: true, 
@@ -181,8 +194,12 @@
               };
 
               this.$.ajax_student_rooster_afmelden.generateRequest();
-
-              this.afgemeld = true;
+              this.afwezig = true;
+              if(this.redenOptie == "Afmelden"){
+                  this.afgemeld = true;
+                }else{
+                  this.ziek = true;
+                }
             },
 
             _student_rooster_afmelden_response_handler: function (request) {
@@ -190,7 +207,17 @@
 
             _student_rooster_current_response_handler: function (request) {
               var response = JSON.parse(request.detail.response).value;
-              console.log(response);
+
+              if(response == 2){
+                this.afwezig = true;
+                this.ziek = true;
+              }else if(response == 3){
+                this.afwezig = true;
+                this.afgemeld = true;
+              }else if(response == 4){
+                this.afwezig = true;
+                this.afgemeldNiet = true;
+              }
             },
 
             _itemSelected : function(e) {
