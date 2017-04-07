@@ -2,6 +2,7 @@
 package controller;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -156,12 +157,13 @@ public class PresentieController implements Handler   {
   				}
   				//aanmeken json object builder
   				JsonObjectBuilder jobStudent = Json.createObjectBuilder();
+  				DecimalFormat formatter = new DecimalFormat("###.##");
   				//Toevoegen presentielijst aan student object
   				jobStudent
   					.add("naam", student.getVoornaam() + " " + student.getVolledigeAchternaam())
   					.add("email", student.getGebruikersnaam())
 						.add("lessen", jabPresenties)
-  					.add("percentage", ((double)lessenAanwezig/(double)totaalAantalLessen)*100).toString();  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
+  					.add("percentage", formatter.format(((double)lessenAanwezig/(double)totaalAantalLessen)*100).toString());  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
   				jabStudentPresentiesVoorKlas
   					.add(jobStudent);
   			}
