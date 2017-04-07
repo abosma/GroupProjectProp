@@ -13,6 +13,17 @@
     table, th, td {
       border: 1px solid black;
     }
+
+    table {
+    border-collapse: collapse;
+    }
+
+    th {
+      color: white;
+      background: #1a9fd9;
+      width: 100px;
+      height:30px;
+    }
     }
   </style>
   <template>
@@ -23,8 +34,11 @@
           [[klas.klas]]
         </th>
         <template is="dom-repeat" items="[[_get_lessen_for_header(klas)]]">
-          <th>Les [[item.les]]</th>
+          <th>Les [[item.les]] <br/>
+             [[_reverse(item.datum)]]
+           </th>
         </template>
+        <th style="font-weight:bold;font-size:120%;">%</th>
       </tr>
 
         <!-- rest -->
@@ -38,6 +52,7 @@
               [[item.presentie]]
             </td>
           </template>
+          <td>[[item.percentage]]</td>
         </tr>
       </template>
     </table>
@@ -85,6 +100,9 @@
 
         _get_lessen_for_header : function(e){
           return e.studenten[0].lessen;
+        },
+        _reverse : function(e){
+          return e.split("-").reverse().join("-");
         },
       });
     })();
