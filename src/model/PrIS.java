@@ -204,7 +204,7 @@ public class PrIS {
   		case 2: return "ziek";
   		case 3: return "afgemeld";
   		case 4: return "afgemeld (niet geaccepteerd)";
-  		default: return "niet geregistreerd";
+  		default: return "n/a";
   	}
 	}
 	

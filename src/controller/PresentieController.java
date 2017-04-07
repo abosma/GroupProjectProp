@@ -156,7 +156,8 @@ public class PresentieController implements Handler   {
   				JsonObjectBuilder jobStudent = Json.createObjectBuilder();
   				//Toevoegen presentielijst aan student object
   				jobStudent
-  					.add("naam", student.getGebruikersnaam())
+  					.add("naam", student.getVoornaam() + " " + student.getVolledigeAchternaam())
+  					.add("email", student.getGebruikersnaam())
 						.add("lessen", jabPresenties);
   
   				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
