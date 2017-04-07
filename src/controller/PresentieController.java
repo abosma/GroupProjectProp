@@ -136,19 +136,21 @@ public class PresentieController implements Handler   {
   				// sorteren
   				Collections.sort(presenties, Presentie.presentieDateComparator);
   				// lessen counter
-  				int count = 0;
-  				
+  				int totaalAantalLessen = 0;
+  				int lessenAanwezig = 0;
   				//ArrayBuilder voor presenties
   				JsonArrayBuilder jabPresenties = Json.createArrayBuilder();
   				
-  				for(Presentie p : presenties){
+  				for(Presentie presentie : presenties){
+  					if(presentie.getCode() == 1)lessenAanwezig++; // '1' betekent aanwezig
+  					
   					JsonObjectBuilder jobEnkelePresentie = Json.createObjectBuilder();
   					
   					jobEnkelePresentie
-  						.add("les", ++count)
-  						.add("presentie", informatieSysteem.translatePresentieIntToString(p.getCode()))
-  						.add("datum", p.getLes().getDatum().toString())
-  						.add("reden", p.getReden());
+  						.add("les", ++totaalAantalLessen)
+  						.add("presentie", informatieSysteem.translatePresentieIntToString(presentie.getCode()))
+  						.add("datum", presentie.getLes().getDatum().toString())
+  						.add("reden", presentie.getReden());
   					
   					jabPresenties.add(jobEnkelePresentie);
   				}
@@ -158,9 +160,8 @@ public class PresentieController implements Handler   {
   				jobStudent
   					.add("naam", student.getVoornaam() + " " + student.getVolledigeAchternaam())
   					.add("email", student.getGebruikersnaam())
-						.add("lessen", jabPresenties);
-  
-  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
+						.add("lessen", jabPresenties)
+  					.add("percentage", ((double)lessenAanwezig/(double)totaalAantalLessen)*100);  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
   				jabStudentPresentiesVoorKlas
   					.add(jobStudent);
   			}
