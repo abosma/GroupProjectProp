@@ -15,8 +15,7 @@
 -->
 
 <dom-module id="my-presentie-docent">
-  <template>
-    <style>
+  <style>
       :host {
         display: block;
       }
@@ -38,8 +37,8 @@
         color: black;
         border-bottom: 1px solid blue;           /* a red line */
         padding-bottom: 5px;
-        margin-bottom: 10px;       
-        
+        margin-bottom: 10px;
+
       }
       .voornaam {
         min-width: 100px;
@@ -63,52 +62,75 @@
         --paper-button-ink-color: #00567B;  /* kind of dark blue */
         margin-top: 5px;                    /* enlarge thet default */
         margin-left: 0px;                   /* reduce the default */
-        
+
       }
       .hidden{
       	display:none;
       	}
-      	
+
       .unhidden{
 		display:block;
 		}
-      
+
       .item {
       padding: 10px;
       padding-left: 20px;
       border-bottom: 1px solid #ccc;
       }
-      
+
      my-presentie-les {
 	   float: left;
-	   margin-top: 10px;   
-	   margin-right: 5px;  
-	   margin-bottom: 15px;  
+	   margin-top: 10px;
+	   margin-right: 5px;
+	   margin-bottom: 15px;
        width: 90px;
             }
-            
-      
-</style>  
-  <div  class="my-title">Selecteer het vak waarvan uw de presentie in wilt zien</div>	    
-   <!--  <iron-list items="{{_vakken}}" as="item" scroll-target="document" scroll-offset="200">
-      <template>
-        <div>
-          <paper-button
-            class="my-button"
-            on-click="_toggle_this"
-       	    data-args$="{{item.vak}}"
-          >[[item.vak]]</paper-button>
 
-          <div id="[[item.vak]]">        
-           	<template is="dom-repeat" items="{{item.lessen}}" as="les">            
-           	  <my-presentie-les id="about" class="unhidden" c_lesnummer="[[les.les]]" c_aanwezigheid="[[les.presentie]]" c_datumles="[[les.datum]]"></my-presentie-les>
-           	</template>
-          </div>
-        </div>  
-      </template> 
-    </iron-list>  -->
-	
-	  <iron-ajax
+
+  </style>
+  <template>
+    <div class="my-title">
+      Selecteer het vak waarvan uw de presentie in wilt zien
+    </div>
+    <div>
+      <table>
+        <tr>
+          <th>
+          Klas1
+          </th>
+          <th>
+            Les1
+          </th>
+          <th>
+            Les2
+          </th>
+          <th>
+            Les3
+          </th>
+          <th>
+            Les4
+          </th>
+        </tr>
+        <tr>
+          <th>
+          Student1
+          </th>
+          <th>
+            afwezig
+          </th>
+          <th>
+            afwezig
+          </th>
+          <th>
+            afwezig
+          </th>
+          <th>
+            afwezig
+          </th>
+        </tr>
+      </table>
+    </div>
+    <iron-ajax
       id="ajax_vakken_ophalen"
       method="POST"
       url="/docent/presentie"
@@ -116,8 +138,8 @@
       on-response="_vakken_ophalen_response_handler">
     </iron-ajax>
 
-  </template>  
-  	
+  </template>
+
 
 
   <script>
@@ -133,7 +155,7 @@
 
         properties: {
           _vakken: {
-            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
+            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
 										array is constant groepnr is changable */
           },
           c_rol: {
@@ -142,8 +164,8 @@
           c_username: {
             type: String,
           },
-          
-        
+
+
           c_visible: {
             type: Boolean,                                      /* true when element is the active visible item */
             value: false,
@@ -152,8 +174,8 @@
                                                                    als c_visible false is */
           },
         },
-        
-  
+
+
 
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
@@ -162,29 +184,24 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
-        
+
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
         	  if (this.c_rol=="docent") {                        // voor studenten
         		  this._vakken_ophalen_request_handler();  //    haal info op van server
-				          
+
         	  } else {                                            // na handmatige url wijziging zonder login
-              var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
-              lToast.open();                                    /* het sluiten van deze error verwijst  */
+              //var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
+              //lToast.open();                                    /* het sluiten van deze error verwijst  */
                                                                 /* terug naar home page */
             }
           }
         },
 
-        _toggle_this : function(e){
-          var arg = e.target.getAttribute('data-args').split(',')[0];
-          console.log("_toggle_this: " + arg);          
-        }, 
-			
           /*  Functie wordt aangeroepen voor de pagina begin,
            Er moet nog voor gezorgt worden dat wanneer deze functie aangeroepen wordt het ervoor zorgt dat de vakken die de student volgt
            opgehaald worden en weergeven worden in de lijst */
-         
+
           _vakken_ophalen_request_handler: function() {
           console.log("_vakken_ophalen_request_handler user="+this.c_username  );
           this.$.ajax_vakken_ophalen.contentType="application/json";
@@ -193,20 +210,20 @@
           };
           this.$.ajax_vakken_ophalen.generateRequest();
         },
-		
+
         /* Response handler functie hierboven */
         _vakken_ophalen_response_handler: function(request) {
-          console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response.length);
+          //console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response.length);
           console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response);
           this._vakken = request.detail.response;
         },
 
         /* Onderstaande functie zou ervoor moeten zorgen dat de aanwezigheid gegevens van het aangeklikte vak getoond moeten worden */
-       _toast_clicked: function(e) {
+      /* _toast_clicked: function(e) {
          var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
          lToast.toggle();
          this._go_home();
-        },
+       },*/
       });
     })();
   </script>
