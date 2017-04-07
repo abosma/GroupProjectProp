@@ -202,7 +202,7 @@
            Er moet nog voor gezorgt worden dat wanneer deze functie aangeroepen wordt het ervoor zorgt dat de vakken die de student volgt
            opgehaald worden en weergeven worden in de lijst */
 
-          _vakken_ophalen_request_handler: function() {
+        _vakken_ophalen_request_handler: function() {
           console.log("_vakken_ophalen_request_handler user="+this.c_username  );
           this.$.ajax_vakken_ophalen.contentType="application/json";
           this.$.ajax_vakken_ophalen.body={
@@ -213,8 +213,7 @@
 
         /* Response handler functie hierboven */
         _vakken_ophalen_response_handler: function(request) {
-          //console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response.length);
-          console.log("_vakken_ophalen_response_handler aantal items="+request.detail.response);
+          console.log("_vakken_ophalen_response_handler response: "+request.detail.response);
           this._vakken = request.detail.response;
         },
 
