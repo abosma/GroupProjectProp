@@ -3,9 +3,7 @@ package controller;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 import javax.json.Json;
 
@@ -15,7 +13,6 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.klas.Klas;
-import model.les.Les;
 import model.persoon.Docent;
 import model.persoon.Student;
 import model.presentie.Presentie;
