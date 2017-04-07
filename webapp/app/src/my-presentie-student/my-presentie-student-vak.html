@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../my-presentie-student/my-presentie-les.html">
-<dom-module id="my-presentie-student">
+<dom-module id="my-presentie-student-vak">
   <style>
     :host {
       display: block;
@@ -23,8 +23,7 @@
     <div>
       <!-- <paper-toggle-button>[[vak.vak]]</paper-toggle-button> -->
       <div id="[[vak.vak]]">
-      DDDD
-       	<template is="dom-repeat" items="{{vak.lessen}}" as="les">            
+       	<template is="dom-repeat" items="{{vak.lessen}}" as="les">          
        	  <my-presentie-les 
             c_lesnummer="[[les.les]]" 
             c_aanwezigheid="[[les.presentie]]" 
