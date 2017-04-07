@@ -102,76 +102,86 @@ public class PresentieController implements Handler   {
 		Docent doc = informatieSysteem.getDocent(lGebruikersnaam);
 
 		ArrayList<Vak> vakken = doc.getVakken();
-		
-		JsonArrayBuilder JsonArrayDocentVakken = Json.createArrayBuilder();
+
 		ArrayList<ArrayList<Vak>> list = new ArrayList<ArrayList<Vak>>();
 		
 		for(Vak vak : vakken){
-			Boolean flag = true;
+			boolean gesorteerd = false;
 			for(ArrayList<Vak> sublist : list){
 				if(sublist.get(0).getNaam().equals(vak.getNaam())){
 					sublist.add(vak);
-					flag = false;
+					gesorteerd = true;
 					break;
 				}
 			}
-			if(flag){
+			if(!gesorteerd){
 				ArrayList<Vak> tmp = new ArrayList<Vak>();
 				tmp.add(vak);
 				list.add(tmp);
 			}
 		}
-		
+		JsonArrayBuilder jabAlleGroepen = Json.createArrayBuilder();
 		for(ArrayList<Vak> vakkenLijst : list){
 			
-			JsonArrayBuilder lJsonArrayBuilderVoorPresentie = Json.createArrayBuilder();
+			JsonArrayBuilder jabGroepVakken = Json.createArrayBuilder();
 			
-			for(Vak vak : vakkenLijst){
-				int count = 0;
+			for(Vak vak : vakkenLijst){				
+				JsonArrayBuilder jabStudentPresentiesVoorKlas = Json.createArrayBuilder();
 				
-				JsonObjectBuilder lJsonObjectBuilderVoorVak = Json.createObjectBuilder();
+				Klas klas = vak.getKlas();
 				
-				Klas k = vak.getKlas();
-				ArrayList<Student> studenten = k.getStudenten();
-				
-				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder();
-				
-				for(Student stu : studenten){
-					JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
-					
-  				PresentieLijst lPresentie = vak.getPresentieLijstForStudent(stu);
-  				
-  				ArrayList<Presentie> presenties = lPresentie.getPresenties();
-  				
+				for(Student student : klas.getStudenten()){
+					//presentie array
+  				ArrayList<Presentie> presenties = vak.getPresentieLijstForStudent(student).getPresenties();
+  				// sorteren
   				Collections.sort(presenties, Presentie.presentieDateComparator);
+  				// lessen counter
+  				int count = 0;
   				
-  				for(Presentie p : lPresentie.getPresenties()){
-  					JsonObjectBuilder lBuilder = Json.createObjectBuilder();
-  					String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
+  				//ArrayBuilder voor presenties
+  				JsonArrayBuilder jabPresenties = Json.createArrayBuilder();
+  				
+  				for(Presentie p : presenties){
+  					JsonObjectBuilder jobEnkelePresentie = Json.createObjectBuilder();
   					
-  					lBuilder
+  					jobEnkelePresentie
   						.add("les", ++count)
-  						.add("presentie", s)
+  						.add("presentie", informatieSysteem.translatePresentieIntToString(p.getCode()))
   						.add("datum", p.getLes().getDatum().toString())
   						.add("reden", p.getReden());
-  					lJsonArrayBuilderVoorLes.add(lBuilder);
-  					lJsonObjectBuilderVoorStudent.add("naam", stu.getGebruikersnaam());
-  					lJsonObjectBuilderVoorStudent.add("les", lJsonArrayBuilderVoorLes);
+  					
+  					jabPresenties.add(jobEnkelePresentie);
   				}
+  				//aanmeken json object builder
+  				JsonObjectBuilder jobStudent = Json.createObjectBuilder();
+  				//Toevoegen presentielijst aan student object
+  				jobStudent
+  					.add("naam", student.getGebruikersnaam())
+						.add("lessen", jabPresenties);
   
-  				//hier toevoegen aan json voor de ene vak
-  				
-  				lJsonObjectBuilderVoorVak
-  					.add("student", lJsonObjectBuilderVoorStudent);
-  				
-  				lJsonArrayBuilderVoorPresentie.add(lJsonObjectBuilderVoorVak);
+  				//Toevoegen studentobject aan de array met alle studentpresenties vor het vak
+  				jabStudentPresentiesVoorKlas
+  					.add(jobStudent);
   			}
-				JsonArrayDocentVakken.add(vak.getNaam());
+				JsonObjectBuilder jobPresentieVoorKlas = Json.createObjectBuilder();
+				
+				jobPresentieVoorKlas
+					.add("klas", klas.getNaam())
+					.add("presentie", jabStudentPresentiesVoorKlas);
+				
+				jabGroepVakken.add(jobPresentieVoorKlas);
 			}
-			JsonArrayDocentVakken.add(lJsonArrayBuilderVoorPresentie);
+			JsonObjectBuilder jobGroepVakken = Json.createObjectBuilder();
+			
+			jobGroepVakken
+				.add("vak", vakkenLijst.get(0).getNaam())
+				.add("klassen", jabGroepVakken);
+			
+			jabAlleGroepen.add(jobGroepVakken);
 		}
-		String lJsonOutStr = JsonArrayDocentVakken.build().toString();	
-		System.out.println(lJsonOutStr);
-		//conversation.sendJSONMessage(lJsonOutStr);
+		
+		String lJsonOutStr = jabAlleGroepen.build().toString();	
+		//System.out.println(lJsonOutStr);
+		conversation.sendJSONMessage(lJsonOutStr);
 	}
 }
