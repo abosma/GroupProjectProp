@@ -1,5 +1,5 @@
 <link rel="import" href="../my-presentie-docent/my-presentie-docent-klas.html">
-<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <dom-module id="my-presentie-docent-vak">
   <style>
@@ -14,22 +14,28 @@
       @apply(--paper-font-body1);
     }
     .button {
-        margin-top: 20px;
+        margin-top: 5px;
         width: 200px;
         height: 2em;
         background-color: #33aadd; 
         color: white;
         margin-bottom: 10px;
       }
+    my-presentie-docent-klas{
+      margin-left: 20px;
+    }
+    paper-button[toggles][active] {
+      background: red;
+    }
     }
   </style>
   <template>
-    <paper-button class="button" on-click="_toggle_hide">[[vak.vak]]</paper-button>
-    <div id="nothing" hidden$="{{__hidden}}">
+    <paper-button toggles class="button green" on-click="toggle">[[vak.vak]]</paper-button>
+    <iron-collapse id="collapse">
       <template is="dom-repeat" items="[[vak.klassen]]">
         <my-presentie-docent-klas klas="[[item]]"></my-presentie-docent-klas>
       </template>
-    </div>
+    </iron-collapse>   
   </template>
   <script>
     (function() {
@@ -53,9 +59,8 @@
           console.log(this.vak);
         },
 
-        _toggle_hide : function(){
-          console.log("__toggle__");
-          this.__hidden = !this.__hidden;
+        toggle : function() {
+          this.$.collapse.toggle();
         },
       });
     })();

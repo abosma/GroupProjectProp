@@ -1,3 +1,6 @@
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
 <dom-module id="my-presentie-docent-klas">
   <style>
     :host {
@@ -13,64 +16,97 @@
     table, th, td {
       border: 1px solid black;
     }
-
-    table {
-    border-collapse: collapse;
+    #table-container {
+      margin-left: 20px;
+      border-radius: 10px;
     }
-
+    table {
+      border-collapse: collapse;
+      margin-left: 20px;
+    }
+    th, td {
+      padding: 3px 5px;
+    }
     th {
       color: white;
       background: #1a9fd9;
-      width: 100px;
       height:30px;
+    }
+    .vertical-text{
+      -webkit-transform: rotate(90deg);
+      -webkit-transform-origin: left top 0;
+      transform: rotate(90deg);
+      transform-origin: left top 0;
+      float: left;
+    }
+    span {
+      float: left;
+    }
+    .type_-1 {
+      background: grey;
+    }
+    .type_0 {
+      background: red;
+    }
+    .type_1 {
+      background: green;
+    }
+    td {
+      text-align: center;
+    }
+    .button {
+      margin-top: 20px;
+      width: 200px;
+      height: 2em;
+      background-color: #33aadd; 
+      color: white;
+      margin-bottom: 10px;
+      margin-top: 0px;
+    }
+    .naam {
+      text-align: left;
+      padding-left: 10px;
+    }
+    paper-button[toggles][active] {
+      background: red;
+    }
+    paper-tooltip{
+      --paper-tooltip-opacity: 1;
     }
     }
   </style>
   <template>
-    <table>
-      <!-- Header row -->
-      <tr>
-        <th>
-          [[klas.klas]]
-        </th>
-        <template is="dom-repeat" items="[[_get_lessen_for_header(klas)]]">
-          <th>Les [[item.les]] <br/>
-             [[_reverse(item.datum)]]
-           </th>
-        </template>
-        <th style="font-weight:bold;font-size:120%;">%</th>
-      </tr>
-
-        <!-- rest -->
-      <template is="dom-repeat" items="[[klas.studenten]]">
+    <paper-button toggles class="button" on-click="toggle">[[klas.klas]]</paper-button>
+    <iron-collapse id="collapse">
+      <table>
+        <!-- Header row -->
         <tr>
-          <td>
-          [[item.naam]]
-          </td>
-          <template is="dom-repeat" items="[[item.lessen]]">
-            <td title="[[item.datum]]">
-              [[item.presentie]]
-            </td>
+          <th colspan="2">Student</th>
+
+          <template is="dom-repeat" items="[[_get_lessen_for_header(klas)]]">
+            <th>[[_reverse(item.datum)]]</th>
           </template>
-          <td>[[item.percentage]]</td>
+
+          <th>Totaal %</th>
         </tr>
-      </template>
-    </table>
 
+        <!-- Data rows -->
+        <template is="dom-repeat" items="[[klas.studenten]]">
+          <tr>
+            <td colspan="2" class="naam">[[item.naam]]</td>
 
+            <template is="dom-repeat" items="[[item.lessen]]">
+              <td title="" class$="[[item.css-class]]">
+                [[item.presentie]]
+                <paper-tooltip>Datum: [[_reverse(item.datum)]]<br/>Reden: [[item.reden]]</paper-tooltip>
+              </td>
+            </template>
 
-<!--
-
-    <template is="dom-repeat" items="[[klas.studenten]]">
-      <div>
-        [[item.naam]]
-        <template is="dom-repeat" items="[[item.lessen]]">
-          <div>
-            [[item.les]]
-          </div>
+            <td style$="[[_get_style(item.percentage)]]">[[item.percentage]]</td>
+          </tr>
         </template>
-      </div>
-    </template> -->
+      </table>
+    </iron-collapse>
   </template>
   <script>
     (function() {
@@ -88,6 +124,10 @@
             type: Boolean,
             value: true,
           },
+          _invisible: {
+            type: Boolean,
+            value: true,
+          }
         },
 
         _observer : function(){
@@ -104,6 +144,15 @@
         _reverse : function(e){
           return e.split("-").reverse().join("-");
         },
+        _get_style : function(percentage){
+          var pct = parseFloat(percentage);
+          var red = 100 - pct;
+
+          return "color:white;background:rgb("+parseInt(red)+","+parseInt(pct)+",0);";
+        },
+        toggle : function(){
+          this.$.collapse.toggle();
+        }
       });
     })();
   </script>

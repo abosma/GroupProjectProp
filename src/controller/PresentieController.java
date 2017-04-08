@@ -150,6 +150,8 @@ public class PresentieController implements Handler   {
   					jobEnkelePresentie
   						.add("les", ++totaalAantalLessen)
   						.add("presentie", informatieSysteem.translatePresentieIntToString(presentie.getCode()))
+  						.add("code", presentie.getCode())
+  						.add("css-class", "type_"+presentie.getCode())
   						.add("datum", presentie.getLes().getDatum().toString())
   						.add("reden", presentie.getReden());
   					
@@ -157,7 +159,7 @@ public class PresentieController implements Handler   {
   				}
   				//aanmeken json object builder
   				JsonObjectBuilder jobStudent = Json.createObjectBuilder();
-  				DecimalFormat formatter = new DecimalFormat("###.##");
+  				DecimalFormat formatter = new DecimalFormat("##0.#");
   				//Toevoegen presentielijst aan student object
   				jobStudent
   					.add("naam", student.getVoornaam() + " " + student.getVolledigeAchternaam())
