@@ -75,6 +75,10 @@
         Polymer({
             is: 'my-presentie-melden',
             properties: {
+             systeemdatumstandaard: {
+                type: String,
+                observer: '_systeemdatumstandaardInitializing',
+              },
                rol: {
                 type: String,
               },
@@ -118,6 +122,17 @@
               }
             },
 
+            _systeemdatumstandaardInitializing: function(){
+              var eenDag = 24*60*60*1000;
+              var eersteDag = new Date(this.systeemdatumstandaard);
+              var tweedeDag = new Date(this.item.datum);
+
+              var vershilInDagen = Math.round(Math.abs((eersteDag.getTime() - tweedeDag.getTime())/(eenDag)));
+              if(vershilInDagen > 1){
+                this.afwezig = true;
+              }
+            },
+
             _initializing : function() {
               if(this.rol == "student"){
                 this._get_current(this.c_username);
@@ -136,6 +151,7 @@
                     "vak": this.item.vak,
                 };
                 this.$.ajax_student_rooster_current.generateRequest();
+                
               }
             },
 
