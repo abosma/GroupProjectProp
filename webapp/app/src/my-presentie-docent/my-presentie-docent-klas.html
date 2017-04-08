@@ -32,15 +32,6 @@
     td {
       text-align: center;
     }
-    .type_-1 {
-      background: grey;
-    }
-    .type_0 {
-      background: red;
-    }
-    .type_1 {
-      background: green;
-    }
     .naam {
       text-align: left;
       padding-left: 10px;
@@ -91,13 +82,13 @@
               <td colspan="2" class="naam">[[item.naam]]</td>
 
               <template is="dom-repeat" items="[[item.lessen]]">
-                <td title="" class$="[[item.css-class]]">
+                <td title="" style$="[[_get_css_style(item.code)]]">
                   [[item.presentie]]
                   <paper-tooltip>Datum: [[_reverse(item.datum)]]<br/>Reden: [[item.reden]]</paper-tooltip>
                 </td>
               </template>
 
-              <td style$="[[_get_style(item.percentage)]]">[[item.percentage]]</td>
+              <td style$="[[_get_percentage_background(item.percentage)]]">[[item.percentage]]</td>
             </tr>
           </template>
         </table>
@@ -114,7 +105,6 @@
         properties: {
           klas: {
             type: Array,
-            observer: '_observer',
           },
           _hide: {
             type: Boolean,
@@ -125,22 +115,13 @@
             value: true,
           }
         },
-
-        _observer : function(){
-          console.log(this.vak);
-        },
-
-        _toggle_hide : function(){
-          this._hide = !this._hide;
-        },
-
         _get_lessen_for_header : function(e){
           return e.studenten[0].lessen;
         },
         _reverse : function(e){
           return e.split("-").reverse().join("-");
         },
-        _get_style : function(percentage){
+        _get_percentage_background : function(percentage){
           var pct = parseFloat(percentage);
           var red = 100 - pct;
 
@@ -148,6 +129,18 @@
         },
         toggle : function(){
           this.$.collapse.toggle();
+        },
+        _get_css_style : function(code){
+          var color = "";
+          switch(code){
+            case 0: color="#B71C1C"; break; /* Red 900 */
+            case 1: color="#4CAF50"; break; /* Green */
+            case 2: color="#E53935"; break; /* Red 600*/
+            case 3: color="#E57373"; break; /* Red 300 */
+            case 4: color="#B71C1C"; break; /* Red 900*/
+            default: color = "#9E9E9E"; break; /* Grey */
+          }
+          return "background:"+color+";";
         }
       });
     })();

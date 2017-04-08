@@ -151,7 +151,6 @@ public class PresentieController implements Handler   {
   						.add("les", ++totaalAantalLessen)
   						.add("presentie", informatieSysteem.translatePresentieIntToString(presentie.getCode()))
   						.add("code", presentie.getCode())
-  						.add("css-class", "type_"+presentie.getCode())
   						.add("datum", presentie.getLes().getDatum().toString())
   						.add("reden", presentie.getReden());
   					
