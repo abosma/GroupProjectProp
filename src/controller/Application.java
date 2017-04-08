@@ -28,7 +28,6 @@ public class Application {
 	 * s */
 	public static void main(String[] args) {
 		JSONFileServer server = new JSONFileServer(new File("webapp/app"), 8888);
-		
 		PrIS infoSysteem = new PrIS();
 		
 		SysteemDatumController systeemDatumController = new SysteemDatumController(infoSysteem);
