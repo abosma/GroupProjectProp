@@ -1,0 +1,69 @@
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="my-presentie-invoeren-opmerking">
+    <template>
+      <style>
+        .mouseHover:hover {
+          color: red;
+        }
+      </style>
+      
+    [[c_opmerking]]
+     <span hidden$="{{!c_accepteerbaar}}">
+        <iron-icon icon="icons:close" class="mouseHover" on-tap="_afkeurButton"></iron-icon>
+        <paper-tooltip>Afmelding afkeuren</paper-tooltip>
+      </span>
+
+      <iron-ajax
+        id="ajax_studenten_rooster_afkeuren"
+        method="POST"
+        url="/docent/rooster/les/presentie/afkeuren"
+        handle-as="json">
+      </iron-ajax>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'my-presentie-invoeren-opmerking',
+            properties: {
+              les: {
+                type: Object,
+                notify: true,   
+              },
+
+              c_username: {
+                type: String,
+                notify: true,   
+              },
+
+              c_opmerking: {
+                type: String,
+                notify: true,   
+              },
+
+              c_accepteerbaar: {
+                type: Boolean,
+                notify: true,   
+              },
+            },
+
+
+            _afkeurButton: function(){
+              this.$.ajax_studenten_rooster_afkeuren.contentType = "application/json";
+              this.$.ajax_studenten_rooster_afkeuren.body = {
+                  "datum": this.les.datum,
+                  "begin": this.les.begin,
+                  "eind": this.les.eind,
+                  "vak": this.les.vak,
+                  "username": this.c_username,
+              };
+
+              this.$.ajax_studenten_rooster_afkeuren.generateRequest();
+
+              alert('Afmelding is afgekeurd');
+              this.c_accepteerbaar = false;
+            },
+        });
+    </script>
+</dom-module>

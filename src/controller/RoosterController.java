@@ -38,10 +38,28 @@ public class RoosterController implements Handler{
 			ophalenPresentieStudenten(conversation);
 		} else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/opslaan")){
 			opslaanPresentieVoorLes(conversation);
-		}
-		else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/current")){
+		}else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/current")){
 			currentPresentieVoorLes(conversation);
+		}else if (conversation.getRequestedURI().startsWith("/docent/rooster/les/presentie/afkeuren")){
+			afkeurenPresentie(conversation);
 		}
+	}
+	
+	private void afkeurenPresentie(Conversation conversation){
+		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
+		
+		//Ophalen student
+		Student s = informatieSysteem.getStudent(verzoek.getString("username"));
+		
+		//Ophalen vak waarvoor word afgemeld
+		Vak vak = s.getVak(verzoek.getString("vak"));
+		
+		//Ophalen specifieke les waarvoor word afgememeld
+		Les les = vak.getLes(
+				LocalDate.parse(verzoek.getString("datum")), 
+				verzoek.getString("begin"));
+		
+		vak.getPresentieLijstForStudent(s).getPresentieObjectForLes(les).setCode(4);
 	}
 	
 	private void currentPresentieVoorLes(Conversation conversation) {

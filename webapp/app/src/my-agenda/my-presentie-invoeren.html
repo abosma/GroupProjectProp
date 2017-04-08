@@ -6,8 +6,8 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
-  <link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-  <link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../my-agenda/my-presentie-invoeren-opmerking.html">
 
 
 
@@ -27,10 +27,6 @@
         width: 100%;
         height: 2em;
         cursor: default;
-      }
-
-      .mouseHover:hover {
-        color: red;
       }
     </style>
     <template>
@@ -60,10 +56,8 @@
                       checked="{{item.aanwezig}}">
                     </paper-checkbox>
                  </td>
-                 <td>[[item.opmerking]]
-                   <span hidden$="{{item.accepteerbaar}}">
-                      <iron-icon icon="icons:close" class="mouseHover" on-tap="_afkeurButton"></iron-icon>
-                    </span>
+                 <td>
+                  <my-presentie-invoeren-opmerking les="{{ les }}" c_opmerking="{{item.opmerking}}" c_username="{{item.email}}" c_accepteerbaar="{{item.accepteerbaar}}"></my-presentie-invoeren-opmerking>
                 </td>
 
                 </tr>
@@ -93,7 +87,6 @@
           url="/docent/rooster/les/presentie/opslaan"
           handle-as="json">
         </iron-ajax>
-
     </template>
     <script>
         Polymer({
@@ -111,14 +104,6 @@
 
               items: {
                 type: Object,
-              },
-
-              _c_studenten: {
-                type: Array,
-              },
-
-              totaalStudenten: {
-                type: Number,
               },
             },
 
@@ -157,10 +142,6 @@
             _studenten_rooster_ophalen_response_handler: function (request) {
              this._c_studenten = request.detail.response;
              this.totaalStudenten = request.detail.response.length;
-            },
-
-            _afkeurButton: function(){
-              alert('jow');
             },
 
         });

@@ -29,6 +29,10 @@ public class Presentie {
 	public void setReden(String reden) {
 		this.reden = reden;
 	}
+	
+	public void setCode(int code) {
+		this.code = code;
+	}
 
 	public Les getLes() {
 		return les;
