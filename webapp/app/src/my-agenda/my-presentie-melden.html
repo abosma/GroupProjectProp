@@ -39,10 +39,10 @@
 
         <paper-dialog id="presentieMelden" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
           <h2>Afmelden</h2>
-          <paper-dropdown-menu label="Reden invoeren" on-iron-select="_itemSelected" selected="{{myProp}}">
+          <paper-dropdown-menu label="Reden invoeren" on-iron-select="_itemSelected">
             <paper-menu class="dropdown-content">
-              <paper-item value="2">Ziek</paper-item>
-              <paper-item value="3">Afmelden</paper-item>
+              <paper-item>Ziek</paper-item>
+              <paper-item>Afmelden</paper-item>
             </paper-menu>
           </paper-dropdown-menu>
 
@@ -117,9 +117,6 @@
                 value: false,
                 notify: true,               
               },
-              myProp: {
-                type: String,
-              }
             },
 
             _systeemdatumstandaardInitializing: function(){

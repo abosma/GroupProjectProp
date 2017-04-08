@@ -1,161 +1,78 @@
 <dom-module id="my-presentie-les">
-    <template>
-        <style>
-            :host {
-                display: block;
-                margin-top: 10px;   
-               margin-right: 5px;  
-               margin-bottom: 15px;  
-               width: 90px;
-            }
+    <style>
+        :host {
+            display: block;
+            margin-top: 10px;   
+           margin-right: 5px;  
+           margin-bottom: 15px;  
+           width: 90px;
+        }
 
-            :root {
-                --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
-            }
+        :root {
+            --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+        }
 
-            span {
-                @apply(--paper-font-body1);
-            }
-
-            .container {
-              @apply(--layout-horizontal);
-              @apply(--layout-justified);
-            }
-            .toast-button {
-                text-transform: none;
-                color: white; /* white tekst */
-                background: #1a9fd9; /* kind of blue */
-                --paper-button-ink-color: #00567B; /* kind of dark blue */
-            }
-
-            .my-title {
-                font-size: 20px;
-                color: blue;
-                border-bottom: 1px solid red; /* a red line */
-                padding-bottom: 2px; /* space above the border line */
-            }
-
-            .voornaam {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .achternaam {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .groepid-header {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .groepid {
-                min-width: 100px;
-            }
-
-            .my-button {
-                width: 100%; /* full width */
-                color: white; /* white tekst */
-                background: #1a9fd9; /* kind of blue */
-                --paper-button-ink-color: #00567B; /* kind of dark blue */
-                margin-top: 5px; /* enlarge thet default */
-                margin-left: 0px; /* reduce the default */
-            }
-
-            .mouseHover:hover {
-                cursor: pointer;
-                color: #33aadd;
-            }
-
-            .presentie-les {
-                border: 1px solid #1693c9;  
-                border-right: none;
-            }
-            
-            .Les{
+        span {
+            @apply(--paper-font-body1);
+        }
+        .les{
             color: #fff;
             font-size: 15px;
             background: #1a9fd9;
             width: 100px;
             height:30px;
             border-radius: 3px;
-            }
-            .Aanwezigheid{
-        /*     background: #fff; */
+        }
+        .aanwezigheid {
             text-align:center;
             width: 90px;
             height: 46px;
             border: 1px solid #000; 
             border-radius: 3px;
-            }
-            
-            em {  /* or .call em, but you should aim for consistency in your styling */
-   				 font-style: normal;
-   				 font-size: 70%;
-				}
-        </style>
-
-        <!-- Header Agenda  -->
-            <table>
-                <tr>
-                    <th class = "Les" scope="col">[[c_lesnummer]]<br><em>[[c_datumles]]</em> </th>
-                </tr>
-                <tr>
-                    <td class="Aanwezigheid">[[c_aanwezigheid]]</td>
-                </tr>
-            </table>
+        }
         
-
+        em {
+			font-style: normal;
+			font-size: 70%;
+		}
+    </style>
+    <template>
+        <table>
+            <tr>
+                <th class="les" scope="col">[[c_lesnummer]]<br><em>[[c_datumles]]</em> </th>
+            </tr>
+            <tr>
+                <td class="aanwezigheid">[[c_aanwezigheid]]</td>
+            </tr>
+        </table>
     </template>
     <script>
         Polymer({
             is: 'my-presentie-les',
             properties: {
                 _c_lessen: {
-                type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
-                                            array is constant groepnr is changable */
-              },
-              c_rol: {
-                type: String,
-              },
-              
-              c_lesnummer: {
-                  type: String,
+                    type: Array,
                 },
-                
-              c_aanwezigheid: {
-                  type: String,
+                c_rol: {
+                    type: String,
                 },
-                
+                c_lesnummer: {
+                    type: String,
+                },
+                c_aanwezigheid: {
+                    type: String,
+                },                
                 c_datumles: {
                     type: String,
-                  },
-              
-              c_username: {
-                type: String,
-              },
-              c_visible: {
-                type: Boolean,
-                value: false,
-              },
-             
-            },
-
-            _go_home: function() {
-              var lApp = document.querySelector('my-app');  //het polymer element <my-app>
-              var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
-              lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
-                                                            // door de two way binding in <app-route> en <app-location>
-                                                            // zal ook de url echt wijzigen
-            },
-           
-
-          
-
-           
-
-             
+                },
+                c_username: {
+                    type: String,
+                },
+                c_visible: {
+                    type: Boolean,
+                    value: false,
+                },
+            },             
         });
     </script>
 </dom-module>
