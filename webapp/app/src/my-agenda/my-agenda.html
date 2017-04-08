@@ -120,8 +120,7 @@
             is: 'my-agenda',
             properties: {
                 _c_lessen: {
-                type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
-                                            array is constant groepnr is changable */
+                type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} array is constant groepnr is changable */
               },
               c_rol: {
                 type: String,
@@ -248,7 +247,7 @@
 
             _date_to_string : function(date) {
               return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-            },    
+            },
         });
     </script>
 </dom-module>

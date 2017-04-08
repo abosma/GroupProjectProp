@@ -8,7 +8,7 @@
 
 <dom-module id="my-presentie-melden">
     <style>
-      .ziekmeld-button {
+      .melden {
         margin-top: 20px;
         width: 100%;
         height: 2em;
@@ -16,7 +16,7 @@
         color: white;
       }
 
-      .ziekgemeld-button {
+      .gemeld {
         margin-top: 20px;
         width: 100%;
         height: 2em;
@@ -26,53 +26,31 @@
     <template>
         <paper-button
           id="login_button_element"
-          class="ziekmeld-button"
+          class="melden"
           on-tap="openDialog"
           raised
-          hidden$="{{afwezig}}">
-            Afmelden
-         </paper-button>
+          hidden$="{{_afwezig}}">Afmelden</paper-button>
 
-         <div hidden$="{{!afwezig}}">
-            <paper-button
+        <paper-button
             id="login_button_element"
-            class="ziekgemeld-button"
+            class="gemeld"
             raised
-            hidden$="{{!ziek}}">
-              Ziek
-           </paper-button>
-
-          <paper-button
-            id="login_button_element"
-            class="ziekgemeld-button"
-            raised
-            hidden$="{{!afgemeld}}">
-              Afgemeld
-           </paper-button>
-
-           <paper-button
-            id="login_button_element"
-            class="ziekgemeld-button"
-            raised
-            hidden$="{{!afgemeldNiet}}">
-              Afgemeld (niet geaccepteerd)
-           </paper-button>
-         </div>
+            hidden$="{{!_afwezig}}">[[_reden]]</paper-button>
 
         <paper-dialog id="presentieMelden" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
           <h2>Afmelden</h2>
-          <paper-dropdown-menu label="Reden invoeren" on-iron-select="_itemSelected">
+          <paper-dropdown-menu label="Reden invoeren" on-iron-select="_itemSelected" selected="{{myProp}}">
             <paper-menu class="dropdown-content">
-              <paper-item value="1">Ziek</paper-item>
-              <paper-item value="2">Afmelden</paper-item>
+              <paper-item value="2">Ziek</paper-item>
+              <paper-item value="3">Afmelden</paper-item>
             </paper-menu>
           </paper-dropdown-menu>
 
-           <paper-input hidden$="{{!redenVeldWeergeven}}" id="afmeldReden" label="Reden afmelden" value="{{ redenVeld }}"></paper-input>
+          <paper-input hidden$="{{!_redenVeldWeergeven}}" id="afmeldReden" label="Reden afmelden" value="{{_redenVeld}}"></paper-input>
 
           <div class="buttons">
             <paper-button dialog-dismiss>Sluiten</paper-button>
-            <paper-button dialog-confirm autofocus on-tap="confirmDialog" hidden$="{{!displayMelden}}">Melden</paper-button>
+            <paper-button dialog-confirm autofocus on-tap="confirmDialog" hidden$="{{!_displayMelden}}">Melden</paper-button>
           </div>
     
         </paper-dialog>
@@ -81,8 +59,7 @@
           id="ajax_student_rooster_afmelden"
           method="POST"
           url="/student/rooster/afmelden"
-          handle-as="json"
-          on-response="_student_rooster_afmelden_response_handler">
+          handle-as="json">
         </iron-ajax>
 
         <iron-ajax
@@ -101,67 +78,61 @@
                rol: {
                 type: String,
               },
-
-              ziek: {
-                type: Boolean,
-                value: false,
-                notify: true, 
-              },
-
-              afgemeld: {
-                type: Boolean,
-                value: false,
-                notify: true, 
-              },
-              afgemeldNiet: {
-                type: Boolean,
-                value: false,
-                notify: true, 
-              },
-
-              afwezig: {
-                type: Boolean,
-                value: false,
-                notify: true, 
-              },
-
-              redenVeldWeergeven: {
-                type: Boolean,
-                value: false,
-                notify: true, 
-              },
-              redenVeld: {
-                type: String,
-              },
-              redenOptie: {
-                type: String,
-              },
-              displayMelden: {
-                type: Boolean,
-                value: false,
-                notify: true,               
-              },
-
               item: {
                 type: Object,
-                notify: true,               
+                notify: true,
+                observer: '_refresh',               
               },
-
               c_username: {
                 type: String,
                 observer: '_initializing',
               },
-
+              /* eigen variabelen */
+              _afwezig: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+              _redenVeldWeergeven: {
+                type: Boolean,
+                value: false,
+                notify: true, 
+              },
+              _redenVeld: {
+                type: String,
+              },
+              _redenOptie: {
+                type: String,
+              },
+              _reden: {
+                type: String,
+                value: "",
+              },
+              _displayMelden: {
+                type: Boolean,
+                value: false,
+                notify: true,               
+              },
+              myProp: {
+                type: String,
+              }
             },
 
             _initializing : function() {
               if(this.rol == "student"){
+                this._get_current(this.c_username);
+              }
+            },
+
+            _get_current : function(user){
+              /* Allen refreshen waner er een les word weergegeven */
+              if(!this.item.leeg && user){
                 this.$.ajax_student_rooster_current.contentType = "application/json";
                 this.$.ajax_student_rooster_current.body = {
                     "datum": this.item.datum,
                     "begin": this.item.begin,
                     "eind": this.item.eind,
-                    "username": this.c_username,
+                    "username": user,
                     "vak": this.item.vak,
                 };
                 this.$.ajax_student_rooster_current.generateRequest();
@@ -173,13 +144,12 @@
             },
 
             confirmDialog: function() {
-
-              if(this.redenOptie == "Afmelden"){
-                if(this.redenVeld.length < 3){
+              if(this._redenOptie == "Afmelden"){
+                if(this._redenVeld.length < 3){
                   alert('Reden is te kort');
                   
                   var that = this;
-                   setTimeout(function () {
+                  setTimeout(function () {
                       that.$.presentieMelden.open();
                   }, 200);
 
@@ -194,49 +164,45 @@
                   "eind": this.item.eind,
                   "username": this.c_username,
                   "vak": this.item.vak,
-                  "redenoptie": this.redenOptie,
-                  "redenveld": this.redenVeld,
+                  "redenoptie": this._redenOptie,
+                  "redenveld": this._redenVeld,
               };
 
               this.$.ajax_student_rooster_afmelden.generateRequest();
-              this.afwezig = true;
-              if(this.redenOptie == "Afmelden"){
-                  this.afgemeld = true;
-                }else{
-                  this.ziek = true;
-                }
+              this._afwezig = true;
+              this._reden = this._redenOptie;
+              if(this._redenVeldWeergeven){
+                this._reden = "Afgemeld";
+              }
             },
 
-            _student_rooster_afmelden_response_handler: function (request) {
+            _reden_from_int : function(response){
+              switch(response){
+                case 0: return "afwezig";
+                case 1: return "aanwezig";
+                case 2: return "ziek";
+                case 3: return "afgemeld";
+                case 4: return "afgemeld( niet geaccepteerd)";
+                default: return "n/a";
+              }
             },
 
             _student_rooster_current_response_handler: function (request) {
               var response = JSON.parse(request.detail.response).value;
-              if(response == 2){
-                this.afwezig = true;
-                this.ziek = true;
-              }else if(response == 3){
-                this.afwezig = true;
-                this.afgemeld = true;
-              }else if(response == 4){
-                this.afwezig = true;
-                this.afgemeldNiet = true;
-              }
+              this._reden = this._reden_from_int(response);
+              this._afwezig = response != -1;
+            },
+
+            _refresh : function(){
+              this._get_current(this.c_username);
             },
 
             _itemSelected : function(e) {
               var selectedItem = e.target.selectedItem;
               if (selectedItem) {
-
-                this.redenOptie = selectedItem.innerText;
-                this.displayMelden = true;
-
-                if(selectedItem.innerText == "Afmelden"){
-                  this.redenVeldWeergeven = true;
-                }else{
-                  this.redenVeldWeergeven = false;
-                }
-
+                this._redenOptie = selectedItem.innerText;
+                this._displayMelden = true;
+                this._redenVeldWeergeven = selectedItem.innerText == "Afmelden"; 
               }
             },
         });
