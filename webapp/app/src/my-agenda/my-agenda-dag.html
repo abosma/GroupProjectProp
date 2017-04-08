@@ -29,7 +29,8 @@
               <my-agenda-les 
                   item=[[item]]
                   rol="{{rol}}"
-                  c_username="{{c_username}}">
+                  c_username="{{c_username}}"
+                  systeemdatumstandaard="{{ systeemdatumstandaard }}">
               </my-agenda-les>  
             </template>
           </div>
@@ -59,7 +60,11 @@
               }, 
               rol: {
                 type: String,
-              }
+              },
+
+              systeemdatumstandaard: {
+                type: String,
+              },
             },
 
             _fix_date : function(date){
