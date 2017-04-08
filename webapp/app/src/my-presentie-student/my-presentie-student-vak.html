@@ -1,4 +1,5 @@
-<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../my-presentie-student/my-presentie-overzicht.html">
 <dom-module id="my-presentie-student-vak">
   <style>
@@ -12,27 +13,41 @@
     span {
       @apply(--paper-font-body1);
     } 
-    my-presentie-les {
-  	   float: left;
-  	   margin-top: 10px;   
-  	   margin-right: 5px;  
-  	   margin-bottom: 15px;  
-       width: 90px;
+    paper-button[toggles] {
+      color: white;
+      width: 200px;
+      height: 2em;
+      background-color: #33aadd;  
+      margin-bottom: 5px;
+      -webkit-transition: width 0.2s ease-in-out;
+      -moz-transition: width 0.2s ease-in-out;
+      -ms-transition: width 0.2s ease-in-out;
+      -o-transition: width 0.2s ease-in-out;
+      transition: width 0.2s ease-in-out;
     }
+    paper-button[toggles][active] {
+      background: red;
+      width: 100%;
+
+      -webkit-transition: width 0.2s ease-in-out;
+      -moz-transition: width 0.2s ease-in-out;
+      -ms-transition: width 0.2s ease-in-out;
+      -o-transition: width 0.2s ease-in-out;
+      transition: width 0.2s ease-in-out;
+    }
+    #student-vak-lessen {
+      margin-left: 20px;
+    }
+
   </style>
   <template>
-    <paper-toggle-button on-change="_toggle_hide">{{vak.vak}}</paper-toggle-button>
-      <div id="student-vak-lessen" hidden$="{{_hide}}">
+    <paper-button toggles on-click="toggle">{{vak.vak}}</paper-button>
+    <iron-collapse id="collapse">
+      <div id="student-vak-lessen">
         <my-presentie-overzicht vak="{{vak}}"></my-presentie-overzicht>
-       	<!-- <template is="dom-repeat" items="{{vak.lessen}}" as="les">          
-       	  <my-presentie-les 
-            c_lesnummer="[[les.les]]" 
-            c_aanwezigheid="[[les.presentie]]" 
-            c_datumles="[[les.datum]]">
-          </my-presentie-les>
-       	</template> -->
       </div>
-    </template>
+    </iron-collapse>
+  </template>
   <script>
     (function() {
       'use strict';
@@ -45,19 +60,14 @@
             type: Array,
             observer: '_observer',
           },
-          _hide: {
-            type: Boolean,
-            value: true,
-          },
         },
 
         _observer : function(){
           console.log(this.vak);
         },
         
-        _toggle_hide : function(){
-          this._hide = !this._hide;
-          console.log("_toggle_hide");
+        toggle : function(){
+          this.$.collapse.toggle();
         },
       });
     })();

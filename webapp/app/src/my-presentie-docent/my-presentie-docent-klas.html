@@ -5,7 +5,9 @@
   <style>
     :host {
       display: block;
+      box-sizing: border-box;
       width: 100%;
+      padding-left: 20px;
     }
     :root {
       --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
@@ -16,13 +18,8 @@
     table, th, td {
       border: 1px solid black;
     }
-    #table-container {
-      margin-left: 20px;
-      border-radius: 10px;
-    }
     table {
       border-collapse: collapse;
-      margin-left: 20px;
     }
     th, td {
       padding: 3px 5px;
@@ -32,15 +29,8 @@
       background: #1a9fd9;
       height:30px;
     }
-    .vertical-text{
-      -webkit-transform: rotate(90deg);
-      -webkit-transform-origin: left top 0;
-      transform: rotate(90deg);
-      transform-origin: left top 0;
-      float: left;
-    }
-    span {
-      float: left;
+    td {
+      text-align: center;
     }
     .type_-1 {
       background: grey;
@@ -51,61 +41,67 @@
     .type_1 {
       background: green;
     }
-    td {
-      text-align: center;
-    }
-    .button {
-      margin-top: 20px;
-      width: 200px;
-      height: 2em;
-      background-color: #33aadd; 
-      color: white;
-      margin-bottom: 10px;
-      margin-top: 0px;
-    }
     .naam {
       text-align: left;
       padding-left: 10px;
     }
+    paper-button[toggles] {
+      color: white;
+      width: 200px;
+      height: 2em;
+      background-color: #33aadd;  
+      margin: 5px 0px;
+      -webkit-transition: width 0.2s ease-in-out;
+      -moz-transition: width 0.2s ease-in-out;
+      -ms-transition: width 0.2s ease-in-out;
+      -o-transition: width 0.2s ease-in-out;
+      transition: width 0.2s ease-in-out;
+    }
     paper-button[toggles][active] {
-      background: red;
+      background: orange;
+      width: 100%;
     }
     paper-tooltip{
       --paper-tooltip-opacity: 1;
+    }
+    #table-container{
+      padding-left: 20px;
     }
     }
   </style>
   <template>
     <paper-button toggles class="button" on-click="toggle">[[klas.klas]]</paper-button>
     <iron-collapse id="collapse">
-      <table>
-        <!-- Header row -->
-        <tr>
-          <th colspan="2">Student</th>
-
-          <template is="dom-repeat" items="[[_get_lessen_for_header(klas)]]">
-            <th>[[_reverse(item.datum)]]</th>
-          </template>
-
-          <th>Totaal %</th>
-        </tr>
-
-        <!-- Data rows -->
-        <template is="dom-repeat" items="[[klas.studenten]]">
+      <div id="table-container">
+        <table>
+          <!-- Header row -->
           <tr>
-            <td colspan="2" class="naam">[[item.naam]]</td>
+            <th colspan="2">Student</th>
 
-            <template is="dom-repeat" items="[[item.lessen]]">
-              <td title="" class$="[[item.css-class]]">
-                [[item.presentie]]
-                <paper-tooltip>Datum: [[_reverse(item.datum)]]<br/>Reden: [[item.reden]]</paper-tooltip>
-              </td>
+            <template is="dom-repeat" items="[[_get_lessen_for_header(klas)]]">
+              <th>[[_reverse(item.datum)]]</th>
             </template>
 
-            <td style$="[[_get_style(item.percentage)]]">[[item.percentage]]</td>
+            <th>Totaal %</th>
           </tr>
-        </template>
-      </table>
+
+          <!-- Data rows -->
+          <template is="dom-repeat" items="[[klas.studenten]]">
+            <tr>
+              <td colspan="2" class="naam">[[item.naam]]</td>
+
+              <template is="dom-repeat" items="[[item.lessen]]">
+                <td title="" class$="[[item.css-class]]">
+                  [[item.presentie]]
+                  <paper-tooltip>Datum: [[_reverse(item.datum)]]<br/>Reden: [[item.reden]]</paper-tooltip>
+                </td>
+              </template>
+
+              <td style$="[[_get_style(item.percentage)]]">[[item.percentage]]</td>
+            </tr>
+          </template>
+        </table>
+      </div>
     </iron-collapse>
   </template>
   <script>

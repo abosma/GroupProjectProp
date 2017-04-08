@@ -5,27 +5,27 @@
   <style>
     :host {
       display: block;
+      box-sizing: border-box;
       width: 100%;
-    }
-    :root {
-      --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
     }
     span {
       @apply(--paper-font-body1);
     }
-    .button {
-        margin-top: 5px;
-        width: 200px;
-        height: 2em;
-        background-color: #33aadd; 
-        color: white;
-        margin-bottom: 10px;
-      }
-    my-presentie-docent-klas{
-      margin-left: 20px;
+    paper-button[toggles] {
+      color: white;
+      width: 200px;
+      height: 2em;
+      background-color: #33aadd;
+      margin: 5px 0px;
+      -webkit-transition: width 0.2s ease-in-out;
+      -moz-transition: width 0.2s ease-in-out;
+      -ms-transition: width 0.2s ease-in-out;
+      -o-transition: width 0.2s ease-in-out;
+      transition: width 0.2s ease-in-out;
     }
     paper-button[toggles][active] {
       background: red;
+      width: 100%;
     }
     }
   </style>
