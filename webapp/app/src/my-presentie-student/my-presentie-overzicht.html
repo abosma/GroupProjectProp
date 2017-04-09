@@ -37,13 +37,16 @@
       <template is="dom-repeat" items="{{vak.lessen}}">
         <th>[[item.les]]<br/><span class="date">[[_reverse(item.datum)]]</span></th>
       </template>
+      <th>totaal %</th>
     </tr>
     <tr>
       <template is="dom-repeat" items="{{vak.lessen}}">
-        <td>[[item.presentie]]</td>
+         <td>[[item.presentie]]</td>
       </template>
+      <td> [[vak.percentage]]</td>
     </tr>
   </table>
+ 
   </template>
   <script>
     (function() {
