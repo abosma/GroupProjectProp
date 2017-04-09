@@ -285,9 +285,6 @@ public class PrIS {
 				String tussenvoegsel = element[2];
 				String achternaam = element[3];
 				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, ++count));
-
-				// System.out.println(gebruikersnaam);
-
 			}
 
 		} catch (FileNotFoundException e) {
@@ -382,7 +379,6 @@ public class PrIS {
 			e.printStackTrace();
 		} finally {
 			// Om alle lessen te printen uncomment deze
-			// System.out.println(pLessen.toString());
 			if (br != null) {
 				try {
 					br.close();
@@ -417,9 +413,6 @@ public class PrIS {
 					lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr); // Volgorde 3-2-1  = voornaam, tussenvoegsel en achternaam
 					pStudenten.add(lStudent);
 					k.voegStudentToe(lStudent);
-
-					// System.out.println(gebruikersnaam);
-
 				}
 
 			} catch (FileNotFoundException e) {

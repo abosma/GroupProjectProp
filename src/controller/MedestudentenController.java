@@ -32,7 +32,6 @@ public class MedestudentenController implements Handler {
 	}
 
 	public void handle(Conversation conversation) {
-		System.out.println(conversation.getRequestedURI());
 		if (conversation.getRequestedURI().startsWith("/student/medestudenten/ophalen")) {
 			ophalen(conversation);
 		} else {
@@ -49,7 +48,6 @@ public class MedestudentenController implements Handler {
 	 */
 	private void ophalen(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		System.out.println(lJsonObjectIn);
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
 		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
 		String  lGroepIdZelf = lStudentZelf.getGroepId();

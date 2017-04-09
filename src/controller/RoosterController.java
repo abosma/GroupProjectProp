@@ -65,9 +65,6 @@ public class RoosterController implements Handler{
 	private void currentPresentieVoorLes(Conversation conversation) {
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
 		
-		System.out.println("DEBUG[1]: -");
-		System.out.println("DEBUG[2]: currentPresentieVoorLes verzoek: " + verzoek.toString());
-		
 		//Ophalen student
 		Student s = informatieSysteem.getStudent(verzoek.getString("username"));
 		
@@ -100,7 +97,6 @@ public class RoosterController implements Handler{
 		Les les = vak.getLes(LocalDate.parse(verzoek.getString("datum")), verzoek.getString("begin"));
 		
 		// loop alle studenten af
-		System.out.println(ja.toString());
 		for(JsonValue jv : ja){
 			JsonObject jo = (JsonObject) jv;
 			String name = jo.getString("email");
@@ -173,7 +169,7 @@ public class RoosterController implements Handler{
 
 	private void veranderPresentieStudent(Conversation conversation) {
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
-		System.out.println("veranderPresentieStudent "+verzoek.toString());
+
 		//Ophalen afmeldingsreden
 		int reden = informatieSysteem.translatePresentieStringToInt(verzoek.getString("redenoptie"));
 		
@@ -187,8 +183,6 @@ public class RoosterController implements Handler{
 		Les les = vak.getLes(
 				LocalDate.parse(verzoek.getString("datum")), 
 				verzoek.getString("begin"));
-		
-		System.out.println("veranderPresentieStudent "+les.getDatum().toString());
 		
 		//De presentiestatus voor een les aanpassen
 		if(reden == 2){

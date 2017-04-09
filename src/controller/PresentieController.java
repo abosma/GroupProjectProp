@@ -32,7 +32,6 @@ public class PresentieController implements Handler   {
 	}
 
 	public void handle(Conversation conversation) {
-		System.out.println(conversation.getRequestedURI());
 		if(conversation.getRequestedURI().startsWith("/student/presentie")) {
 			studentOphalen(conversation);
 		}if (conversation.getRequestedURI().startsWith("/docent/presentie")) {
@@ -44,7 +43,6 @@ public class PresentieController implements Handler   {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		System.out.println(lGebruikersnaam);
 		
 		Student lStudent = informatieSysteem.getStudent(lGebruikersnaam);
 
@@ -89,7 +87,6 @@ public class PresentieController implements Handler   {
 			
 		}
 		String lJsonOutStr = lJsonArrayBuilderVoorPresentie.build().toString();	
-		System.out.println(lJsonOutStr);
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
@@ -98,7 +95,6 @@ public class PresentieController implements Handler   {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		System.out.println(lGebruikersnaam);
 		
 		Docent doc = informatieSysteem.getDocent(lGebruikersnaam);
 
@@ -186,7 +182,6 @@ public class PresentieController implements Handler   {
 		}
 		
 		String lJsonOutStr = jabAlleGroepen.build().toString();	
-		System.out.println(lJsonOutStr);
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 }
