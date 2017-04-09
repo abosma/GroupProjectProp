@@ -3,36 +3,45 @@
 <link rel="import" href="../my-presentie-student/my-presentie-student-vak.html">
 
 <dom-module id="my-presentie-student">
-  <style>
-  :host {
-    display: block;
-  }
-  :root {
-    --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
-  }
-  span {
-    @apply(--paper-font-body1);
-  }
-  .toast-button {
-    text-transform: none;
-    color: white;                           /* white tekst */
-    background: #1a9fd9;                    /* kind of blue */
-    --paper-button-ink-color: #00567B;      /* kind of dark blue */
-  }
-  .my-title {
-    font-size: 20px;
-    color: black;
-    border-bottom: 1px solid blue;           /* a red line */
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-  }
-  my-presentie-student-vak{
-    width:100%;
-    float: left;
-  }
-  </style>
   <template>
-    <div class="my-title">Selecteer het vak waarvan u de presentie in wilt zien</div>	    
+    <style>
+      :host {
+        display: block;
+      }
+      :root {
+        --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
+      }
+      span {
+        @apply(--paper-font-body1);
+      }
+      .toast-button {
+        text-transform: none;
+        color: white;                           /* white tekst */
+        background: #1a9fd9;                    /* kind of blue */
+        --paper-button-ink-color: #00567B;      /* kind of dark blue */
+      }
+      .my-title {
+        font-size: 20px;
+        color: black;
+        border-bottom: 1px solid blue;           /* a red line */
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+      }
+      my-presentie-student-vak{
+        width:100%;
+        float: left;
+      }
+    </style>
+    <paper-toast id="toast_invalid_aanroep"
+      duration="0"
+      text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
+      <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
+    </paper-toast>
+
+    <div class="my-title">
+      Selecteer het vak waarvan u de presentie in wilt zien
+    </div>	    
+    
     <template is="dom-repeat" items="{{_vakken}}">
       <my-presentie-student-vak vak="{{item}}"></my-presentie-student-vak>
     </template>

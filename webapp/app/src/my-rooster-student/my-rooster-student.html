@@ -1,12 +1,5 @@
-﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+﻿<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../my-agenda/my-agenda.html">
-<link rel="import" href="../my-agenda/my-agenda-dag.html">
-<link rel="import" href="../my-agenda/my-agenda-les.html">
 
 <!-- Dit element wordt door de aanwezigheid van de c_visible parameter steeds opnieuw gerefreshed
      op het moment dat het element in de iron-pages geselecteerd wordt
@@ -25,70 +18,12 @@
             :root {
                 --paper-input-container-focus-color: #1a9fd9; /* kind of blue */
             }
-
-            span {
-                @apply(--paper-font-body1);
-            }
-
-            .container {
-              @apply(--layout-horizontal);
-              @apply(--layout-justified);
-            }
             .toast-button {
                 text-transform: none;
                 color: white; /* white tekst */
                 background: #1a9fd9; /* kind of blue */
                 --paper-button-ink-color: #00567B; /* kind of dark blue */
             }
-
-            .my-title {
-                font-size: 20px;
-                color: blue;
-                border-bottom: 1px solid red; /* a red line */
-                padding-bottom: 2px; /* space above the border line */
-            }
-
-            .voornaam {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .achternaam {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .groepid-header {
-                min-width: 100px;
-                text-align: left;
-            }
-
-            .groepid {
-                min-width: 100px;
-            }
-
-            .my-button {
-                width: 100%; /* full width */
-                color: white; /* white tekst */
-                background: #1a9fd9; /* kind of blue */
-                --paper-button-ink-color: #00567B; /* kind of dark blue */
-                margin-top: 5px; /* enlarge thet default */
-                margin-left: 0px; /* reduce the default */
-            }
-
-            .mouseHover:hover {
-                cursor: pointer;
-                color: #33aadd;
-            }
-
-            .agenda {
-                border: 1px solid #1693c9;  
-                border-right: none;
-            }
-            my-agenda-dag {
-              border-right: 1px solid #1693c9;
-            }
-
         </style>
 
         <paper-toast id="toast_invalid_aanroep"
@@ -123,6 +58,7 @@
           c_visible: {
             type: Boolean,
             value: false,
+            observer: '_initializing',
           },
           systeemdatumstandaard: {
             type: String,
@@ -130,12 +66,9 @@
         },
         _initializing : function() {
           if (this.c_visible) {
-            if (this.c_rol=="student") {
-              //all is good..
-            } else {
-                console.log(this.c_username + " " + this.c_rol + " ");
-                var lToast = this.$.toast_invalid_aanroep;
-                lToast.open();
+            if (!(this.c_rol=="student")){
+	            var lToast = this.$.toast_invalid_aanroep;
+	            lToast.open();
             }
           }
         },
