@@ -8,7 +8,17 @@ public class Student extends Persoon {
 	private int studentNummer;
 	private Klas klas;
 	private String groepId;
-
+	/**
+	 * Student haalt meeste attributen van het Persoon interface
+	 * maar heeft ook nog een extra attribuut studentNummer
+	 * en maakt zelf een attribuut aan genaamd groepID
+	 * @param voornaam : voornaam
+	 * @param tussenvoegsel : tussenvoegsel
+	 * @param achternaam : achternaam
+	 * @param wachtwoord : wachtwoord
+	 * @param gebruikersnaam : gebruikersnaam
+	 * @param pStudentNummer : studentnummer
+	 */
 	public Student(String pVoornaam, String pTussenvoegsel, String pAchternaam, String pWachtwoord,
 			String pGebruikersnaam, int pStudentNummer) {
 		super(pVoornaam, pTussenvoegsel, pAchternaam, pWachtwoord, pGebruikersnaam);

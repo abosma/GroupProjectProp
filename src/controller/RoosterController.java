@@ -23,6 +23,15 @@ import server.Handler;
 public class RoosterController implements Handler{
 	private PrIS informatieSysteem;
 	
+	/**
+	 * De RoosterController klasse moet alle presentie-gerelateerde aanvragen
+	 * afhandelen. Methode handle() kijkt welke URI is opgevraagd en laat
+	 * dan de juiste methode het werk doen. Je kunt voor elke nieuwe URI
+	 * een nieuwe methode schrijven.
+	 * 
+	 * @param infoSys - het toegangspunt tot het domeinmodel
+	 */
+	
 	public RoosterController(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
@@ -44,6 +53,16 @@ public class RoosterController implements Handler{
 			afkeurenPresentie(conversation);
 		}
 	}
+	
+	/**
+	 * Functie afkeurenPresentie haalt de gebruikersnaam, vak en datum op
+	 * waarvan de presentie afgekeurd moet worden.
+	 * 
+	 * Met deze data kunnen we de presentiecode van dit student veranderen
+	 * naar een afgekeurde afwezigheidsaanvraag
+	 * 
+	 * @param conversation - De request door de Polymer frontend
+	 */
 	
 	private void afkeurenPresentie(Conversation conversation){
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
@@ -82,6 +101,15 @@ public class RoosterController implements Handler{
 		job.add("value", presentieVoorLes);
 		conversation.sendJSONMessage(job.build().toString());
 	}
+	
+	/**
+	 * Functie opslaanPresentieVoorLes haalt een array van studenten 
+	 * op met ingevoerde presenties door de docent en het vak + datum van het vak.
+	 * 
+	 * Deze worden dan opgeslagen voor ieder student in het informatiesysteem.
+	 * 
+	 * @param conversation - De request door de Polymer frontend
+	 */
 	
 	private void opslaanPresentieVoorLes(Conversation conversation) {
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
@@ -127,6 +155,14 @@ public class RoosterController implements Handler{
 			}
 		}
 	}
+	
+	/**
+	 * Functie ophalenPresentieStudenten haalt het Docent, vak en datum op uit de request
+	 * en gebruikt de data om de les waar de presenties van opgehaald moeten worden de
+	 * presenties op te halen en terug te sturen.
+	 *  
+	 * @param conversation - De request door de Polymer frontend
+	 */
 
 	private void ophalenPresentieStudenten(Conversation conversation) {
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
@@ -166,6 +202,16 @@ public class RoosterController implements Handler{
 		}
 		conversation.sendJSONMessage(jab.build().toString());
 	}
+	
+	/**
+	 * Functie veranderPresentieStudent haalt de reden, gebruikersnaam, vak en datum op.
+	 * 
+	 * Als de reden ziek is wordt er in het systeem voor de les de student voor dat les
+	 * op die datum voor dat vak op ziek gezet, anders wordt er ook een reden ingevuld
+	 * voor zijn afwezigheid, de leraar krijgt deze reden dan ook te zien.
+	 * 
+	 * @param conversation - De request door de Polymer frontend
+	 */
 
 	private void veranderPresentieStudent(Conversation conversation) {
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
@@ -201,6 +247,15 @@ public class RoosterController implements Handler{
 	private void ophalenStudentLessen(Conversation conversation) {
 		ophalenLesWeek(conversation, "student");
 	}
+	
+	/**
+	 * Functie ophalenLesWeek haalt de gebruikersnaam en datum op.
+	 * 
+	 * Met deze data haalt hij alle lessen op van de gebruiker van de week waarin de datum zit
+	 * en stuurt hij deze als JSON object terug.
+	 * 
+	 * @param conversation - De request door de Polymer frontend
+	 */
 	
 	private void ophalenLesWeek(Conversation conversation, String rol){
     JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();

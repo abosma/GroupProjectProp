@@ -9,7 +9,17 @@ public class Docent extends Persoon {
 
 	private int docentNummer;
 	private ArrayList<Vak> vakken;
-	
+	/**
+	 * Docent haalt meeste attributen van het Persoon interface
+	 * maar heeft ook nog een extra attribuut docentNummer
+	 * en creeert zelf een leeg arraylist vakken aan
+	 * @param voornaam : voornaam
+	 * @param tussenvoegsel : tussenvoegsel
+	 * @param achternaam : achternaam
+	 * @param wachtwoord : wachtwoord
+	 * @param gebruikersnaam : gebruikersnaam
+	 * @param docentNummer : docentnummer
+	 */
 	public Docent(String voornaam, String tussenvoegsel, String achternaam, String wachtwoord, String gebruikersnaam, int docentNummer) {
 		super(voornaam, tussenvoegsel, achternaam, wachtwoord, gebruikersnaam);
 		this.docentNummer = docentNummer;
@@ -36,6 +46,12 @@ public class Docent extends Persoon {
 		return this.vakken;
 	}
 
+	/**
+	 * Haalt vak op gebaseerd op de ingevoerde String
+	 * 
+	 * @param naam : Vaknaam
+	 * @return Vak
+	 */
 	public Vak getVak(String naam) {
 		for(Vak vak : vakken){
 			if(vak.getNaam().equals(naam)){
@@ -44,7 +60,10 @@ public class Docent extends Persoon {
 		}
 		return null;
 	}
-
+	/**
+	 * Haalt alle lessen op dat de docent geeft
+	 * @return ArrayList<Les>
+	 */
 	public ArrayList<Les> getLessen() {
 		ArrayList<Les> lessen = new ArrayList<Les>();
 		for(Vak vak : vakken){
