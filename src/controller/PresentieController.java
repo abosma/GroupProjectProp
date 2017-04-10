@@ -50,16 +50,18 @@ public class PresentieController implements Handler   {
 
 		JsonArrayBuilder lJsonArrayBuilderVoorPresentie = Json.createArrayBuilder();
 		for(Vak vak : vakken){
-			int aui = 0;
-			ArrayList<Integer> presentieint = new ArrayList<Integer>();
+			int count = 0;
 			JsonObjectBuilder lJsonObjectBuilderVoorVak = Json.createObjectBuilder();
 			
 			//lesnummer(als string bijv:les1) en de aanwezigheid als string
 			JsonArrayBuilder lJsonArrayBuilderVoorLes = Json.createArrayBuilder();
 
 			PresentieLijst lPresentie = vak.getPresentieLijstForStudent(lStudent);
-				presentieint.add(p.getCode());
+			
 			ArrayList<Presentie> presenties = lPresentie.getPresenties();
+			
+			int lessenAanwezig = 0;
+			int totaalAantalLessen = 0;
 			
 			Collections.sort(presenties, Presentie.presentieDateComparator);
 			
@@ -68,20 +70,17 @@ public class PresentieController implements Handler   {
 				JsonObjectBuilder lBuilder = Json.createObjectBuilder();
 				String s = this.informatieSysteem.translatePresentieIntToString(p.getCode());
 				
-				String lesnummer = "Les "+ (++aui);
+				String lesnummer = "Les "+ (++count);
 				lBuilder
 					.add("les", lesnummer)
 					.add("presentie", s)
 					.add("datum", p.getLes().getDatum().toString())
 					.add("reden", p.getReden());
 				lJsonArrayBuilderVoorLes.add(lBuilder);
-			}
-			//hier toevoegen aan json voor de ene vak
-			int lessenAanwezig = 0;
-			int totaalAantalLessen = 0;
-			for(int i: presentieint){
+
 				totaalAantalLessen++;
-				if (!(i==-1)){
+				if(lessenAanwezig == 1){
+					lessenAanwezig++;
 				}
 			}
 			DecimalFormat formatter = new DecimalFormat("###.##");
