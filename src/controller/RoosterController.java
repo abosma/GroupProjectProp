@@ -300,6 +300,12 @@ public class RoosterController implements Handler{
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
+	/**
+	 * Maakt van een lijst met lessen (ArrayList<Les>) een JsonArray
+	 * 
+	 * @param lessen - het te transformeren ArrayLisy<Les>-object
+	 * @return (JsonArray) een JasonArray met de lessen
+	 */
 	private JsonArray transformLessenToJsonArray(ArrayList<Les> lessen){
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();
 		// Controleren of er lessen zijn meegegeven
@@ -325,6 +331,12 @@ public class RoosterController implements Handler{
 		return lJsonArrayBuilder.build();
 	}
 	
+	/**
+	 * Transformeert een les object naar een JasonObject
+	 * 
+	 * @param les - Het te transformeren Les-object
+	 * @return (JsonObject) het JsonObject op basis van de Les
+	 */
 	private JsonObject transformLesToJsonObject(Les les){
 		LocalDate datum = les.getDatum();
 		
