@@ -52,8 +52,12 @@ public class Presentie {
 	}
 
 	public void update(int code, String reden) {
-		this.code = code;
-		this.reden = reden;
+		
+		if(this.getCode() < 2){
+			this.code = code;
+			this.reden = reden;
+		}
+		
 	}
 
 	public static Comparator<Presentie> presentieDateComparator = new Comparator<Presentie>() {
