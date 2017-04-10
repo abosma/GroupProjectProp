@@ -101,6 +101,12 @@ public class PrIS {
 		return lString;
 	}
 
+	/**
+	 * Geeft het Docent object terug bijbehorend bij de gegeven gebruikersnaam
+	 * 
+	 * @param gebruikersnaam - de gebruikersnaam in String formaar
+	 * @return het Docent object bijbehorend aan de String
+	 */
 	public Docent getDocent(String gebruikersnaam) {
 		Docent resultaat = null;
 
@@ -113,19 +119,24 @@ public class PrIS {
 
 		return resultaat;
 	}
-
+	
+	/**
+	 * Geeft het Klas object terug van het gegeven Student Object
+	 * 
+	 * @param pStudent - de Student waarvan de klas gevonden moet worden
+	 * @return het Klas object bijbehorend aan de Student
+	 */
 	public Klas getKlasVanStudent(Student pStudent) {
-		// used
-		for (Klas lKlas : deKlassen) {
-			if (lKlas.bevatStudent(pStudent)) {
-				return (lKlas);
-			}
-		}
-		return null;
+		return pStudent.getKlas();
 	}
 
+	/**
+	 * Geeft het Student object terug op basis van de gegeven gebruikersnaam
+	 * 
+	 * @param pGebruikersnaam - de gebruikersnaam in String formaar
+	 * @return het Student object bijbehorend aan de String
+	 */
 	public Student getStudent(String pGebruikersnaam) {
-		// used
 		Student lGevondenStudent = null;
 
 		for (Student lStudent : deStudenten) {
@@ -137,7 +148,13 @@ public class PrIS {
 
 		return lGevondenStudent;
 	}
-
+	
+	/**
+	 * Geeft het Student object terug op basis van het studentnummer
+	 * 
+	 * @param pStudentNummer - studentnummer van de te zoeken student
+	 * @return het Student object bijbehorend aan de String
+	 */
 	public Student getStudent(int pStudentNummer) {
 		// used
 		Student lGevondenStudent = null;
@@ -152,6 +169,13 @@ public class PrIS {
 		return lGevondenStudent;
 	}
 
+	/**
+	 * Valideren van een een gebruiker op basis van de gebruikersnaam en wachtwoord 
+	 * 
+	 * @param gebruikersnaam - de gebruikersnaam in String formaat
+	 * @param wachtwoord - het wachtwoord in String formaat
+	 * @return	de rol van de gebruiker
+	 */
 	public String login(String gebruikersnaam, String wachtwoord) {
 		for (Docent d : deDocenten) {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
@@ -171,32 +195,22 @@ public class PrIS {
 
 		return "undefined";
 	}
-
+	
+	/**
+	 * Haalt de ArrayList met alle geregistreede klassen op
+	 * 
+	 * @return een ArrayList<Klas> object met alle klassen
+	 */
 	public ArrayList<Klas> getAlleKlassen(){
 		return this.deKlassen;
 	}
-
-	public ArrayList<Les> getLessenDocent(String gebruikersnaam) {
-		ArrayList<Les> returnLessen = new ArrayList<Les>();
-		Docent lDocent = this.getDocent(gebruikersnaam);
-		for(Vak vak : lDocent.getVakken()){
-			returnLessen.addAll(vak.getLessen());
-		}
-		return returnLessen;
-	}
-
-	public ArrayList<Les> getVakStudent(String naam, String gebruikersnaam) {
-		return this.getStudent(gebruikersnaam).getVak(naam).getLessen();
-	}
-
-	public ArrayList<Les> getVakDocent(String naam, String gebruikersnaam) {
-		return this.getDocent(gebruikersnaam).getVak(naam).getLessen();
-	}
-
-	public ArrayList<Les> getLessenStudent(String stuMail) {
-		return this.getStudent(stuMail).getKlas().getAllLessen();
-	}
 	
+	/**
+	 * Vertaalt de presentiecode naar de juiste naam
+	 * 
+	 * @param iPresentie - de presentiecode
+	 * @return de naam voor de presentie code in String formaat
+	 */
 	public String translatePresentieIntToString(int iPresentie){
 		switch(iPresentie){
   		case 0: return "afwezig";
@@ -208,6 +222,12 @@ public class PrIS {
   	}
 	}
 	
+	/**
+	 * Vertaalt een presentie in String-formaat naar een integer
+	 * 
+	 * @param sPresentie de gegeven presentie in String-formaat
+	 * @return de getalrepresentatie van de presentiecode
+	 */
 	public int translatePresentieStringToInt(String sPresentie){
 		// we maken van de zin een zin in kleine letters
 		// dit doen we om te voorkomen dat de presentie niet herkend word
@@ -231,6 +251,13 @@ public class PrIS {
 		}
 	}
 
+	/**
+	 * Haal voor een docent alle lessen op voor een gegeven datum
+	 * 
+	 * @param dct - gebruikersnaam van de docent waarvoor de lessen moeten worden opgehaald
+	 * @param date - de Datum waarop de lessen moeten plaatsvinden
+	 * @return een ArrayList<Les> object met daarin alle lessen voor de gegeven datum
+	 */
 	public ArrayList<Les> getLessenDocentForSingleDate(String dct, LocalDateTime date) {
 		ArrayList<Les> lesDag = new ArrayList<Les>();
 
@@ -247,6 +274,13 @@ public class PrIS {
 		return lesDag;
 	}
 
+	/**
+	 * Haal voor een student alle lessen op voor een gegeven datum
+	 * 
+	 * @param studentMail - gebnruikersnaam van de student 
+	 * @param date - datum waarop de lessen meoten plaatsvinden
+	 * @return ArrayList<Les> object dat alle lessen bevat
+	 */
 	public ArrayList<Les> getLessenStudentForSingleDate(String studentMail, LocalDateTime date) {
 		// variabele waarin we de lessen van de gegeven dag opslaan
 		ArrayList<Les> lesdag = new ArrayList<Les>();
@@ -266,6 +300,12 @@ public class PrIS {
 		return lesdag;
 	}
 
+	
+	/**
+	 * Vult de docentenlijst met Docent-objecten
+	 * 
+	 * @param pDocenten - ArrayList<Docent> object dat gevuld meot worden
+	 */
 	private void vulDocenten(ArrayList<Docent> pDocenten) {
 		String csvFile = "././CSV/docenten.csv";
 		BufferedReader br = null;
@@ -302,6 +342,11 @@ public class PrIS {
 		}
 	}
 
+	/**
+	 * Voegt alle klassen aan de klassenlijst
+	 * 
+	 * @param pKlassen - de ArrayList<Klas> die gevuld moet worden
+	 */
 	private void vulKlassen(ArrayList<Klas> pKlassen) {
 		// TICT-SIE-VIA is de klascode die ook in de rooster file voorkomt
 		// V1A is de naam van de klas die ook als file naam voor de studenten van
@@ -321,6 +366,12 @@ public class PrIS {
 		pKlassen.add(k6);
 	}
 
+	/**
+	 * Vult de lijst met lessen
+	 * 
+	 * @param pKlassen - ArrayList<Klas> object welke alle bekende Klas-objecten moet bevatten 
+	 * @param pLessen - de lijst die gevuld moet worden
+	 */
 	private void vulLessen(ArrayList<Klas> pKlassen, ArrayList<Les> pLessen) {
 		String csvFile = "././CSV/rooster.csv";
 		BufferedReader br = null;
@@ -389,6 +440,12 @@ public class PrIS {
 		}
 	}
 
+	/**
+	 * Vult de lijst emt studenten
+	 * 
+	 * @param pStudenten - het te vullen ArrayList<Student> object
+	 * @param pKlassen - het ArrayList<Klas> object dat alle Klas-objecten bevat.
+	 */
 	private void vulStudenten(ArrayList<Student> pStudenten, ArrayList<Klas> pKlassen) {
 		Student lStudent;
 		for (Klas k : pKlassen) {
