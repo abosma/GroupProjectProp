@@ -133,6 +133,7 @@
             _initializing : function() {
               if(this.rol == "student"){
                 this._get_current(this.c_username);
+                console.log('ophalen')
               }
             },
 
@@ -207,7 +208,9 @@
             },
 
             _refresh : function(){
-              this._get_current(this.c_username);
+              if(this.rol == "student"){
+                this._get_current(this.c_username);
+              }
             },
 
             _itemSelected : function(e) {
