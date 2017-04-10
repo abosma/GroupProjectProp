@@ -65,23 +65,6 @@
       <iron-icon icon="icons:perm-identity" class="my-icon"></iron-icon>
     </div>
 
-    <paper-button
-      id="login_button_element"
-      class="my-button"
-      on-click="studentGegevens"
-      raised>
-        Student gegevens
-    </paper-button>
-
-    <paper-button
-      id="login_button_element"
-      class="my-button"
-      on-click="docentGegevens"
-      raised>
-        Docent gegevens
-    </paper-button>
-
-
     <div class="my-input">
       <paper-input id="email_element" on-keydown="_checkForEnter" label="gebruikersnaam" value="{{username}}"></paper-input>
       <paper-input id="wachtwoord_element" on-keydown="_checkForEnter" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
@@ -210,16 +193,6 @@
           var lToast = e.path[1];       //path[0] is de button. path[1] is de owner etc.
           lToast.toggle();              //sluit de foutmelding
           this._go_home();              // en ga verder op de home page
-        },
-
-        docentGegevens: function(){
-          this.username = "john.smeets@hu.nl"
-          this._ophalen_login_request_handler();
-        },
-
-        studentGegevens: function(){
-          this.username = "robert.arissen@student.hu.nl"
-          this._ophalen_login_request_handler();
         },
 
       });

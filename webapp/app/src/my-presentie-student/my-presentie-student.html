@@ -73,6 +73,8 @@
           },
           c_rol: {
             type: String,
+            observer: '_initializing',
+
           },
           c_username: {
             type: String,
@@ -80,7 +82,6 @@
           c_visible: {
             type: Boolean,                                      /* true when element is the active visible item */
             value: false,
-            observer: '_initializing',
           },
         },
 
@@ -92,7 +93,6 @@
                                                         // zal ook de url echt wijzigen
         },
         _initializing : function() {
-          if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
         	  if (this.c_rol=="student") {                        // voor studenten
         		  this._vakken_ophalen_request_handler();           // haal info op van server
         	  } else {                                            // na handmatige url wijziging zonder login
@@ -100,7 +100,6 @@
               lToast.open();                                    /* het sluiten van deze error verwijst  */
                                                                 /* terug naar home page */
             }
-          }
         },
 
         /*  Functie wordt aangeroepen voor de pagina begin,
