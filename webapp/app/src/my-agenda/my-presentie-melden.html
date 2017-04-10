@@ -138,7 +138,7 @@
 
             _get_current : function(user){
               /* Allen refreshen waner er een les word weergegeven */
-              if(!this.item.leeg && user){
+              if(!this.item.leeg && user && this.item.vak){
                 this.$.ajax_student_rooster_current.contentType = "application/json";
                 this.$.ajax_student_rooster_current.body = {
                     "datum": this.item.datum,
