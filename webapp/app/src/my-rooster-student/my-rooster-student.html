@@ -50,6 +50,7 @@
         properties: {
           c_rol: {
             type: String,
+            observer: '_initializing',
           },
           c_username: {
             type: String,
@@ -57,19 +58,16 @@
           c_visible: {
             type: Boolean,
             value: false,
-            observer: '_initializing',
           },
           systeemdatumstandaard: {
             type: String,
           },
         },
         _initializing : function() {
-          if (this.c_visible) {
             if (!(this.c_rol=="student")){
 	            var lToast = this.$.toast_invalid_aanroep;
 	            lToast.open();
             }
-          }
         },
 
         _toast_clicked: function(e) {
