@@ -26,7 +26,14 @@ import server.Handler;
 public class PresentieController implements Handler   {
 	private PrIS informatieSysteem;
  
-
+	/**
+	 * De PresentieController klasse moet alle presentie-gerelateerde aanvragen
+	 * afhandelen. Methode handle() kijkt welke URI is opgevraagd en laat
+	 * dan de juiste methode het werk doen. Je kunt voor elke nieuwe URI
+	 * een nieuwe methode schrijven.
+	 * 
+	 * @param infoSys - het toegangspunt tot het domeinmodel
+	 */
 	public PresentieController(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
@@ -38,6 +45,17 @@ public class PresentieController implements Handler   {
 			docentOphalen(conversation);
 		}
 	}
+	
+	/**
+	 * Functie StudentOphalen gebruikt de opgestuurde aanvraag om data op te halen
+	 * 
+	 * Uit de request wordt de gebruikersnaam gehaald en wordt er een JSON-object
+	 * gecreeerd en teruggestuurd.
+	 * 
+	 * In dit JSON-Object zit er een Les en Vak object in samen met de presenties.
+	 * 
+	 * @param conversation - De request door de Polymer frontend
+	 */
 	
 	private void studentOphalen(Conversation conversation)  {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
@@ -97,7 +115,17 @@ public class PresentieController implements Handler   {
 		conversation.sendJSONMessage(lJsonOutStr);
 	}
 	
-	
+	/**
+	 * Functie DocentOphalen gebruikt de opgestuurde aanvraag om data op te halen
+	 * 
+	 * Uit de request wordt de gebruikersnaam gehaald en wordt er een JSON-object
+	 * gecreeerd en teruggestuurd.
+	 * 
+	 * In dit JSON-Object zit er een Klas object met daaronder een Vak object 
+	 * en daaronder een Les Object in samen met de presenties.
+	 * 
+	 * @param conversation - De request door de Polymer frontend
+	 */	
 	public void docentOphalen(Conversation conversation)  {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
