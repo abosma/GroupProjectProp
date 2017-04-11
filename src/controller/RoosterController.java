@@ -82,9 +82,7 @@ public class RoosterController implements Handler{
 	}
 	
 	private void currentPresentieVoorLes(Conversation conversation) {
-		System.out.println("test");
 		JsonObject verzoek = (JsonObject) conversation.getRequestBodyAsJSON();
-		System.out.println(verzoek.toString());
 		
 		//Ophalen student
 		Student s = informatieSysteem.getStudent(verzoek.getString("username"));
