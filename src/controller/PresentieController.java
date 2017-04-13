@@ -97,16 +97,16 @@ public class PresentieController implements Handler   {
 				lJsonArrayBuilderVoorLes.add(lBuilder);
 
 				totaalAantalLessen++;
-				if(lessenAanwezig == 1){
+				if(p.getCode() == 1){
 					lessenAanwezig++;
 				}
 			}
 			DecimalFormat formatter = new DecimalFormat("###.##");
-			
 			lJsonObjectBuilderVoorVak
 				.add("vak",vak.getNaam())
 				.add("lessen", lJsonArrayBuilderVoorLes)
-			  .add("percentage", formatter.format(((double)lessenAanwezig/(double)totaalAantalLessen)*100).toString());
+			  
+				.add("percentage", formatter.format(((double)lessenAanwezig/(double)totaalAantalLessen)*100).toString());
 			
 			lJsonArrayBuilderVoorPresentie.add(lJsonObjectBuilderVoorVak);
 			
